@@ -12,6 +12,8 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Microsoft.Bot.Builder.Teams.Middlewares;
+
 using EchoBot1.Bots;
 
 namespace EchoBot1
@@ -37,7 +39,17 @@ namespace EchoBot1
             services.AddSingleton<IBotFrameworkHttpAdapter, BotFrameworkHttpAdapter>();
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
-            services.AddTransient<IBot, EchoBot>();
+            //            services.AddTransient<IBot, EchoBot>();
+            services.AddBot<EchoBot>(opt =>
+            {
+                var credentials = new SimpleCredentialProvider();
+                opt.CredentialProvider = credentials;
+
+                opt.Middleware.Add(
+                    new TeamsMiddleware(
+                        new ConfigurationCredentialProvider(this.Configuration)));
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
