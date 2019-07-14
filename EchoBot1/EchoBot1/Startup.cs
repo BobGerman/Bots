@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Bot.Builder.Teams.Middlewares;
 
 using EchoBot1.Bots;
+using EchoBot1.Services;
 
 namespace EchoBot1
 {
@@ -38,14 +39,21 @@ namespace EchoBot1
             // Create the Bot Framework Adapter.
             services.AddSingleton<IBotFrameworkHttpAdapter, BotFrameworkHttpAdapter>();
 
+            // Configure state
+            services.AddSingleton<IStorage, MemoryStorage>();
+            services.AddSingleton<UserState>();
+            services.AddSingleton<ConversationState>();
+            services.AddSingleton<BotStateService>();
+
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             //            services.AddTransient<IBot, EchoBot>();
-            services.AddBot<EchoBot>(opt =>
+            //services.AddBot<EchoBot>(options =>
+            services.AddBot<GreetingBot>(options =>
             {
                 var credentials = new SimpleCredentialProvider();
-                opt.CredentialProvider = credentials;
+                options.CredentialProvider = credentials;
 
-                opt.Middleware.Add(
+                options.Middleware.Add(
                     new TeamsMiddleware(
                         new ConfigurationCredentialProvider(this.Configuration)));
 
