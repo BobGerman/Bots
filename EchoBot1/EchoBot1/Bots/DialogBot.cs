@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,10 @@ namespace EchoBot1.Bots
         {
             _logger.LogInformation("Running dialog with message activity");
 
+            // Strip off initial @mention of bot (if any)
+            turnContext.Activity.Text = Regex.Replace(
+                turnContext.Activity.Text,
+                @"^<(at)\b[^>]*>(?:[^<]|<(?!/\1))*</\1>*", String.Empty);
             await _dialog.RunAsync(turnContext, _botStateService.DialogStateAccessor, cancellationToken);
         }
     }
