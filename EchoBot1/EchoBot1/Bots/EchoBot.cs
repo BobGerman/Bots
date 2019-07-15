@@ -17,6 +17,10 @@ namespace EchoBot1.Bots
 {
     public class EchoBot : ActivityHandler
     {
+        public EchoBot()
+        {
+            var x = 0;
+        }
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             var message = "You are not in a Team";

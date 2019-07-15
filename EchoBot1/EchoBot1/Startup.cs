@@ -45,19 +45,22 @@ namespace EchoBot1
             services.AddSingleton<ConversationState>();
             services.AddSingleton<BotStateService>();
 
+            // Configure Dialogs
+            services.AddSingleton<Dialogs.MainDialog>();
+
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
-            //            services.AddTransient<IBot, EchoBot>();
+            services.AddTransient<IBot, DialogBot<Dialogs.MainDialog>>();
             //services.AddBot<EchoBot>(options =>
-            services.AddBot<GreetingBot>(options =>
-            {
-                var credentials = new SimpleCredentialProvider();
-                options.CredentialProvider = credentials;
+            //services.AddBot<DialogBot<Dialogs.MainDialog>>(options =>
+            //{
+            //    var credentials = new SimpleCredentialProvider();
+            //    options.CredentialProvider = credentials;
 
-                options.Middleware.Add(
-                    new TeamsMiddleware(
-                        new ConfigurationCredentialProvider(this.Configuration)));
+            //    options.Middleware.Add(
+            //        new TeamsMiddleware(
+            //            new ConfigurationCredentialProvider(this.Configuration)));
 
-            });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
