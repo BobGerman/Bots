@@ -45,6 +45,8 @@ namespace EchoBot1
             services.AddSingleton<ConversationState>();
             services.AddSingleton<BotStateService>();
 
+            services.AddSingleton<BotServices>();
+
             // Configure Dialogs
             services.AddSingleton<Dialogs.MainDialog>();
 

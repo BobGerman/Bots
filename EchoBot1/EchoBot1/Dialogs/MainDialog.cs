@@ -1,4 +1,5 @@
 ﻿using EchoBot1.Services;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace EchoBot1.Dialogs
     public class MainDialog : ComponentDialog
     {
         private readonly BotStateService _botStateService;
+        private readonly BotServices _botServices;
 
-        public MainDialog(BotStateService botStateService) : base(nameof(MainDialog))
+        public MainDialog(BotStateService botStateService, BotServices botServices) : base(nameof(MainDialog))
         {
             _botStateService = botStateService ?? throw new ArgumentNullException(nameof(botStateService));
+            _botServices = botServices ?? throw new ArgumentNullException(nameof(botStateService));
 
             InitializeWaterfallDialog();
         }
@@ -30,9 +33,10 @@ namespace EchoBot1.Dialogs
             };
 
             // Add named dialogs
+            AddDialog(new WaterfallDialog($"{nameof(MainDialog)}.mainFlow", waterfallSteps));
             AddDialog(new GreetingDialog($"{nameof(MainDialog)}.greeting", _botStateService));
             AddDialog(new BugReportDialog($"{nameof(MainDialog)}.bugReport", _botStateService));
-            AddDialog(new WaterfallDialog($"{nameof(MainDialog)}.mainFlow", waterfallSteps));
+            AddDialog(new BugTypeDialog($"{nameof(MainDialog)}.bugType", _botStateService, _botServices));
 
             // Set the starting dialog
             InitialDialogId = $"{nameof(MainDialog)}.mainFlow";
@@ -40,14 +44,41 @@ namespace EchoBot1.Dialogs
 
         private async Task<DialogTurnResult> InitialStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            if (Regex.Match(stepContext.Context.Activity.Text.ToLower(), "hi").Success)
+            var recognizerResult = await _botServices.Dispatch.RecognizeAsync(stepContext.Context, cancellationToken);
+
+            var topIntent = recognizerResult.GetTopScoringIntent();
+
+            try
             {
-                return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.greeting", null, cancellationToken);
+                switch (topIntent.intent)
+                {
+                    case "GreetingIntent":
+                        return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.greeting", null, cancellationToken);
+                    case "NewBugReportIntent":
+                        return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.bugReport", null, cancellationToken);
+
+                    //return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.bugReport", null, cancellationToken);
+                    case "QueryBugTypeIntent":
+                        return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.bugType", null, cancellationToken);
+                    default:
+                        await stepContext.Context.SendActivityAsync(MessageFactory.Text($"I'm confused, what do you mean?"), cancellationToken);
+                        break;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.bugReport", null, cancellationToken);
+                var x = ex.Message;
             }
+            return await stepContext.NextAsync(null, cancellationToken);
+
+            //if (Regex.Match(stepContext.Context.Activity.Text.ToLower(), "hi").Success)
+            //{
+            //    return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.greeting", null, cancellationToken);
+            //}
+            //else
+            //{
+            //    return await stepContext.BeginDialogAsync($"{nameof(MainDialog)}.bugReport", null, cancellationToken);
+            //}
         }
 
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
