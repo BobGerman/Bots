@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Teams;
+using Microsoft.Bot.Connector.Teams;
 using Microsoft.Bot.Schema.Teams;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -57,8 +59,7 @@ namespace ConsultingBot.Dialogs
                     message = $"You are in channel {channelData.Channel.Id}";
                 }
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text(message), cancellationToken);
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo?: {stepContext.Context.Activity.Text}"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"{message}<br /> Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
 
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"") }, cancellationToken);
             }

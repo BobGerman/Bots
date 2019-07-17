@@ -50,6 +50,9 @@ namespace ConsultingBot
             // The Dialog that will be run by the bot.
             services.AddSingleton<MainDialog>();
 
+            // Teams middleware to be added in AdapterWithErrorHandler
+            services.AddSingleton<TeamsMiddleware>();
+
             // Custom middleware to be added in AdapterWithErrorHandler
             services.AddSingleton<StripBotMention>();
 
