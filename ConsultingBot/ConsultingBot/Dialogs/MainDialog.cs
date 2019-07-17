@@ -58,7 +58,7 @@ namespace ConsultingBot.Dialogs
                 }
 
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text(message), cancellationToken);
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo?: {stepContext.Context.Activity.Text}"), cancellationToken);
 
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"") }, cancellationToken);
             }

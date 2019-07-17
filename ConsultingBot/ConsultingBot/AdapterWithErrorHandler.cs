@@ -4,6 +4,7 @@
 // Generated with Bot Builder V4 SDK Template for Visual Studio CoreBot v4.3.0
 
 using System;
+using ConsultingBot.Middleware;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Connector.Authentication;
@@ -13,9 +14,14 @@ namespace ConsultingBot
 {
     public class AdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
-        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, ConversationState conversationState = null)
+        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, StripBotMention stripBotMentionMiddleware, ConversationState conversationState = null)
             : base(credentialProvider)
         {
+            if (stripBotMentionMiddleware != null)
+            {
+                Use(stripBotMentionMiddleware);
+            }
+
             OnTurnError = async (turnContext, exception) =>
             {
                 // Log any leaked exception from the application.
