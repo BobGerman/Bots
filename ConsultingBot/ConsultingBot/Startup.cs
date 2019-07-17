@@ -51,27 +51,16 @@ namespace ConsultingBot
             services.AddSingleton<MainDialog>();
 
             // Teams middleware to be added in AdapterWithErrorHandler
-            services.AddSingleton<TeamsMiddleware>();
+            var teamsMiddleware = new TeamsMiddleware(
+                        new ConfigurationCredentialProvider(this.Configuration)
+                );
+            services.AddSingleton(teamsMiddleware);
 
             // Custom middleware to be added in AdapterWithErrorHandler
             services.AddSingleton<StripBotMention>();
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, DialogAndWelcomeBot<MainDialog>>();
-
-
-            //services.AddBot<DialogAndWelcomeBot<MainDialog>>(
-            //    (options) => {
-            //    var credentials = new SimpleCredentialProvider();
-            //    options.CredentialProvider = credentials;
-
-            //    options.Middleware.Add(
-            //        new TeamsMiddleware(
-            //            new ConfigurationCredentialProvider(this.Configuration)));
-            //    options.Middleware.Add(
-            //        new StripBotMention());
-            //}
-                //);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
