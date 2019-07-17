@@ -13,13 +13,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ConsultingBot.Bots;
 using ConsultingBot.Dialogs;
+using Microsoft.Bot.Builder.Teams.Middlewares;
+using Microsoft.Extensions.Configuration;
 
 namespace ConsultingBot
 {
     public class Startup
     {
-        public Startup()
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration)
         {
+            this.Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -46,7 +50,14 @@ namespace ConsultingBot
             services.AddSingleton<MainDialog>();
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
-            services.AddTransient<IBot, DialogAndWelcomeBot<MainDialog>>();
+            services.AddBot<DialogAndWelcomeBot<MainDialog>>((options) => {
+                var credentials = new SimpleCredentialProvider();
+                options.CredentialProvider = credentials;
+
+                options.Middleware.Add(
+                    new TeamsMiddleware(
+                        new ConfigurationCredentialProvider(this.Configuration)));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
