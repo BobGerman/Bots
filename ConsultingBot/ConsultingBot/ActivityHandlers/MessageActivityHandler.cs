@@ -7,6 +7,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AdaptiveCards;
     using Microsoft.Bot.Builder.Abstractions;
     using Microsoft.Bot.Builder.Abstractions.Teams;
     using Microsoft.Bot.Schema;
@@ -29,9 +30,16 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
                 var action1 = new CardAction("imback", "imBack", null, null, null, "text");
                 var action2 = new CardAction("messageBack", "message back", null, "text received by bots", "text display to users", JObject.Parse(@"{ ""key"" : ""value"" }"));
                 var action3 = new CardAction("invoke", "invoke", null, null, null, JObject.Parse(@"{ ""key"" : ""value"" }"));
+                // The Teams CardAction doesn't seem to work but - hey Teams doesn't even get involved with this one
+                var action4 = new AdaptiveOpenUrlAction
+                {
+                    Title = "Link",
+                    Url = new Uri("https://www.microsoft.com")
+                };
                 adaptiveCard.Actions.Add(action1.ToAdaptiveCardAction());
                 adaptiveCard.Actions.Add(action2.ToAdaptiveCardAction());
                 adaptiveCard.Actions.Add(action3.ToAdaptiveCardAction());
+                adaptiveCard.Actions.Add(action4);
 
                 // Task module action
                 var taskModuleAction = new TaskModuleAction("Launch Task Module", @"{ ""hiddenKey"": ""hidden value from task module launcher"" }");
