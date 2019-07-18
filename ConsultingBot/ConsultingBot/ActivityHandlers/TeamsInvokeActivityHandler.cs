@@ -1,34 +1,25 @@
-﻿// <copyright file="TeamsInvokeActivityHandler.cs" company="Microsoft">
-// Licensed under the MIT License.
-// </copyright>
-
-namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
+﻿namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder.Abstractions.Teams;
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Newtonsoft.Json.Linq;
 
-    /// <summary>
-    /// Handles Teams invoke activity.
-    /// </summary>
-    /// <seealso cref="ITeamsInvokeActivityHandler" />
     public class TeamsInvokeActivityHandler : TeamsInvokeActivityHandlerBase
     {
-        /// <summary>
-        /// Handles the messaging extension action asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context</param>
-        /// <param name="query">The invoke query object</param>
-        /// <returns>
-        /// Task tracking operation.
-        /// </returns>
+
+        // Called when the messaging extension query is entered
         public override async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
         {
-            var heroCard = new HeroCard("Result Card", null, "<pre>This card mocks the CE results</pre>");
+            string queryText = "";
+            queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
+            // TODO: Get items matching query here
+            // TODO: Build list of MessagingExtensionAttachment objects and return it
+            var heroCard = new HeroCard("Result Card", null, $"<pre>Query result for {queryText}</pre>");
             var previewCard = new ThumbnailCard("Search Item Card", null, "This is to show the search result");
             return new InvokeResponse
             {
@@ -41,6 +32,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
                         Attachments = new List<MessagingExtensionAttachment>()
                             {
                                 heroCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()),
+                                heroCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()),
                             },
                     },
                 },
@@ -48,12 +40,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
-        /// <summary>
-        /// Handles messaging extension action of "fetch task" asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <param name="query">The query object of messaging extension action.</param>
-        /// <returns>Task tracking operation.</returns>
+        // Called when the task module is fetched for an action
         public override async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
             return new InvokeResponse
@@ -66,14 +53,10 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
-        /// <summary>
-        /// Handles messaging extension action of "submit action" asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <param name="query">The query object of messaging extension action.</param>
-        /// <returns>Task tracking operation.</returns>
+        // Called when the task module from an action messaging extension  is submitted
         public override async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
+            // Inspect the query to determine if we're done
             bool done = false;
             JObject data = null;
             if (query.Data != null)
@@ -83,23 +66,26 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             }
 
             var body = new MessagingExtensionActionResponse();
-
             if (data != null && done)
             {
+                // We are done, build a card based on our interaction and insert it into the compose box
                 string sharedMessage = string.Empty;
                 if (query.CommandId.Equals("shareMessage") && query.CommandContext.Equals("message"))
                 {
                     sharedMessage = $"Shared message: <div style=\"background:#F0F0F0\">{JObject.FromObject(query.MessagePayload).ToString()}</div><br/>";
                 }
 
-                var preview = new ThumbnailCard("Created Card", null, $"Your input: {data["userText"]?.ToString()}").ToAttachment();
-                var heroCard = new HeroCard("Created Card", null, $"{sharedMessage}Your input: {data["userText"]?.ToString()}").ToAttachment();
-                var resultCards = new List<MessagingExtensionAttachment> { heroCard.ToMessagingExtensionAttachment(preview) };
+                var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {data["userText"]?.ToString()}").ToAttachment();
+                var heroCard = new HeroCard("Created Card (hero)", null, $"{sharedMessage}Your input: {data["userText"]?.ToString()}").ToAttachment();
+                var resultCards = new List<MessagingExtensionAttachment> {
+                    heroCard.ToMessagingExtensionAttachment(preview)
+                };
 
                 body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
             }
             else if ((query.CommandId != null && query.CommandId.Equals("createWithPreview")) || query.BotMessagePreviewAction != null)
             {
+                // We are not done so re-render the task module
                 if (query.BotMessagePreviewAction == null)
                 {
                     body.ComposeExtension = new MessagingExtensionResult
@@ -113,6 +99,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
                 }
                 else
                 {
+                    // Something is wrong in the Teams client - handle it
                     var userEditActivities = query.BotActivityPreview;
                     var card = userEditActivities?[0]?.Attachments?[0];
                     if (card == null)
@@ -154,12 +141,13 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
-        /// <summary>
-        /// Handles task module fetch asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <param name="query">The query object of task module request.</param>
-        /// <returns>Task tracking operation.</returns>
+        // Called when an Invoke button on a card is clicked
+        public override async Task<InvokeResponse> HandleInvokeTaskAsync(ITurnContext turnContext)
+        {
+            return await base.HandleInvokeTaskAsync(turnContext);
+        }
+
+        // Called when a Task Module Action on a card is clicked and the task module needs to be rendered
         public override async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)
         {
             return new InvokeResponse
@@ -172,12 +160,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
-        /// <summary>
-        /// Handles task module submit asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <param name="query">The query object of task module request.</param>
-        /// <returns>Task tracking operation.</returns>
+        // Called when a task module from a card is submitted
         public override async Task<InvokeResponse> HandleTaskModuleSubmitAsync(ITurnContext turnContext, TaskModuleRequest query)
         {
             bool done = false;
@@ -197,12 +180,8 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
-        /// <summary>
-        /// Handles app-based link query asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <param name="query">The app-based link query.</param>
-        /// <returns>Task tracking operation.</returns>
+        // Called when a link message handler runs (i.e. we render a preview to a link whose domain is 
+        // included in the messageHandlers in the manifest)
         public override async Task<InvokeResponse> HandleAppBasedLinkQueryAsync(ITurnContext turnContext, AppBasedLinkQuery query)
         {
             var previewImg = new List<CardImage>
@@ -223,6 +202,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             };
         }
 
+        // Called when fetching the contents of the task module
         private TaskModuleResponseBase TaskModuleResponseTask(TaskModuleRequest query, bool done)
         {
             if (done)
@@ -254,6 +234,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             }
         }
 
+        // Builds the response card displayed in the task module
         private Attachment TaskModuleResponseCard(TaskModuleRequest query, string textValue)
         {
             AdaptiveCards.AdaptiveCard adaptiveCard = new AdaptiveCards.AdaptiveCard();

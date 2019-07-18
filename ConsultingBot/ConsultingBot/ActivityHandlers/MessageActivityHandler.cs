@@ -13,17 +13,8 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
     using Microsoft.Bot.Schema.Teams;
     using Newtonsoft.Json.Linq;
 
-    /// <summary>
-    /// Handles Teams invoke activity.
-    /// </summary>
-    /// <seealso cref="ITeamsInvokeActivityHandler" />
     public class MessageActivityHandler : IMessageActivityHandler
     {
-        /// <summary>
-        /// Handles the message activity asynchronously.
-        /// </summary>
-        /// <param name="turnContext">The turn context.</param>
-        /// <returns>Task tracking operation.</returns>
         public async Task HandleMessageAsync(ITurnContext turnContext)
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
