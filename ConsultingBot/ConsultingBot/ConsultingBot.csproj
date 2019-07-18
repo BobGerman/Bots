@@ -19,4 +19,12 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MessageExtensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Bot.Builder.Abstractions.Teams\Microsoft.Bot.Builder.Abstractions.Teams.csproj" />
+  </ItemGroup>
+
 </Project>

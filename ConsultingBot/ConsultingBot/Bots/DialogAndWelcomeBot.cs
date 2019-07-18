@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Abstractions;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
@@ -17,8 +18,8 @@ namespace ConsultingBot.Bots
 {
     public class DialogAndWelcomeBot<T> : DialogBot<T> where T : Dialog
     {
-        public DialogAndWelcomeBot(ConversationState conversationState, UserState userState, T dialog, ILogger<DialogBot<T>> logger)
-            : base(conversationState, userState, dialog, logger)
+        public DialogAndWelcomeBot(ConversationState conversationState, UserState userState, IActivityProcessor activityProcessor, T dialog, ILogger<DialogBot<T>> logger)
+            : base(conversationState, userState, activityProcessor, dialog, logger)
         {
         }
 
