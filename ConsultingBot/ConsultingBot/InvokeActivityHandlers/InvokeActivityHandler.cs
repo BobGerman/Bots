@@ -58,8 +58,8 @@
                 teamsContext.IsRequestTaskModuleFetch() ||
                 teamsContext.IsRequestTaskModuleSubmit())
             {
-                var card = new TestCard();
-                return await card.HandleInvokeAsync(turnContext);
+                var taskModule = new TestTaskModule();
+                return await taskModule.HandleInvokeAsync(turnContext);
             }
 
             return await this.HandleInvokeTaskAsync(turnContext).ConfigureAwait(false);
