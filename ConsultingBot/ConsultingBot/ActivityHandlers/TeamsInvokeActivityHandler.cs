@@ -4,16 +4,68 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Bot.Builder.Abstractions.Teams;
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Newtonsoft.Json.Linq;
 
-    public class TeamsInvokeActivityHandler : TeamsInvokeActivityHandlerBase
+    public class TeamsInvokeActivityHandler
     {
+        // Big Ol' Dispatcher
+        public async Task<InvokeResponse> ProcessTeamsInvokeActivityAsync(ITurnContext turnContext)
+        {
+            ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
+
+            //if (teamsContext.IsRequestO365ConnectorCardActionQuery())
+            //{
+            //    return await this.HandleO365ConnectorCardActionAsync(turnContext, teamsContext.GetO365ConnectorCardActionQueryData()).ConfigureAwait(false);
+            //}
+
+            //if (teamsContext.IsRequestSigninStateVerificationQuery())
+            //{
+            //    return await this.HandleSigninStateVerificationActionAsync(turnContext, teamsContext.GetSigninStateVerificationQueryData()).ConfigureAwait(false);
+            //}
+
+            //if (teamsContext.IsRequestFileConsentResponse())
+            //{
+            //    return await this.HandleFileConsentResponseAsync(turnContext, teamsContext.GetFileConsentQueryData()).ConfigureAwait(false);
+            //}
+
+            if (teamsContext.IsRequestMessagingExtensionQuery())
+            {
+                return await this.HandleMessagingExtensionQueryAsync(turnContext, teamsContext.GetMessagingExtensionQueryData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestAppBasedLinkQuery())
+            {
+                return await this.HandleAppBasedLinkQueryAsync(turnContext, teamsContext.GetAppBasedLinkQueryData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestMessagingExtensionFetchTask())
+            {
+                return await this.HandleMessagingExtensionFetchTaskAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestMessagingExtensionSubmitAction())
+            {
+                return await this.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestTaskModuleFetch())
+            {
+                return await this.HandleTaskModuleFetchAsync(turnContext, teamsContext.GetTaskModuleRequestData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestTaskModuleSubmit())
+            {
+                return await this.HandleTaskModuleSubmitAsync(turnContext, teamsContext.GetTaskModuleRequestData()).ConfigureAwait(false);
+            }
+
+            return await this.HandleInvokeTaskAsync(turnContext).ConfigureAwait(false);
+        }
+
 
         // Called when the messaging extension query is entered
-        public override async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
+        private async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
         {
             string queryText = "";
             queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
@@ -41,7 +93,7 @@
         }
 
         // Called when the task module is fetched for an action
-        public override async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
+        private async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
             return new InvokeResponse
             {
@@ -54,7 +106,7 @@
         }
 
         // Called when the task module from an action messaging extension  is submitted
-        public override async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
+        private async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
             // Inspect the query to determine if we're done
             bool done = false;
@@ -142,13 +194,13 @@
         }
 
         // Called when an Invoke button on a card is clicked
-        public override async Task<InvokeResponse> HandleInvokeTaskAsync(ITurnContext turnContext)
+        private async Task<InvokeResponse> HandleInvokeTaskAsync(ITurnContext turnContext)
         {
-            return await base.HandleInvokeTaskAsync(turnContext);
+             return await Task.FromResult<InvokeResponse>(null);
         }
 
         // Called when a Task Module Action on a card is clicked and the task module needs to be rendered
-        public override async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)
+        private async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)
         {
             return new InvokeResponse
             {
@@ -161,7 +213,7 @@
         }
 
         // Called when a task module from a card is submitted
-        public override async Task<InvokeResponse> HandleTaskModuleSubmitAsync(ITurnContext turnContext, TaskModuleRequest query)
+        private async Task<InvokeResponse> HandleTaskModuleSubmitAsync(ITurnContext turnContext, TaskModuleRequest query)
         {
             bool done = false;
             if (query.Data != null)
@@ -182,7 +234,7 @@
 
         // Called when a link message handler runs (i.e. we render a preview to a link whose domain is 
         // included in the messageHandlers in the manifest)
-        public override async Task<InvokeResponse> HandleAppBasedLinkQueryAsync(ITurnContext turnContext, AppBasedLinkQuery query)
+        private async Task<InvokeResponse> HandleAppBasedLinkQueryAsync(ITurnContext turnContext, AppBasedLinkQuery query)
         {
             var previewImg = new List<CardImage>
             {

@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsultingBot", "ConsultingBot\ConsultingBot.csproj", "{45395EF4-8876-4B5C-8588-7EA42545FBBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Builder.Abstractions", "Microsoft.Bot.Builder.Abstractions\Microsoft.Bot.Builder.Abstractions.csproj", "{CB2F8F47-2AA6-4473-A386-79630E798937}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Builder.Abstractions.Teams", "Microsoft.Bot.Builder.Abstractions.Teams\Microsoft.Bot.Builder.Abstractions.Teams.csproj", "{AFB53D7E-73F3-431D-8C78-4F824DA00748}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{45395EF4-8876-4B5C-8588-7EA42545FBBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45395EF4-8876-4B5C-8588-7EA42545FBBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45395EF4-8876-4B5C-8588-7EA42545FBBE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB2F8F47-2AA6-4473-A386-79630E798937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB2F8F47-2AA6-4473-A386-79630E798937}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB2F8F47-2AA6-4473-A386-79630E798937}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB2F8F47-2AA6-4473-A386-79630E798937}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFB53D7E-73F3-431D-8C78-4F824DA00748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFB53D7E-73F3-431D-8C78-4F824DA00748}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFB53D7E-73F3-431D-8C78-4F824DA00748}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFB53D7E-73F3-431D-8C78-4F824DA00748}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

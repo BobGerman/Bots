@@ -8,13 +8,11 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using AdaptiveCards;
-    using Microsoft.Bot.Builder.Abstractions;
-    using Microsoft.Bot.Builder.Abstractions.Teams;
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Newtonsoft.Json.Linq;
 
-    public class MessageActivityHandler : IMessageActivityHandler
+    public class MessageActivityHandler
     {
         public async Task HandleMessageAsync(ITurnContext turnContext)
         {

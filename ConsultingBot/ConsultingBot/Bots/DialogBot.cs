@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Abstractions;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Teams;
+using Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 
@@ -24,15 +24,13 @@ namespace ConsultingBot.Bots
     {
         protected readonly BotState ConversationState;
         protected readonly BotState UserState;
-        private readonly IActivityProcessor ActivityProcessor;
         protected readonly Dialog Dialog;
         protected readonly ILogger Logger;
 
-        public DialogBot(ConversationState conversationState, UserState userState, IActivityProcessor activityProcessor, T dialog, ILogger<DialogBot<T>> logger)
+        public DialogBot(ConversationState conversationState, UserState userState, T dialog, ILogger<DialogBot<T>> logger)
         {
             ConversationState = conversationState;
             UserState = userState;
-            ActivityProcessor = activityProcessor;
             Dialog = dialog;
             Logger = logger;
         }
@@ -45,7 +43,9 @@ namespace ConsultingBot.Bots
                 //    var messagineExtensionQueryData = teamsContext.GetMessagingExtensionQueryData();
                 //    var invokeActivityHandler = new TeamsInvokeActivityHandler();
                 //    await invokeActivityHandler.HandleMessagingExtensionQueryAsync(turnContext, messagineExtensionQueryData);
-                await ActivityProcessor.ProcessIncomingActivityAsync(turnContext).ConfigureAwait(false);
+                //                await ActivityProcessor.ProcessIncomingActivityAsync(turnContext).ConfigureAwait(false);
+                var invokeActivityProcessor = new TeamsInvokeActivityHandler();
+                await invokeActivityProcessor.ProcessTeamsInvokeActivityAsync(turnContext);
             }
             else
             {
