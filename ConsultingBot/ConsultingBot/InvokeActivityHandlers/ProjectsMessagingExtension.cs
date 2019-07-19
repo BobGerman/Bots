@@ -43,7 +43,7 @@ namespace ConsultingBot.InvokeActivityHandlers
         // Called when the task module is fetched for an action
         public async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
-            var responseCard = new TaskModuleResponseCard();
+            var responseCard = new TestCard();
 
             return new InvokeResponse
             {

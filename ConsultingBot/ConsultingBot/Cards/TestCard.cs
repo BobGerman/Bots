@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot.Cards
 {
-    public class TaskModuleResponseCard : IMyCard
+    public class TestCard : IMyCard
     {
         public Attachment GetCardAttachment(ITurnContext turnContext)
         {

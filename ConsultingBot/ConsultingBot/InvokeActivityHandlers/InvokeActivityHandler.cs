@@ -58,7 +58,7 @@
                 teamsContext.IsRequestTaskModuleFetch() ||
                 teamsContext.IsRequestTaskModuleSubmit())
             {
-                var card = new TaskModuleResponseCard();
+                var card = new TestCard();
                 return await card.HandleInvokeAsync(turnContext);
             }
 
