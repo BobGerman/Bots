@@ -1,5 +1,6 @@
 ﻿using ConsultingBot.Cards;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
 using Newtonsoft.Json.Linq;
@@ -14,8 +15,32 @@ namespace ConsultingBot.InvokeActivityHandlers
     {
         private TestCard testCard = new TestCard();
 
+        public async Task<InvokeResponse> ProcessInvokeActivityAsync(ITurnContext turnContext)
+        {
+            ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
+            if (teamsContext.IsRequestMessagingExtensionQuery())
+            {
+                var projectMessagingExtension = new ProjectsMessagingExtension();
+                return await projectMessagingExtension.HandleMessagingExtensionQueryAsync(turnContext, teamsContext.GetMessagingExtensionQueryData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestMessagingExtensionFetchTask())
+            {
+                var projectMessagingExtension = new ProjectsMessagingExtension();
+                return await projectMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
+            }
+
+            if (teamsContext.IsRequestMessagingExtensionSubmitAction())
+            {
+                var projectMessagingExtension = new ProjectsMessagingExtension();
+                return await projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
+            }
+
+            return await Task.FromResult<InvokeResponse>(null);
+        }
+
         // Called when the messaging extension query is entered
-        public async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
+        private async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
         {
             string queryText = "";
             queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
@@ -43,7 +68,7 @@ namespace ConsultingBot.InvokeActivityHandlers
         }
 
         // Called when the task module is fetched for an action
-        public async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
+        private async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
             var taskModule = new TestTaskModule();
 
@@ -58,7 +83,7 @@ namespace ConsultingBot.InvokeActivityHandlers
         }
 
         // Called when the task module from an action messaging extension  is submitted
-        public async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
+        private async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
             // Inspect the query to determine if we're done
             bool done = false;

@@ -17,28 +17,12 @@
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
 
-            #region Unused activity types
-            //if (teamsContext.IsRequestO365ConnectorCardActionQuery())
-            //{
-            //    return await this.HandleO365ConnectorCardActionAsync(turnContext, teamsContext.GetO365ConnectorCardActionQueryData()).ConfigureAwait(false);
-            //}
-
-            //if (teamsContext.IsRequestSigninStateVerificationQuery())
-            //{
-            //    return await this.HandleSigninStateVerificationActionAsync(turnContext, teamsContext.GetSigninStateVerificationQueryData()).ConfigureAwait(false);
-            //}
-
-            //if (teamsContext.IsRequestFileConsentResponse())
-            //{
-            //    return await this.HandleFileConsentResponseAsync(turnContext, teamsContext.GetFileConsentQueryData()).ConfigureAwait(false);
-            //}
-            #endregion
-
-            #region Messagine extensions and link queries
-            if (teamsContext.IsRequestMessagingExtensionQuery())
+            if (teamsContext.IsRequestMessagingExtensionQuery() ||
+                teamsContext.IsRequestMessagingExtensionFetchTask() ||
+                teamsContext.IsRequestMessagingExtensionSubmitAction())
             {
                 var projectMessagingExtension = new ProjectsMessagingExtension();
-                return await projectMessagingExtension.HandleMessagingExtensionQueryAsync(turnContext, teamsContext.GetMessagingExtensionQueryData()).ConfigureAwait(false);
+                return await projectMessagingExtension.ProcessInvokeActivityAsync (turnContext).ConfigureAwait(false);
             }
 
             if (teamsContext.IsRequestAppBasedLinkQuery())
@@ -47,40 +31,14 @@
                 return await projectLinkQuery.HandleAppBasedLinkQueryAsync(turnContext, teamsContext.GetAppBasedLinkQueryData()).ConfigureAwait(false);
             }
 
-            if (teamsContext.IsRequestMessagingExtensionFetchTask())
-            {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
-                return await projectMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
-            }
-
-            if (teamsContext.IsRequestMessagingExtensionSubmitAction())
-            {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
-                return await projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
-            }
-
-            #endregion
-
-            if (teamsContext.IsRequestMessagingExtensionSubmitAction() ||
-                teamsContext.IsRequestTaskModuleFetch() ||
+            if (teamsContext.IsRequestTaskModuleFetch() ||
                 teamsContext.IsRequestTaskModuleSubmit())
             {
                 var taskModule = new TestTaskModule();
                 return await taskModule.HandleInvokeAsync(turnContext);
             }
 
-            return await this.HandleInvokeTaskAsync(turnContext).ConfigureAwait(false);
+            return await Task.FromResult<InvokeResponse>(null);
         }
-
-        // Called when an Invoke button on a card is clicked
-        private async Task<InvokeResponse> HandleInvokeTaskAsync(ITurnContext turnContext)
-        {
-             return await Task.FromResult<InvokeResponse>(null);
-        }
-
-
-
-
-
     }
 }

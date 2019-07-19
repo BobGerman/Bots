@@ -1,11 +1,7 @@
 ﻿using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
-using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConsultingBot.Cards
@@ -28,10 +24,8 @@ namespace ConsultingBot.Cards
                 return await this.HandleTaskModuleSubmitAsync(turnContext, teamsContext.GetTaskModuleRequestData()).ConfigureAwait(false);
             }
 
-            return await this.HandleInvokeTaskAsync(turnContext).ConfigureAwait(false);
+            return await Task.FromResult<InvokeResponse>(null);
         }
-
-
 
         // Called when a Task Module Action on a card is clicked and the task module needs to be rendered
         private async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)
@@ -66,11 +60,6 @@ namespace ConsultingBot.Cards
             };
         }
 
-        private async Task<InvokeResponse> HandleInvokeTaskAsync(ITurnContext turnContext)
-        {
-            return await Task.FromResult<InvokeResponse>(null);
-        }
-
         // Called when fetching the contents of the task module
         public TaskModuleResponseBase TaskModuleResponseTask(TaskModuleRequest query, bool done)
         {
@@ -102,7 +91,6 @@ namespace ConsultingBot.Cards
                 };
             }
         }
-
 
     }
 }
