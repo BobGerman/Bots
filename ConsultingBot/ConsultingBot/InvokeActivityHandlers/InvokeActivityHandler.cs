@@ -21,13 +21,13 @@
                 teamsContext.IsRequestMessagingExtensionFetchTask() ||
                 teamsContext.IsRequestMessagingExtensionSubmitAction())
             {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
+                var projectMessagingExtension = new TestMessagingExtension();
                 return await projectMessagingExtension.ProcessInvokeActivityAsync (turnContext).ConfigureAwait(false);
             }
 
             if (teamsContext.IsRequestAppBasedLinkQuery())
             {
-                var projectLinkQuery = new ProjectLinkQuery();
+                var projectLinkQuery = new TestLinkQuery();
                 return await projectLinkQuery.HandleAppBasedLinkQueryAsync(turnContext, teamsContext.GetAppBasedLinkQueryData()).ConfigureAwait(false);
             }
 

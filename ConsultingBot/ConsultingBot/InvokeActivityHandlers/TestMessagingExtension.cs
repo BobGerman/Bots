@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class ProjectsMessagingExtension
+    public class TestMessagingExtension
     {
         private TestCard testCard = new TestCard();
 
@@ -20,19 +20,19 @@ namespace ConsultingBot.InvokeActivityHandlers
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
             if (teamsContext.IsRequestMessagingExtensionQuery())
             {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
+                var projectMessagingExtension = new TestMessagingExtension();
                 return await projectMessagingExtension.HandleMessagingExtensionQueryAsync(turnContext, teamsContext.GetMessagingExtensionQueryData()).ConfigureAwait(false);
             }
 
             if (teamsContext.IsRequestMessagingExtensionFetchTask())
             {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
+                var projectMessagingExtension = new TestMessagingExtension();
                 return await projectMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
             }
 
             if (teamsContext.IsRequestMessagingExtensionSubmitAction())
             {
-                var projectMessagingExtension = new ProjectsMessagingExtension();
+                var projectMessagingExtension = new TestMessagingExtension();
                 return await projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
             }
 
