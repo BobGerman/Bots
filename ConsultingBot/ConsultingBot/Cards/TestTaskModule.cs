@@ -18,11 +18,6 @@ namespace ConsultingBot.Cards
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
 
-            if (teamsContext.IsRequestMessagingExtensionSubmitAction())
-            {
-                return await this.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
-            }
-
             if (teamsContext.IsRequestTaskModuleFetch())
             {
                 return await this.HandleTaskModuleFetchAsync(turnContext, teamsContext.GetTaskModuleRequestData()).ConfigureAwait(false);
@@ -37,93 +32,6 @@ namespace ConsultingBot.Cards
         }
 
 
-        // Called when the task module from an action messaging extension  is submitted
-        private async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
-        {
-            // Inspect the query to determine if we're done
-            bool done = false;
-            JObject data = null;
-            if (query.Data != null)
-            {
-                data = JObject.FromObject(query.Data);
-                done = (bool)data["done"];
-            }
-
-            var body = new MessagingExtensionActionResponse();
-            if (data != null && done)
-            {
-                // We are done, build a card based on our interaction and insert it into the compose box
-                string sharedMessage = string.Empty;
-                if (query.CommandId.Equals("shareMessage") && query.CommandContext.Equals("message"))
-                {
-                    sharedMessage = $"Shared message: <div style=\"background:#F0F0F0\">{JObject.FromObject(query.MessagePayload).ToString()}</div><br/>";
-                }
-
-                var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {data["userText"]?.ToString()}").ToAttachment();
-                var heroCard = new HeroCard("Created Card (hero)", null, $"{sharedMessage}Your input: {data["userText"]?.ToString()}").ToAttachment();
-                var resultCards = new List<MessagingExtensionAttachment> {
-                    heroCard.ToMessagingExtensionAttachment(preview)
-                };
-
-                body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
-            }
-            else if ((query.CommandId != null && query.CommandId.Equals("createWithPreview")) || query.BotMessagePreviewAction != null)
-            {
-                // We are not done so re-render the task module
-                if (query.BotMessagePreviewAction == null)
-                {
-                    body.ComposeExtension = new MessagingExtensionResult
-                    {
-                        Type = "botMessagePreview",
-                        ActivityPreview = new Activity
-                        {
-                            Attachments = new List<Attachment> { testCard.GetCard(query, null) },
-                        },
-                    };
-                }
-                else
-                {
-                    // Something is wrong in the Teams client - handle it
-                    var userEditActivities = query.BotActivityPreview;
-                    var card = userEditActivities?[0]?.Attachments?[0];
-                    if (card == null)
-                    {
-                        body.Task = new TaskModuleMessageResponse
-                        {
-                            Type = "message",
-                            Value = "Missing user edit card. Something wrong on Teams client.",
-                        };
-                    }
-                    else if (query.BotMessagePreviewAction.Equals("send"))
-                    {
-                        Activity activity = turnContext.Activity.CreateReply();
-                        activity.Attachments = new List<Attachment> { card };
-                        await turnContext.SendActivityAsync(activity).ConfigureAwait(false);
-                    }
-                    else if (query.BotMessagePreviewAction.Equals("edit"))
-                    {
-                        body.Task = new TaskModuleContinueResponse
-                        {
-                            Type = "continue",
-                            Value = new TaskModuleTaskInfo
-                            {
-                                Card = card,
-                            },
-                        };
-                    }
-                }
-            }
-            else
-            {
-                body.Task = this.TaskModuleResponseTask(query, false);
-            }
-
-            return new InvokeResponse
-            {
-                Status = 200,
-                Body = body,
-            };
-        }
 
         // Called when a Task Module Action on a card is clicked and the task module needs to be rendered
         private async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)

@@ -52,6 +52,13 @@
                 var projectMessagingExtension = new ProjectsMessagingExtension();
                 return await projectMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
             }
+
+            if (teamsContext.IsRequestMessagingExtensionSubmitAction())
+            {
+                var projectMessagingExtension = new ProjectsMessagingExtension();
+                return await projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, teamsContext.GetMessagingExtensionActionData()).ConfigureAwait(false);
+            }
+
             #endregion
 
             if (teamsContext.IsRequestMessagingExtensionSubmitAction() ||
