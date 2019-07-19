@@ -27,7 +27,7 @@ namespace ConsultingBot.Bots
 
                 case ActivityTypes.Invoke:
                     {
-                        var handler = new TeamsInvokeActivityHandler();
+                        var handler = new InvokeActivityHandler();
                         InvokeResponse invokeResponse = await handler.ProcessTeamsInvokeActivityAsync(turnContext).ConfigureAwait(false);
 
                         await turnContext.SendActivityAsync(

@@ -44,7 +44,7 @@ namespace ConsultingBot.Bots
                 //    var invokeActivityHandler = new TeamsInvokeActivityHandler();
                 //    await invokeActivityHandler.HandleMessagingExtensionQueryAsync(turnContext, messagineExtensionQueryData);
                 //                await ActivityProcessor.ProcessIncomingActivityAsync(turnContext).ConfigureAwait(false);
-                var invokeActivityProcessor = new TeamsInvokeActivityHandler();
+                var invokeActivityProcessor = new InvokeActivityHandler();
                 await invokeActivityProcessor.ProcessTeamsInvokeActivityAsync(turnContext);
             }
             else
