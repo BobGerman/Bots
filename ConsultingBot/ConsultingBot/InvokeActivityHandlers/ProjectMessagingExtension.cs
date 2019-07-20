@@ -1,4 +1,5 @@
 ﻿using ConsultingBot.Cards;
+using ConsultingData.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema;
@@ -42,12 +43,25 @@ namespace ConsultingBot.InvokeActivityHandlers
         // Called when the messaging extension query is entered
         private async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)
         {
-            string queryText = "";
+            var queryText = "";
             queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
-            // TODO: Get items matching query here
-            // TODO: Build list of MessagingExtensionAttachment objects and return it
-            var heroCard = new HeroCard("Project Hero Card", null, $"<pre>Query result for {queryText}</pre>");
-            var previewCard = new ThumbnailCard("Project thumbnail card", null, "This is to show the search result");
+
+            var consultingDataService = new ConsultingDataService();
+            var projects = consultingDataService.GetProjects(queryText);
+            var attachments = new List<MessagingExtensionAttachment>();
+            foreach (var project in projects)
+            {
+                var resultCard = new HeroCard("Result Card", null, $"<pre>Query result for {queryText}</pre>");
+                //var previewCard = new ThumbnailCard(project.Client.Name, null, "This is to show the search result");
+                var previewCard = new ThumbnailCard()
+                {
+                    Title = $"{project.Client.Name} - {project.Name}",
+                    Text = project.Description,
+                    Images = new List<CardImage>() { new CardImage() { Url = project.Client.LogoUrl } }
+                };
+                attachments.Add(resultCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()));
+            }
+
             return new InvokeResponse
             {
                 Body = new MessagingExtensionResponse
@@ -56,11 +70,7 @@ namespace ConsultingBot.InvokeActivityHandlers
                     {
                         Type = "result",
                         AttachmentLayout = "list",
-                        Attachments = new List<MessagingExtensionAttachment>()
-                            {
-                                heroCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()),
-                                heroCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()),
-                            },
+                        Attachments = attachments
                     },
                 },
                 Status = 200,
