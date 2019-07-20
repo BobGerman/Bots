@@ -39,13 +39,8 @@ namespace ConsultingBot.Bots
         {
             if (turnContext.Activity.Type == ActivityTypes.Invoke)
             {
-                //    var teamsContext = turnContext.TurnState.Get<ITeamsContext>();
-                //    var messagineExtensionQueryData = teamsContext.GetMessagingExtensionQueryData();
-                //    var invokeActivityHandler = new TeamsInvokeActivityHandler();
-                //    await invokeActivityHandler.HandleMessagingExtensionQueryAsync(turnContext, messagineExtensionQueryData);
-                //                await ActivityProcessor.ProcessIncomingActivityAsync(turnContext).ConfigureAwait(false);
                 var invokeActivityProcessor = new InvokeActivityHandler();
-                await invokeActivityProcessor.ProcessTeamsInvokeActivityAsync(turnContext);
+                await invokeActivityProcessor.HandleInvokeActivityAsync(turnContext);
             }
             else
             {

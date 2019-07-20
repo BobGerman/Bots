@@ -40,6 +40,32 @@
       "botId": "526dec6e-545d-4706-b818-d709112323ec",
       "commands": [
         {
+          "id": "queryProjects",
+          "description": "Find a consulting project",
+          "title": "Project",
+          "parameters": [
+            {
+              "name": "queryText",
+              "title": "Query parameter",
+              "description": "Query parameter"
+            }
+          ]
+        },
+        {
+          "id": "sampleCard",
+          "type": "action",
+          "description": "Create a sample card",
+          "title": "Sample card",
+          "fetchTask": true,
+          "parameters": [
+            {
+              "name": "dummy",
+              "title": "Dummy parameter",
+              "description": "Dummy parameter"
+            }
+          ]
+        },
+        {
           "id": "queryCards",
           "description": "Test command to run query",
           "title": "Query cards",

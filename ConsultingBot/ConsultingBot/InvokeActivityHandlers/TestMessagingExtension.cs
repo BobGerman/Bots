@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class TestMessagingExtension
+    public class TestMessagingExtension : IInvokeActivityHandler
     {
         private TestCard testCard = new TestCard();
 
-        public async Task<InvokeResponse> ProcessInvokeActivityAsync(ITurnContext turnContext)
+        #region Dispatcher for this Messaging Extension
+        // TODO: Move into base class
+        public async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
             if (teamsContext.IsRequestMessagingExtensionQuery())
@@ -38,6 +40,7 @@ namespace ConsultingBot.InvokeActivityHandlers
 
             return await Task.FromResult<InvokeResponse>(null);
         }
+        #endregion
 
         // Called when the messaging extension query is entered
         private async Task<InvokeResponse> HandleMessagingExtensionQueryAsync(ITurnContext turnContext, MessagingExtensionQuery query)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Bot.Builder;
+﻿using ConsultingBot.InvokeActivityHandlers;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema.Teams;
 using Newtonsoft.Json.Linq;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.Cards
 {
-    public class TestTaskModule
+    public class TestTaskModule : IInvokeActivityHandler
     {
         private TestCard testCard = new TestCard();
 
-        public async Task<InvokeResponse> HandleInvokeAsync(ITurnContext turnContext)
+        #region Dispatcher for this task module
+        // TODO: Move into base class
+        public async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
 
@@ -26,6 +29,7 @@ namespace ConsultingBot.Cards
 
             return await Task.FromResult<InvokeResponse>(null);
         }
+        #endregion
 
         // Called when a Task Module Action on a card is clicked and the task module needs to be rendered
         private async Task<InvokeResponse> HandleTaskModuleFetchAsync(ITurnContext turnContext, TaskModuleRequest query)
