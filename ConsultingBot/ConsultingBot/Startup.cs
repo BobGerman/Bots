@@ -16,6 +16,7 @@ using ConsultingBot.Dialogs;
 using Microsoft.Bot.Builder.Teams.Middlewares;
 using Microsoft.Extensions.Configuration;
 using ConsultingBot.Middleware;
+using ConsultingBot.InvokeActivityHandlers;
 
 namespace ConsultingBot
 {
@@ -46,6 +47,9 @@ namespace ConsultingBot
 
             // Create the Conversation state. (Used by the Dialog system itself.)
             services.AddSingleton<ConversationState>();
+
+            // Internal services
+            services.AddSingleton(new ProjectMessagingExtension(this.Configuration));
 
             // The Dialog that will be run by the bot.
             services.AddSingleton<MainDialog>();

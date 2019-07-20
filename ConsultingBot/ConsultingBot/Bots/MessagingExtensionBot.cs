@@ -6,13 +6,16 @@ using System.Threading;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine;
+using ConsultingBot.InvokeActivityHandlers;
 
 namespace ConsultingBot.Bots
 {
         public class MessagingExtensionBot : IBot
         {
-            public MessagingExtensionBot()
+            private readonly ProjectMessagingExtension projectMessageExtension;
+            public MessagingExtensionBot(ProjectMessagingExtension projectMessageExtension)
             {
+                this.projectMessageExtension = projectMessageExtension;
             }
             public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
             {
@@ -27,7 +30,7 @@ namespace ConsultingBot.Bots
 
                 case ActivityTypes.Invoke:
                     {
-                        var handler = new InvokeActivityHandler();
+                        var handler = new InvokeActivityHandler(this.projectMessageExtension);
                         InvokeResponse invokeResponse = await handler.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
 
                         await turnContext.SendActivityAsync(

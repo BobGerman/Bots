@@ -6,11 +6,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsultingBot.InvokeActivityHandlers;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine;
 using Microsoft.Bot.Schema;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace ConsultingBot.Bots
@@ -22,24 +24,28 @@ namespace ConsultingBot.Bots
     // and the requirement is that all BotState objects are saved at the end of a turn.
     public class DialogBot<T> : ActivityHandler where T : Dialog
     {
-        protected readonly BotState ConversationState;
-        protected readonly BotState UserState;
-        protected readonly Dialog Dialog;
-        protected readonly ILogger Logger;
+        protected readonly BotState conversationState;
+        protected readonly BotState userState;
+        protected readonly Dialog dialog;
+        protected readonly ProjectMessagingExtension projectMessagingExtension;
+        protected readonly ILogger logger;
 
-        public DialogBot(ConversationState conversationState, UserState userState, T dialog, ILogger<DialogBot<T>> logger)
+        public DialogBot(ConversationState conversationState, UserState userState, T dialog,
+            ProjectMessagingExtension projectMessagingExtension, 
+            ILogger<DialogBot<T>> logger)
         {
-            ConversationState = conversationState;
-            UserState = userState;
-            Dialog = dialog;
-            Logger = logger;
+            this.conversationState = conversationState;
+            this.userState = userState;
+            this.dialog = dialog;
+            this.projectMessagingExtension = projectMessagingExtension;
+            this.logger = logger;
         }
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (turnContext.Activity.Type == ActivityTypes.Invoke)
             {
-                var invokeActivityProcessor = new InvokeActivityHandler();
+                var invokeActivityProcessor = new InvokeActivityHandler(this.projectMessagingExtension);
                 await invokeActivityProcessor.HandleInvokeActivityAsync(turnContext);
             }
             else
@@ -48,16 +54,16 @@ namespace ConsultingBot.Bots
             }
 
             // Save any state changes that might have occured during the turn.
-            await ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-            await UserState.SaveChangesAsync(turnContext, false, cancellationToken);
+            await conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+            await userState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            Logger.LogInformation("Running dialog with Message Activity.");
+            logger.LogInformation("Running dialog with Message Activity.");
 
             // Run the Dialog with the new message Activity.
-            await Dialog.Run(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
+            await dialog.Run(turnContext, conversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
         }
     }
 }

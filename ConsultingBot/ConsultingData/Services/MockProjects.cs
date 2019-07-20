@@ -31,7 +31,7 @@ namespace ConsultingData.Services
                     ProjectId = 2,
                     Client = MockClients.data.FirstOrDefault<ConsultingClient>(
                         (c) => c.ClientId == 2),
-                    Name = "Back Burner",
+                    Name = "Intranet Modernization",
                     Address = "5 Wayside Rd.",
                     City = "Burlington",
                     State = "MA",
@@ -40,7 +40,7 @@ namespace ConsultingData.Services
                     Longitude =  -71.191528,
                     Phone = "+1 (781) 487-6400",
                     Contact = "Person 2",
-                    Description = "This project is going nowhere",
+                    Description = "Make an amazing new Intranet with Modern SharePoint",
                     DocumentsUrl = "https://bgtest18.sharepoint.com/sites/Bot4Test/Shared Documents/",
                     TeamUrl = "https://teams.microsoft.com/l/team/19%3ad90eb69425bc4cc7a6a43df04be83bba%40thread.skype/conversations?groupId=a54cd0e7-1d00-420a-8b51-060c288620eb&tenantId=a25d4ef1-c73a-4dc1-bdb1-9a342260f216"
                 },

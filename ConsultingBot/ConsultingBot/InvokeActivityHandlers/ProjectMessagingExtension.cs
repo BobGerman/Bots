@@ -5,6 +5,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ namespace ConsultingBot.InvokeActivityHandlers
     public class ProjectMessagingExtension : IInvokeActivityHandler
     {
         private TestCard testCard = new TestCard();
+
+        private readonly IConfiguration configuration;
+        public ProjectMessagingExtension(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
 
         #region Dispatcher for this Messaging Extension
         // TODO: Move into base class
@@ -198,6 +205,7 @@ namespace ConsultingBot.InvokeActivityHandlers
         {
             string coordinates = $"{ client.Latitude.ToString() },{ client.Longitude.ToString()}";
 
+            string bingMapsKey = this.configuration["BingMapsAPIKey"];
             string result = $"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/?{ coordinates }mapSize=450,600&pp={ coordinates }&key={ bingMapsKey }";
 
             return result;

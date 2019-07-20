@@ -7,6 +7,12 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
 {
     public class InvokeActivityHandler : IInvokeActivityHandler
     {
+        private ProjectMessagingExtension projectMessagingExtension;
+        public InvokeActivityHandler(ProjectMessagingExtension projectMessagingExtension)
+        {
+            this.projectMessagingExtension = projectMessagingExtension;
+        }
+
         // Dispatcher for all Bot Invoke activities
         public async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
         {
@@ -18,7 +24,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
                 IInvokeActivityHandler messagingExtension;
                 if (teamsContext.GetMessagingExtensionQueryData()?.CommandId == ManifestConstants.ComposeExtensions.ProjectQuery.Id)
                 {
-                    messagingExtension = new ProjectMessagingExtension();
+                    messagingExtension = this.projectMessagingExtension;
                 }
                 else
                 {
@@ -33,7 +39,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
                 IInvokeActivityHandler messagingExtension;
                 if (teamsContext.GetMessagingExtensionActionData()?.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
                 {
-                    messagingExtension = new ProjectMessagingExtension();
+                    messagingExtension = this.projectMessagingExtension;
                 }
                 else
                 {
