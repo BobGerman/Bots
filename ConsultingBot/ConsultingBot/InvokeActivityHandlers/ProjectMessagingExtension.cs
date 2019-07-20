@@ -1,4 +1,5 @@
 ﻿using ConsultingBot.Cards;
+using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
@@ -51,8 +52,19 @@ namespace ConsultingBot.InvokeActivityHandlers
             var attachments = new List<MessagingExtensionAttachment>();
             foreach (var project in projects)
             {
-                var resultCard = new HeroCard("Result Card", null, $"<pre>Query result for {queryText}</pre>");
-                //var previewCard = new ThumbnailCard(project.Client.Name, null, "This is to show the search result");
+                var resultCard = new HeroCard()
+                {
+                    Title = $"{ project.Client.Name } - { project.Name }",
+                    Subtitle = $"{ project.Description }",
+                    Text = $"{ project.Address }<br />{ project.City }, { project.State }, { project.Zip }<br />Contact is { project.Contact }",
+                    Images = new List<CardImage>() { new CardImage() { Url = getMapUrl(project.Client) } },
+                    Buttons = new List<CardAction>()
+                    {
+                        new CardAction() { Title = "Project Team" , Type = "openUrl", Value = project.TeamUrl },
+                        new CardAction() { Title = "Project Documents" , Type = "openUrl", Value = project.DocumentsUrl }
+
+                    }
+                };
                 var previewCard = new ThumbnailCard()
                 {
                     Title = $"{project.Client.Name} - {project.Name}",
@@ -180,6 +192,15 @@ namespace ConsultingBot.InvokeActivityHandlers
                 Status = 200,
                 Body = body,
             };
+        }
+
+        private string getMapUrl(ConsultingClient client)
+        {
+            string coordinates = $"{ client.Latitude.ToString() },{ client.Longitude.ToString()}";
+
+            string result = $"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/?{ coordinates }mapSize=450,600&pp={ coordinates }&key={ bingMapsKey }";
+
+            return result;
         }
     }
 }
