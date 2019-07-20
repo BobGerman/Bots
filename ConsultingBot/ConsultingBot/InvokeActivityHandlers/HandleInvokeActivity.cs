@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ConsultingBot.Cards;
 using ConsultingBot.InvokeActivityHandlers;
+using ConsultingBot.TeamsManifest;
 
 namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
 {
@@ -12,12 +13,33 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
 
             // Messaging extensions
-            if (teamsContext.IsRequestMessagingExtensionQuery() ||
-                teamsContext.IsRequestMessagingExtensionFetchTask() ||
+            if (teamsContext.IsRequestMessagingExtensionQuery())
+            {
+                IInvokeActivityHandler messagingExtension;
+                if (teamsContext.GetMessagingExtensionQueryData()?.CommandId == ManifestConstants.ComposeExtensions.ProjectQuery.Id)
+                {
+                    messagingExtension = new ProjectMessagingExtension();
+                }
+                else
+                {
+                    messagingExtension = new TestMessagingExtension();
+                }
+                return await messagingExtension.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
+            }
+            
+            if (teamsContext.IsRequestMessagingExtensionFetchTask() ||
                 teamsContext.IsRequestMessagingExtensionSubmitAction())
             {
-                var projectMessagingExtension = new TestMessagingExtension();
-                return await projectMessagingExtension.HandleInvokeActivityAsync (turnContext).ConfigureAwait(false);
+                IInvokeActivityHandler messagingExtension;
+                if (teamsContext.GetMessagingExtensionActionData()?.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
+                {
+                    messagingExtension = new ProjectMessagingExtension();
+                }
+                else
+                {
+                    messagingExtension = new TestMessagingExtension();
+                }
+                return await messagingExtension.HandleInvokeActivityAsync (turnContext).ConfigureAwait(false);
             }
 
             // Link previews

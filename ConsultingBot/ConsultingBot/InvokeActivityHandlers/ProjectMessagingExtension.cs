@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class TestMessagingExtension : IInvokeActivityHandler
+    public class ProjectMessagingExtension : IInvokeActivityHandler
     {
         private TestCard testCard = new TestCard();
 
@@ -46,8 +46,8 @@ namespace ConsultingBot.InvokeActivityHandlers
             queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
             // TODO: Get items matching query here
             // TODO: Build list of MessagingExtensionAttachment objects and return it
-            var heroCard = new HeroCard("Result Card", null, $"<pre>Query result for {queryText}</pre>");
-            var previewCard = new ThumbnailCard("Search Item Card", null, "This is to show the search result");
+            var heroCard = new HeroCard("Project Hero Card", null, $"<pre>Query result for {queryText}</pre>");
+            var previewCard = new ThumbnailCard("Project thumbnail card", null, "This is to show the search result");
             return new InvokeResponse
             {
                 Body = new MessagingExtensionResponse
