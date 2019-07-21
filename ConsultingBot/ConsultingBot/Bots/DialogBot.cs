@@ -27,17 +27,17 @@ namespace ConsultingBot.Bots
         protected readonly BotState conversationState;
         protected readonly BotState userState;
         protected readonly Dialog dialog;
-        protected readonly ProjectMessagingExtension projectMessagingExtension;
+        protected readonly IInvokeActivityService invokeActivityService;
         protected readonly ILogger logger;
 
         public DialogBot(ConversationState conversationState, UserState userState, T dialog,
-            ProjectMessagingExtension projectMessagingExtension, 
+            IInvokeActivityService invokeActivityService, 
             ILogger<DialogBot<T>> logger)
         {
             this.conversationState = conversationState;
             this.userState = userState;
             this.dialog = dialog;
-            this.projectMessagingExtension = projectMessagingExtension;
+            this.invokeActivityService = invokeActivityService;
             this.logger = logger;
         }
 
@@ -45,8 +45,7 @@ namespace ConsultingBot.Bots
         {
             if (turnContext.Activity.Type == ActivityTypes.Invoke)
             {
-                var handler = new InvokeActivityHandler(this.projectMessagingExtension);
-                InvokeResponse invokeResponse = await handler.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
+                InvokeResponse invokeResponse = await invokeActivityService.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
 
                 await turnContext.SendActivityAsync(
                     new Activity

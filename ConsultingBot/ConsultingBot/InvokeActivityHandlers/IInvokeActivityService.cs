@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    interface IInvokeActivityHandler
+    public interface IInvokeActivityService
     {
         Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext);
     }

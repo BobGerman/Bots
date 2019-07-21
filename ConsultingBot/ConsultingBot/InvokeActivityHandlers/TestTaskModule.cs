@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.Cards
 {
-    public class TestTaskModule : IInvokeActivityHandler
+    public class TestTaskModule : IInvokeActivityService
     {
         private TestCard testCard = new TestCard();
 

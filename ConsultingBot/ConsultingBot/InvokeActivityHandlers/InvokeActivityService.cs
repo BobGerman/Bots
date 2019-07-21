@@ -2,18 +2,18 @@
 using ConsultingBot.Cards;
 using ConsultingBot.InvokeActivityHandlers;
 using ConsultingBot.TeamsManifest;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Teams;
 
-namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
+namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class InvokeActivityHandler : IInvokeActivityHandler
+    public class InvokeActivityService : IInvokeActivityService
     {
         private ProjectMessagingExtension projectMessagingExtension;
-        public InvokeActivityHandler(ProjectMessagingExtension projectMessagingExtension)
+        public InvokeActivityService(ProjectMessagingExtension projectMessagingExtension)
         {
             this.projectMessagingExtension = projectMessagingExtension;
         }
-
-        // Dispatcher for all Bot Invoke activities
         public async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
         {
             ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
@@ -21,7 +21,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             // Messaging extensions
             if (teamsContext.IsRequestMessagingExtensionQuery())
             {
-                IInvokeActivityHandler messagingExtension;
+                IInvokeActivityService messagingExtension;
                 if (teamsContext.GetMessagingExtensionQueryData()?.CommandId == ManifestConstants.ComposeExtensions.ProjectQuery.Id)
                 {
                     messagingExtension = this.projectMessagingExtension;
@@ -36,7 +36,7 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
             if (teamsContext.IsRequestMessagingExtensionFetchTask() ||
                 teamsContext.IsRequestMessagingExtensionSubmitAction())
             {
-                IInvokeActivityHandler messagingExtension;
+                IInvokeActivityService messagingExtension;
                 if (teamsContext.GetMessagingExtensionActionData()?.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
                 {
                     messagingExtension = this.projectMessagingExtension;

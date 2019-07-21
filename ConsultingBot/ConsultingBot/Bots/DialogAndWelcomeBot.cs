@@ -11,7 +11,6 @@ using ConsultingBot.InvokeActivityHandlers;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -19,8 +18,8 @@ namespace ConsultingBot.Bots
 {
     public class DialogAndWelcomeBot<T> : DialogBot<T> where T : Dialog
     {
-        public DialogAndWelcomeBot(ConversationState conversationState, UserState userState, T dialog, ProjectMessagingExtension projectMessagingExtension, ILogger<DialogBot<T>> logger)
-            : base(conversationState, userState, dialog, projectMessagingExtension, logger)
+        public DialogAndWelcomeBot(ConversationState conversationState, UserState userState, T dialog, IInvokeActivityService invokeActivityService, ILogger<DialogBot<T>> logger)
+            : base(conversationState, userState, dialog, invokeActivityService, logger)
         {
         }
 

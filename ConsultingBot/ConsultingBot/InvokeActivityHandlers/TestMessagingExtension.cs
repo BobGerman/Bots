@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class TestMessagingExtension : IInvokeActivityHandler
+    public class TestMessagingExtension : IInvokeActivityService
     {
         private TestCard testCard = new TestCard();
 

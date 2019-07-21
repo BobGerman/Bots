@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
-    public class TestLinkQuery : IInvokeActivityHandler
+    public class TestLinkQuery : IInvokeActivityService
     {
         // Called when a link message handler runs (i.e. we render a preview to a link whose domain is 
         // included in the messageHandlers in the manifest)
