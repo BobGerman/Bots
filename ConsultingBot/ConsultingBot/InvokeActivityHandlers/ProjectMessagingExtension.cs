@@ -59,25 +59,8 @@ namespace ConsultingBot.InvokeActivityHandlers
             var attachments = new List<MessagingExtensionAttachment>();
             foreach (var project in projects)
             {
-                var resultCard = new HeroCard()
-                {
-                    Title = $"{ project.Client.Name } - { project.Name }",
-                    Subtitle = $"{ project.Description }",
-                    Text = $"{ project.Address }<br />{ project.City }, { project.State }, { project.Zip }<br />Contact is { project.Contact }",
-                    Images = new List<CardImage>() { new CardImage() { Url = getMapUrl(project.Client) } },
-                    Buttons = new List<CardAction>()
-                    {
-                        new CardAction() { Title = "Project Team" , Type = "openUrl", Value = project.TeamUrl },
-                        new CardAction() { Title = "Project Documents" , Type = "openUrl", Value = project.DocumentsUrl }
-
-                    }
-                };
-                var previewCard = new ThumbnailCard()
-                {
-                    Title = $"{project.Client.Name} - {project.Name}",
-                    Text = project.Description,
-                    Images = new List<CardImage>() { new CardImage() { Url = project.Client.LogoUrl } }
-                };
+                var resultCard = ProjectResultsCard.GetCard(project);
+                var previewCard = ProjectPreviewCard.GetCard(project);
                 attachments.Add(resultCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()));
             }
 
