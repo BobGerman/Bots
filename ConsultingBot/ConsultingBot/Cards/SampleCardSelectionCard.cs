@@ -25,7 +25,7 @@ namespace ConsultingBot.Cards
 
             if (sampleChoiceValue == "refresh")
             {
-                card.Body.Add(new AdaptiveCards.AdaptiveTextBlock("This card has been refreshed")
+                card.Body.Add(new AdaptiveCards.AdaptiveTextBlock($"This card has been refreshed. You previously entered: {userText}")
                 {
                     Color = AdaptiveCards.AdaptiveTextColor.Attention
                 });

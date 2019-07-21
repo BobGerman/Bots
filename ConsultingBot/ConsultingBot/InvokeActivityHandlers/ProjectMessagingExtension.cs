@@ -111,17 +111,34 @@ namespace ConsultingBot.InvokeActivityHandlers
             var body = new MessagingExtensionActionResponse();
             if (data != null && done && sampleChoice != "refresh")
             {
-                var consultingDataService = new ConsultingDataService();
-                var project = consultingDataService.GetProjects().FirstOrDefault();
+                switch (sampleChoice)
+                {
+                    case "1":
+                        {
+                            // Sample Hero Card
+                            var card = SampleHeroCard.GetCard(userText);
+                            var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
+                            var resultCards = new List<MessagingExtensionAttachment> {
+                               card.ToAttachment().ToMessagingExtensionAttachment(preview)
+                            };
+                            body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
+                            break;
+                        }
+                    default:
+                        {
+                            // Sample project card
+                            var consultingDataService = new ConsultingDataService();
+                            var project = consultingDataService.GetProjects().FirstOrDefault();
 
-                var card = ProjectPreviewCard.GetCard(project);
-                var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
-                var resultCards = new List<MessagingExtensionAttachment> {
-                        card.ToAttachment().ToMessagingExtensionAttachment(preview)
-                    };
-
-                body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
-
+                            var card = ProjectPreviewCard.GetCard(project);
+                            var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
+                            var resultCards = new List<MessagingExtensionAttachment> {
+                                card.ToAttachment().ToMessagingExtensionAttachment(preview)
+                            };
+                            body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
+                            break;
+                        }
+                }
                 return new InvokeResponse
                 {
                     Status = 200,
@@ -135,7 +152,7 @@ namespace ConsultingBot.InvokeActivityHandlers
                     Status = 200,
                     Body = new MessagingExtensionActionResponse
                     {
-                        Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(userText: userText)
+                        Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(sampleChoice, userText)
                     },
                 };
             }

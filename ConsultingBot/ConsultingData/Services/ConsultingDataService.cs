@@ -7,7 +7,7 @@ namespace ConsultingData.Services
     // Simple mock for now
     public class ConsultingDataService
     {
-        public List<ConsultingProject> GetProjects(string query)
+        public List<ConsultingProject> GetProjects(string query = null)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -20,11 +20,6 @@ namespace ConsultingData.Services
                     p.Client.Name.ToLower().IndexOf(query.ToLower()) >= 0 ||
                     p.Name.ToLower().IndexOf(query.ToLower()) >= 0).ToList();
             }
-        }
-
-        public List<ConsultingProject> GetProjects()
-        {
-            return this.GetProjects(null);
         }
     }
 }
