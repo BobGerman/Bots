@@ -21,5 +21,10 @@ namespace ConsultingData.Services
                     p.Name.ToLower().IndexOf(query.ToLower()) >= 0).ToList();
             }
         }
+
+        public List<ConsultingProject> GetProjects()
+        {
+            return this.GetProjects(null);
+        }
     }
 }

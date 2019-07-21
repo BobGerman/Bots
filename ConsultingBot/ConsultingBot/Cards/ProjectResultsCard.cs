@@ -6,14 +6,14 @@ namespace ConsultingBot.Cards
 {
     public class ProjectResultsCard
     {
-        public static HeroCard GetCard(ConsultingProject project)
+        public static HeroCard GetCard(ConsultingProject project, string imageUrl)
         {
             var resultCard = new HeroCard()
             {
                 Title = $"{ project.Client.Name } - { project.Name }",
                 Subtitle = $"{ project.Description }",
                 Text = $"{ project.Address }<br />{ project.City }, { project.State }, { project.Zip }<br />Contact is { project.Contact }",
-                Images = new List<CardImage>() { new CardImage() { Url = getMapUrl(project.Client) } },
+                Images = new List<CardImage>() { new CardImage() { Url = imageUrl } },
                 Buttons = new List<CardAction>()
                     {
                         new CardAction() { Title = "Project Team" , Type = "openUrl", Value = project.TeamUrl },

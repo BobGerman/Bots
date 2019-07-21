@@ -59,7 +59,7 @@ namespace ConsultingBot.InvokeActivityHandlers
             var attachments = new List<MessagingExtensionAttachment>();
             foreach (var project in projects)
             {
-                var resultCard = ProjectResultsCard.GetCard(project);
+                var resultCard = ProjectResultsCard.GetCard(project, getMapUrl(project.Client));
                 var previewCard = ProjectPreviewCard.GetCard(project);
                 attachments.Add(resultCard.ToAttachment().ToMessagingExtensionAttachment(previewCard.ToAttachment()));
             }
@@ -82,14 +82,12 @@ namespace ConsultingBot.InvokeActivityHandlers
         // Called when the task module is fetched for an action
         private async Task<InvokeResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
-            var taskModule = new TestTaskModule();
-
             return new InvokeResponse
             {
                 Status = 200,
                 Body = new MessagingExtensionActionResponse
                 {
-                    Task = taskModule.TaskModuleResponseTask(query, false),
+                    Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(),
                 },
             };
         }
@@ -97,91 +95,50 @@ namespace ConsultingBot.InvokeActivityHandlers
         // Called when the task module from an action messaging extension  is submitted
         private async Task<InvokeResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
-            // Inspect the query to determine if we're done
             bool done = false;
+            string sampleChoice = "";
+            string userText = "";
+
             JObject data = null;
             if (query.Data != null)
             {
                 data = JObject.FromObject(query.Data);
+                sampleChoice = (string)data["sampleChoice"];
+                userText = (string)data["userText"];
                 done = (bool)data["done"];
             }
 
             var body = new MessagingExtensionActionResponse();
-            if (data != null && done)
+            if (data != null && done && sampleChoice != "refresh")
             {
-                // We are done, build a card based on our interaction and insert it into the compose box
-                string sharedMessage = string.Empty;
-                if (query.CommandId.Equals("shareMessage") && query.CommandContext.Equals("message"))
-                {
-                    sharedMessage = $"Shared message: <div style=\"background:#F0F0F0\">{JObject.FromObject(query.MessagePayload).ToString()}</div><br/>";
-                }
+                var consultingDataService = new ConsultingDataService();
+                var project = consultingDataService.GetProjects().FirstOrDefault();
 
-                var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {data["userText"]?.ToString()}").ToAttachment();
-                var heroCard = new HeroCard("Created Card (hero)", null, $"{sharedMessage}Your input: {data["userText"]?.ToString()}").ToAttachment();
+                var card = ProjectPreviewCard.GetCard(project);
+                var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
                 var resultCards = new List<MessagingExtensionAttachment> {
-                    heroCard.ToMessagingExtensionAttachment(preview)
-                };
+                        card.ToAttachment().ToMessagingExtensionAttachment(preview)
+                    };
 
                 body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
-            }
-            else if ((query.CommandId != null && query.CommandId.Equals("createWithPreview")) || query.BotMessagePreviewAction != null)
-            {
-                // We are not done so re-render the task module
-                if (query.BotMessagePreviewAction == null)
+
+                return new InvokeResponse
                 {
-                    body.ComposeExtension = new MessagingExtensionResult
-                    {
-                        Type = "botMessagePreview",
-                        ActivityPreview = new Activity
-                        {
-                            Attachments = new List<Attachment> { testCard.GetCard(query, null) },
-                        },
-                    };
-                }
-                else
-                {
-                    // Something is wrong in the Teams client - handle it
-                    var userEditActivities = query.BotActivityPreview;
-                    var card = userEditActivities?[0]?.Attachments?[0];
-                    if (card == null)
-                    {
-                        body.Task = new TaskModuleMessageResponse
-                        {
-                            Type = "message",
-                            Value = "Missing user edit card. Something wrong on Teams client.",
-                        };
-                    }
-                    else if (query.BotMessagePreviewAction.Equals("send"))
-                    {
-                        Activity activity = turnContext.Activity.CreateReply();
-                        activity.Attachments = new List<Attachment> { card };
-                        await turnContext.SendActivityAsync(activity).ConfigureAwait(false);
-                    }
-                    else if (query.BotMessagePreviewAction.Equals("edit"))
-                    {
-                        body.Task = new TaskModuleContinueResponse
-                        {
-                            Type = "continue",
-                            Value = new TaskModuleTaskInfo
-                            {
-                                Card = card,
-                            },
-                        };
-                    }
-                }
+                    Status = 200,
+                    Body = body,
+                };
             }
             else
             {
-                // Update the task module
-                TestTaskModule taskModule = new TestTaskModule();
-                body.Task = taskModule.TaskModuleResponseTask(query, false);
+                return new InvokeResponse
+                {
+                    Status = 200,
+                    Body = new MessagingExtensionActionResponse
+                    {
+                        Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(userText: userText)
+                    },
+                };
             }
-
-            return new InvokeResponse
-            {
-                Status = 200,
-                Body = body,
-            };
         }
 
         private string getMapUrl(ConsultingClient client)
