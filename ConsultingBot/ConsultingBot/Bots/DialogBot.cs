@@ -45,8 +45,15 @@ namespace ConsultingBot.Bots
         {
             if (turnContext.Activity.Type == ActivityTypes.Invoke)
             {
-                var invokeActivityProcessor = new InvokeActivityHandler(this.projectMessagingExtension);
-                await invokeActivityProcessor.HandleInvokeActivityAsync(turnContext);
+                var handler = new InvokeActivityHandler(this.projectMessagingExtension);
+                InvokeResponse invokeResponse = await handler.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
+
+                await turnContext.SendActivityAsync(
+                    new Activity
+                    {
+                        Value = invokeResponse,
+                        Type = ActivityTypesEx.InvokeResponse,
+                    }).ConfigureAwait(false);
             }
             else
             {

@@ -12,10 +12,10 @@ namespace ConsultingBot.Bots
 {
         public class MessagingExtensionBot : IBot
         {
-            private readonly ProjectMessagingExtension projectMessageExtension;
+            private readonly ProjectMessagingExtension projectMessagingExtension;
             public MessagingExtensionBot(ProjectMessagingExtension projectMessageExtension)
             {
-                this.projectMessageExtension = projectMessageExtension;
+                this.projectMessagingExtension = projectMessageExtension;
             }
             public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
             {
@@ -30,7 +30,7 @@ namespace ConsultingBot.Bots
 
                 case ActivityTypes.Invoke:
                     {
-                        var handler = new InvokeActivityHandler(this.projectMessageExtension);
+                        var handler = new InvokeActivityHandler(this.projectMessagingExtension);
                         InvokeResponse invokeResponse = await handler.HandleInvokeActivityAsync(turnContext).ConfigureAwait(false);
 
                         await turnContext.SendActivityAsync(
