@@ -17,13 +17,13 @@ using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace ConsultingBot.Dialogs
 {
-    public class MainDialog : ComponentDialog
+    public class CoreBotMainDialog : ComponentDialog
     {
         protected readonly IConfiguration Configuration;
         protected readonly ILogger Logger;
 
-        public MainDialog(IConfiguration configuration, ILogger<MainDialog> logger)
-            : base(nameof(MainDialog))
+        public CoreBotMainDialog(IConfiguration configuration, ILogger<CoreBotMainDialog> logger)
+            : base(nameof(CoreBotMainDialog))
         {
             Configuration = configuration;
             Logger = logger;

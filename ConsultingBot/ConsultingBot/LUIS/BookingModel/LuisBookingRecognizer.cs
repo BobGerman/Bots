@@ -15,9 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ConsultingBot
 {
-    public static class LuisHelper
+    public static class LuisBookingRecognizer
     {
-        public static async Task<BookingDetails> ExecuteLuisQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
+        public static async Task<BookingDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
             var bookingDetails = new BookingDetails();
 
