@@ -70,7 +70,7 @@ namespace ConsultingBot.Dialogs
                 // Call LUIS and gather any potential booking details. (Note the TurnContext has the response to the prompt.)
                 var projectIntentDetails = stepContext.Context.Activity.Text != null
                         ?
-                    await LuisConsultingProjectHelper.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
+                    await LuisConsultingProjectRecognizer.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
                         :
                     new ProjectIntentDetails();
 

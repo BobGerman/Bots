@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot
 {
-    public static class LuisConsultingProjectHelper
+    public static class LuisConsultingProjectRecognizer
     {
         public static async Task<ProjectIntentDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
@@ -32,10 +32,11 @@ namespace ConsultingBot
                 var (intent, score) = recognizerResult.GetTopScoringIntent();
 
                 // Get all the possible values for each entity from the Entities JObject
-                var personNameValues = recognizerResult.GetEntity<string>("personName");
-                var projectNameValues = recognizerResult.GetEntity<string>("projectName");
-                var timeWorkedValues = recognizerResult.GetEntity<string>("timeWorked");
-                var dateTimeValues = recognizerResult.GetEntity<string>("datetime");
+                // (GetEntityValueOptions is an extension method, see below)
+                var personNameValues = recognizerResult.GetEntityValueOptions<string>("personName");
+                var projectNameValues = recognizerResult.GetEntityValueOptions<string>("projectName");
+                var timeWorkedValues = recognizerResult.GetEntityValueOptions<string>("timeWorked");
+                var dateTimeValues = recognizerResult.GetEntityValueOptions<string>("datetime");
 
                 // Now based on the intent, fill in the result as best we can
                 switch (intent)
@@ -53,8 +54,8 @@ namespace ConsultingBot
                             result.projectName = projectNameValues?.FirstOrDefault();
                             string timeUnitsToken;
                             (result.taskDurationMinutes, timeUnitsToken) =
-                                TryGetTaskDurationMinutes(result, timeWorkedValues);
-                            result.deliveryDate = TryGetDeliveryDateString(result, dateTimeValues, timeUnitsToken);
+                                TryExtractTimeWorked(result, timeWorkedValues);
+                            result.deliveryDate = TryExtractDeliveryDate(result, dateTimeValues, timeUnitsToken);
                             break;
                         }
                     default:
@@ -72,7 +73,7 @@ namespace ConsultingBot
             return result;
         }
 
-        private static string TryGetDeliveryDateString(ProjectIntentDetails result, List<string> dateTimeValues, string timeUnitsToken)
+        private static string TryExtractDeliveryDate(ProjectIntentDetails result, List<string> dateTimeValues, string timeUnitsToken)
         {
             foreach (string val in dateTimeValues)
             {
@@ -86,7 +87,7 @@ namespace ConsultingBot
             return null;
         }
 
-        private static (int,string) TryGetTaskDurationMinutes(ProjectIntentDetails result, List<string> timeWorkedValues)
+        private static (int,string) TryExtractTimeWorked(ProjectIntentDetails result, List<string> timeWorkedValues)
         {
             var minutes = 0;
             string timeUnitString = null;
@@ -100,13 +101,13 @@ namespace ConsultingBot
                         if ((new[] { "hours", "hrs", "hr", "h" })
                             .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
                         {
-                            result.taskDurationMinutes = timeUnitCount * 60;
+                            minutes = timeUnitCount * 60;
                             timeUnitString = timeWorkedValues[i + 1];
                         }
                         else if ((new[] { "minutes", "min", "mn", "m" })
                             .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
                         {
-                            result.taskDurationMinutes = timeUnitCount;
+                            minutes = timeUnitCount;
                             timeUnitString = timeWorkedValues[i + 1];
                         }
                     }
@@ -116,7 +117,7 @@ namespace ConsultingBot
             return (minutes, timeUnitString);
         }
 
-        private static List<T> GetEntity<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
+        private static List<T> GetEntityValueOptions<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
         {
             // Parsing the dynamic JObjects returned by LUIS is never easy
             // Adapted from https://pauliom.com/2018/11/06/extracting-an-entity-from-luis-in-bot-framework/
