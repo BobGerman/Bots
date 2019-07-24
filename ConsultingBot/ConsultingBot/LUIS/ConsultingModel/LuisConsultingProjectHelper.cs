@@ -1,25 +1,21 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-//
-// Generated with Bot Builder V4 SDK Template for Visual Studio CoreBot v4.3.0
-
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
-using Microsoft.Bot.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot
 {
     public static class LuisConsultingProjectHelper
     {
-        public static async Task<BookingDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
+        public static async Task<ProjectIntentDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = new BookingDetails();
+            var result = new ProjectIntentDetails();
 
             try
             {
@@ -29,22 +25,71 @@ namespace ConsultingBot
                     configuration["LuisAPIKey"],
                     "https://" + configuration["LuisAPIHostName"]
                 );
-
                 var recognizer = new LuisRecognizer(luisApplication);
 
                 // The actual call to LUIS
                 var recognizerResult = await recognizer.RecognizeAsync(turnContext, cancellationToken);
-
                 var (intent, score) = recognizerResult.GetTopScoringIntent();
-                if (intent == "Book_flight")
-                {
-                    // We need to get the result from the LUIS JSON which at every level returns an array.
-                    bookingDetails.Destination = recognizerResult.Entities["To"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
-                    bookingDetails.Origin = recognizerResult.Entities["From"]?.FirstOrDefault()?["Airport"]?.FirstOrDefault()?.FirstOrDefault()?.ToString();
 
-                    // This value will be a TIMEX. And we are only interested in a Date so grab the first result and drop the Time part.
-                    // TIMEX is a format that represents DateTime expressions that include some ambiguity. e.g. missing a Year.
-                    bookingDetails.TravelDate = recognizerResult.Entities["datetime"]?.FirstOrDefault()?["timex"]?.FirstOrDefault()?.ToString().Split('T')[0];
+                // Get all the possible values for each entity
+                var personNameValues = recognizerResult.GetEntity<string>("personName");
+                var projectNameValues = recognizerResult.GetEntity<string>("projectName");
+                var timeWorkedValues = recognizerResult.GetEntity<string>("timeWorked");
+                var dateTimeValues = recognizerResult.GetEntity<string>("datetime");
+
+                // Now based on the intent, fill in the result
+                switch (intent)
+                {
+                    case "AddPersonToProject":
+                        {
+                            result.intent = ProjectIntent.AddToProject;
+                            result.personName = personNameValues?.FirstOrDefault();
+                            result.projectName = projectNameValues?.FirstOrDefault();
+                            break;
+                        }
+                    case "BillToProject":
+                        {
+                            result.intent = ProjectIntent.BillToProject;
+                            result.projectName = projectNameValues?.FirstOrDefault();
+                            result.taskDurationMinutes = 0;
+
+                            string timeUnitString = null;
+                            for (int i=0; i<timeWorkedValues.Count; i++)
+                            {
+                                var timeUnitCount = 0;
+                                if (int.TryParse(timeWorkedValues[i], out timeUnitCount))
+                                {
+                                    if (i < timeWorkedValues.Count)
+                                    {
+                                        if ((new[] { "hours", "hrs", "hr", "h" })
+                                            .Contains(timeWorkedValues[i+1], StringComparer.OrdinalIgnoreCase))
+                                        {
+                                            result.taskDurationMinutes = timeUnitCount * 60;
+                                            timeUnitString = timeWorkedValues[i + 1];
+                                        }
+                                        else if ((new[] { "minutes", "min", "mn", "m" })
+                                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
+                                        {
+                                            result.taskDurationMinutes = timeUnitCount;
+                                            timeUnitString = timeWorkedValues[i + 1];
+                                        }
+                                    }
+                                }
+                            }
+                            foreach (string val in dateTimeValues)
+                            {
+                                if (val.IndexOf(timeUnitString) <= 0)
+                                {
+                                    result.deliveryDate = val;
+                                }
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            result.intent = ProjectIntent.Unknown;
+                            break;
+                        }
                 }
             }
             catch (Exception e)
@@ -52,7 +97,46 @@ namespace ConsultingBot
                 logger.LogWarning($"LUIS Exception: {e.Message} Check your LUIS configuration.");
             }
 
-            return bookingDetails;
+            return result;
+        }
+
+        private static List<T> GetEntity<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
+        {
+            // Parsing the dynamic JObjects returned by LUIS is never easy
+            // Adapted from https://pauliom.com/2018/11/06/extracting-an-entity-from-luis-in-bot-framework/
+            var result = new List<T>();
+
+            if (luisResult != null)
+            {
+                //// var value = (luisResult.Entities["$instance"][entityKey][0]["text"] as JValue).Value;
+                var data = luisResult.Entities as IDictionary<string, JToken>;
+
+                if (data.TryGetValue("$instance", out JToken value))
+                {
+                    var entities = value as IDictionary<string, JToken>;
+                    if (entities.TryGetValue(entityKey, out JToken targetEntity))
+                    {
+                        var entityArray = targetEntity as JArray;
+                        if (entityArray.Count > 0)
+                        {
+                            for (int i=0; i<entityArray.Count;i++)
+                            {
+                                var values = entityArray[i] as IDictionary<string, JToken>;
+                                if (values.TryGetValue(valuePropertyName, out JToken textValue))
+                                {
+                                    var text = textValue as JValue;
+                                    if (text != null)
+                                    {
+                                        result.Add((T)text.Value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }
