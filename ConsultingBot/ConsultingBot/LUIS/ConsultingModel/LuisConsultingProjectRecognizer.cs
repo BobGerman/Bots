@@ -53,8 +53,8 @@ namespace ConsultingBot
                             result.intent = Intent.BillToProject;
                             result.projectName = projectNameValues?.FirstOrDefault();
                             string timeUnitsToken;
-                            (result.workDuration, timeUnitsToken) =
-                                TryExtractTimeWorked(result, timeWorkedValues);
+                            (result.workHours, timeUnitsToken) =
+                                TryExtractTimeWorked(timeWorkedValues);
                             result.workDate = TryExtractDeliveryDate(result, dateTimeValues, timeUnitsToken);
                             break;
                         }
@@ -87,34 +87,34 @@ namespace ConsultingBot
             return null;
         }
 
-        private static (int,string) TryExtractTimeWorked(RequestDetails result, List<string> timeWorkedValues)
+        private static (double,string) TryExtractTimeWorked(List<string> timeWorkedValues)
         {
-            var minutes = 0;
+            var result = 0.0;
             string timeUnitString = null;
             for (int i = 0; i < timeWorkedValues.Count; i++)
             {
-                var timeUnitCount = 0;
-                if (int.TryParse(timeWorkedValues[i], out timeUnitCount))
+                var hours = 0.0;
+                if (double.TryParse(timeWorkedValues[i], out hours))
                 {
                     if (i < timeWorkedValues.Count)
                     {
                         if ((new[] { "hours", "hrs", "hr", "h" })
                             .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
                         {
-                            minutes = timeUnitCount * 60;
+                            result = hours;
                             timeUnitString = timeWorkedValues[i + 1];
                         }
                         else if ((new[] { "minutes", "min", "mn", "m" })
                             .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
                         {
-                            minutes = timeUnitCount;
+                            result = hours / 60.0;
                             timeUnitString = timeWorkedValues[i + 1];
                         }
                     }
                 }
             }
 
-            return (minutes, timeUnitString);
+            return (result, timeUnitString);
         }
 
         private static List<T> GetPossibleEntityValues<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")

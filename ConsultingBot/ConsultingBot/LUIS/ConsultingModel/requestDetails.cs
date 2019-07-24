@@ -15,7 +15,7 @@ namespace ConsultingBot
         // Note that only some are used, depending on the intent
         public string projectName { get; set; }
         public string personName { get; set; }
-        public int workDuration { get; set; }
+        public double workHours { get; set; }
         public string workDate { get; set; }
     }
 }

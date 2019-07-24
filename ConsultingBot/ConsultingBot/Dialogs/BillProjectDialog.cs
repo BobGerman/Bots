@@ -11,6 +11,7 @@ namespace ConsultingBot.Dialogs
         public BillProjectDialog(string dialogId) : base(dialogId)
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
+            AddDialog(new NumberPrompt<double>(nameof(NumberPrompt<double>)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
@@ -54,13 +55,13 @@ namespace ConsultingBot.Dialogs
 
             requestDetails.projectName = (string)stepContext.Result;
 
-            if (requestDetails.workDuration == 0)
+            if (requestDetails.workHours == 0.0)
             {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("How many hours did you work?") }, cancellationToken);
+                return await stepContext.PromptAsync(nameof(NumberPrompt<double>), new PromptOptions { Prompt = MessageFactory.Text("How many hours did you work?") }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync((int)requestDetails.workDuration / 60, cancellationToken);
+                return await stepContext.NextAsync(requestDetails.workHours, cancellationToken);
             }
         }
 
@@ -73,7 +74,7 @@ namespace ConsultingBot.Dialogs
                     ? stepContext.Options as RequestDetails
                     : new RequestDetails();
 
-            requestDetails.workDuration = (int)stepContext.Result;
+            requestDetails.workHours = (double)stepContext.Result;
 
             if (requestDetails.workDate == null || IsAmbiguous(requestDetails.workDate))
             {
@@ -85,6 +86,7 @@ namespace ConsultingBot.Dialogs
             }
         }
 
+        // Step 4: Save the work date and confirm
         private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var requestDetails = stepContext.Options is RequestDetails
@@ -93,11 +95,12 @@ namespace ConsultingBot.Dialogs
 
             requestDetails.workDate = (string)stepContext.Result;
 
-            var msg = $"Please confirm that you worked for {requestDetails.workDuration} hours on the {requestDetails.projectName} on {requestDetails.workDate}";
+            var msg = $"Please confirm that you worked for {requestDetails.workHours} hours on the {requestDetails.projectName} on {requestDetails.workDate}";
 
             return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(msg) }, cancellationToken);
         }
 
+        // Step 5: End the dialog
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             if ((bool)stepContext.Result)
