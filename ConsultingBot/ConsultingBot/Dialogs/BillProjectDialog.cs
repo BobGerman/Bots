@@ -26,58 +26,74 @@ namespace ConsultingBot.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
+        // Step 1: Ensure we have a project name
+        // Result is the project name from LUIS or from a user prompt
         private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = (BookingDetails)stepContext.Options;
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
 
-            if (bookingDetails.Destination == null)
+            if (requestDetails.projectName == null)
             {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("Where would you like to travel to?") }, cancellationToken);
+                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("Which project do you want to add to?") }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(bookingDetails.Destination, cancellationToken);
+                return await stepContext.NextAsync(requestDetails.projectName, cancellationToken);
             }
         }
 
+        // Step 2: Save the project name and ensure we have a duration
+        // Result is the duration from LUIS or from a user prompt
         private async Task<DialogTurnResult> TimeWorkedAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = (BookingDetails)stepContext.Options;
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
 
-            bookingDetails.Destination = (string)stepContext.Result;
+            requestDetails.projectName = (string)stepContext.Result;
 
-            if (bookingDetails.Origin == null)
+            if (requestDetails.workDuration == 0)
             {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("Where are you traveling from?") }, cancellationToken);
+                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("How many hours did you work?") }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(bookingDetails.Origin, cancellationToken);
+                return await stepContext.NextAsync((int)requestDetails.workDuration / 60, cancellationToken);
             }
         }
+
+        // Step 3: Save the work duration and ensure we have work date
+        // Result is the work date from LUIS or from a user prompt
+
         private async Task<DialogTurnResult> DeliveryDateAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = (BookingDetails)stepContext.Options;
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
 
-            bookingDetails.Origin = (string)stepContext.Result;
+            requestDetails.workDuration = (int)stepContext.Result;
 
-            if (bookingDetails.TravelDate == null || IsAmbiguous(bookingDetails.TravelDate))
+            if (requestDetails.workDate == null || IsAmbiguous(requestDetails.workDate))
             {
-                return await stepContext.BeginDialogAsync(nameof(DateResolverDialog), bookingDetails.TravelDate, cancellationToken);
+                return await stepContext.BeginDialogAsync(nameof(DateResolverDialog), requestDetails.workDate, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(bookingDetails.TravelDate, cancellationToken);
+                return await stepContext.NextAsync(requestDetails.workDate, cancellationToken);
             }
         }
 
         private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var bookingDetails = (BookingDetails)stepContext.Options;
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
 
-            bookingDetails.TravelDate = (string)stepContext.Result;
+            requestDetails.workDate = (string)stepContext.Result;
 
-            var msg = $"Please confirm, I have you traveling to: {bookingDetails.Destination} from: {bookingDetails.Origin} on: {bookingDetails.TravelDate}";
+            var msg = $"Please confirm that you worked for {requestDetails.workDuration} hours on the {requestDetails.projectName} on {requestDetails.workDate}";
 
             return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(msg) }, cancellationToken);
         }
@@ -86,9 +102,11 @@ namespace ConsultingBot.Dialogs
         {
             if ((bool)stepContext.Result)
             {
-                var bookingDetails = (BookingDetails)stepContext.Options;
+                var requestDetails = stepContext.Options is RequestDetails
+                        ? stepContext.Options as RequestDetails
+                        : new RequestDetails();
 
-                return await stepContext.EndDialogAsync(bookingDetails, cancellationToken);
+                return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
             }
             else
             {

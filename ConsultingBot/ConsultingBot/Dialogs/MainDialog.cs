@@ -31,7 +31,6 @@ namespace ConsultingBot.Dialogs
             // Add child dialogs we may use
             AddDialog(new AddToProjectDialog(nameof(AddToProjectDialog)));
             AddDialog(new BillProjectDialog(nameof(BillProjectDialog)));
-            AddDialog(new UnknownIntentDialog(nameof(UnknownIntentDialog)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InitialStepAsync,
@@ -56,27 +55,28 @@ namespace ConsultingBot.Dialogs
             {
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
 
-                var projectIntentDetails = stepContext.Context.Activity.Text != null
+                var requestDetails = stepContext.Context.Activity.Text != null
                         ?
                     await LuisConsultingProjectRecognizer.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
                         :
                     new RequestDetails();
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {projectIntentDetails.intent}\nProject: {projectIntentDetails.projectName}\nPerson: {projectIntentDetails.personName}\nMinutes: {projectIntentDetails.workDuration}\nWhen: {projectIntentDetails.workDate}"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {requestDetails.intent}\nProject: {requestDetails.projectName}\nPerson: {requestDetails.personName}\nMinutes: {requestDetails.workDuration}\nWhen: {requestDetails.workDate}"), cancellationToken);
 
-                switch (projectIntentDetails.intent)
+                switch (requestDetails.intent)
                 {
                     case Intent.AddToProject:
                         {
-                            return await stepContext.BeginDialogAsync(nameof(AddToProjectDialog), projectIntentDetails, cancellationToken);
+                            return await stepContext.BeginDialogAsync(nameof(AddToProjectDialog), requestDetails, cancellationToken);
                         }
                     case Intent.BillToProject:
                         {
-                            return await stepContext.BeginDialogAsync(nameof(BillProjectDialog), projectIntentDetails, cancellationToken);
+                            return await stepContext.BeginDialogAsync(nameof(BillProjectDialog), requestDetails, cancellationToken);
                         }
                 }
 
-                return await stepContext.BeginDialogAsync(nameof(UnknownIntentDialog), projectIntentDetails, cancellationToken);
+                requestDetails.intent = Intent.Unknown;
+                return await stepContext.NextAsync(requestDetails, cancellationToken);
             }
 
         }
@@ -84,7 +84,7 @@ namespace ConsultingBot.Dialogs
         // Step 2: Confirm the final outcome
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var confirmationMessage = "Thank you for using ConsultingBot";
+            var confirmationMessage = "OK never mind!";
             var result = stepContext.Result as RequestDetails;
 
             // If the child dialog was cancelled or the user failed to confirm, the result will be null.
@@ -106,6 +106,7 @@ namespace ConsultingBot.Dialogs
                         }
                     default:
                         {
+                            confirmationMessage = "Sorry, I don't understand what you typed";
                             break;
                         }
                 }

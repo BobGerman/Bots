@@ -32,8 +32,8 @@ namespace ConsultingBot.Dialogs
         {
             var timex = (string)stepContext.Options;
 
-            var promptMsg = "When would you like to travel?";
-            var repromptMsg = $"I'm sorry, to make your booking please enter a full travel date including Day Month and Year.";
+            var promptMsg = "When did you deliver those hours?";
+            var repromptMsg = $"I didn't catch the date when you delivered these hours. Please enter a date including day, month, and year.";
 
             if (timex == null)
             {
