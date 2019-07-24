@@ -31,13 +31,13 @@ namespace ConsultingBot
                 var recognizerResult = await recognizer.RecognizeAsync(turnContext, cancellationToken);
                 var (intent, score) = recognizerResult.GetTopScoringIntent();
 
-                // Get all the possible values for each entity
+                // Get all the possible values for each entity from the Entities JObject
                 var personNameValues = recognizerResult.GetEntity<string>("personName");
                 var projectNameValues = recognizerResult.GetEntity<string>("projectName");
                 var timeWorkedValues = recognizerResult.GetEntity<string>("timeWorked");
                 var dateTimeValues = recognizerResult.GetEntity<string>("datetime");
 
-                // Now based on the intent, fill in the result
+                // Now based on the intent, fill in the result as best we can
                 switch (intent)
                 {
                     case "AddPersonToProject":
@@ -51,38 +51,10 @@ namespace ConsultingBot
                         {
                             result.intent = ProjectIntent.BillToProject;
                             result.projectName = projectNameValues?.FirstOrDefault();
-                            result.taskDurationMinutes = 0;
-
-                            string timeUnitString = null;
-                            for (int i=0; i<timeWorkedValues.Count; i++)
-                            {
-                                var timeUnitCount = 0;
-                                if (int.TryParse(timeWorkedValues[i], out timeUnitCount))
-                                {
-                                    if (i < timeWorkedValues.Count)
-                                    {
-                                        if ((new[] { "hours", "hrs", "hr", "h" })
-                                            .Contains(timeWorkedValues[i+1], StringComparer.OrdinalIgnoreCase))
-                                        {
-                                            result.taskDurationMinutes = timeUnitCount * 60;
-                                            timeUnitString = timeWorkedValues[i + 1];
-                                        }
-                                        else if ((new[] { "minutes", "min", "mn", "m" })
-                                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
-                                        {
-                                            result.taskDurationMinutes = timeUnitCount;
-                                            timeUnitString = timeWorkedValues[i + 1];
-                                        }
-                                    }
-                                }
-                            }
-                            foreach (string val in dateTimeValues)
-                            {
-                                if (val.IndexOf(timeUnitString) <= 0)
-                                {
-                                    result.deliveryDate = val;
-                                }
-                            }
+                            string timeUnitsToken;
+                            (result.taskDurationMinutes, timeUnitsToken) =
+                                TryGetTaskDurationMinutes(result, timeWorkedValues);
+                            result.deliveryDate = TryGetDeliveryDateString(result, dateTimeValues, timeUnitsToken);
                             break;
                         }
                     default:
@@ -98,6 +70,50 @@ namespace ConsultingBot
             }
 
             return result;
+        }
+
+        private static string TryGetDeliveryDateString(ProjectIntentDetails result, List<string> dateTimeValues, string timeUnitsToken)
+        {
+            foreach (string val in dateTimeValues)
+            {
+                // Often the task duration is mistaken as a date value, so if we see the 
+                // same time units in there, skip that value
+                if (!string.IsNullOrEmpty(timeUnitsToken) && val.IndexOf(timeUnitsToken) <= 0)
+                {
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        private static (int,string) TryGetTaskDurationMinutes(ProjectIntentDetails result, List<string> timeWorkedValues)
+        {
+            var minutes = 0;
+            string timeUnitString = null;
+            for (int i = 0; i < timeWorkedValues.Count; i++)
+            {
+                var timeUnitCount = 0;
+                if (int.TryParse(timeWorkedValues[i], out timeUnitCount))
+                {
+                    if (i < timeWorkedValues.Count)
+                    {
+                        if ((new[] { "hours", "hrs", "hr", "h" })
+                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
+                        {
+                            result.taskDurationMinutes = timeUnitCount * 60;
+                            timeUnitString = timeWorkedValues[i + 1];
+                        }
+                        else if ((new[] { "minutes", "min", "mn", "m" })
+                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
+                        {
+                            result.taskDurationMinutes = timeUnitCount;
+                            timeUnitString = timeWorkedValues[i + 1];
+                        }
+                    }
+                }
+            }
+
+            return (minutes, timeUnitString);
         }
 
         private static List<T> GetEntity<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
