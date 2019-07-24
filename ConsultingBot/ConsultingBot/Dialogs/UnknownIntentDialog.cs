@@ -1,3 +1,8 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+//
+// Generated with Bot Builder V4 SDK Template for Visual Studio CoreBot v4.3.0
+
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -6,13 +11,12 @@ using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace ConsultingBot.Dialogs
 {
-    public class BillProjectDialog : CancelAndHelpDialog
+    public class UnknownIntentDialog : CancelAndHelpDialog
     {
-        public BillProjectDialog(string dialogId) : base(dialogId)
+        public UnknownIntentDialog(string dialogId) : base(dialogId)
         {
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
-            AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 DestinationStepAsync,

@@ -33,10 +33,10 @@ namespace ConsultingBot
 
                 // Get all the possible values for each entity from the Entities JObject
                 // (GetEntityValueOptions is an extension method, see below)
-                var personNameValues = recognizerResult.GetEntityValueOptions<string>("personName");
-                var projectNameValues = recognizerResult.GetEntityValueOptions<string>("projectName");
-                var timeWorkedValues = recognizerResult.GetEntityValueOptions<string>("timeWorked");
-                var dateTimeValues = recognizerResult.GetEntityValueOptions<string>("datetime");
+                var personNameValues = recognizerResult.GetPossibleEntityValues<string>("personName");
+                var projectNameValues = recognizerResult.GetPossibleEntityValues<string>("projectName");
+                var timeWorkedValues = recognizerResult.GetPossibleEntityValues<string>("timeWorked");
+                var dateTimeValues = recognizerResult.GetPossibleEntityValues<string>("datetime");
 
                 // Now based on the intent, fill in the result as best we can
                 switch (intent)
@@ -117,7 +117,7 @@ namespace ConsultingBot
             return (minutes, timeUnitString);
         }
 
-        private static List<T> GetEntityValueOptions<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
+        private static List<T> GetPossibleEntityValues<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
         {
             // Parsing the dynamic JObjects returned by LUIS is never easy
             // Adapted from https://pauliom.com/2018/11/06/extracting-an-entity-from-luis-in-bot-framework/
