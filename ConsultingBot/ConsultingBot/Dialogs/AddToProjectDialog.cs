@@ -28,17 +28,17 @@ namespace ConsultingBot.Dialogs
         // Result is the project name from LUIS or from a user prompt
         private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var projectIntentDetails = stepContext.Options is ProjectIntentDetails
-                    ? stepContext.Options as ProjectIntentDetails
-                    : new ProjectIntentDetails();
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
 
-            if (string.IsNullOrEmpty(projectIntentDetails.projectName))
+            if (string.IsNullOrEmpty(requestDetails.projectName))
             {
                 return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("Which project did you work on?") }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(projectIntentDetails.projectName, cancellationToken);
+                return await stepContext.NextAsync(requestDetails.projectName, cancellationToken);
             }
         }
 
@@ -46,33 +46,33 @@ namespace ConsultingBot.Dialogs
         // Result is the person name from LUIS or from a user prompt
         private async Task<DialogTurnResult> PersonStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var projectIntentDetails = stepContext.Options is ProjectIntentDetails
-                    ? stepContext.Options as ProjectIntentDetails
-                    : new ProjectIntentDetails();
-            projectIntentDetails.projectName = (string)stepContext.Result;
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
+            requestDetails.projectName = (string)stepContext.Result;
 
-            if (string.IsNullOrEmpty(projectIntentDetails.personName))
+            if (string.IsNullOrEmpty(requestDetails.personName))
             {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text($"Ok, who did you want to add to the {projectIntentDetails.projectName} project?") }, cancellationToken);
+                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text($"Ok, who did you want to add to the {requestDetails.projectName} project?") }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(projectIntentDetails.personName, cancellationToken);
+                return await stepContext.NextAsync(requestDetails.personName, cancellationToken);
             }
         }
 
         // Step 3: Save the person name and confirm with the user 
         private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var projectIntentDetails = stepContext.Options is ProjectIntentDetails
+            var requestDetails = stepContext.Options is RequestDetails
                     ?
-                stepContext.Options as ProjectIntentDetails
+                stepContext.Options as RequestDetails
                     :
-                new ProjectIntentDetails();
+                new RequestDetails();
 
-            projectIntentDetails.personName = (string)stepContext.Result;
+            requestDetails.personName = (string)stepContext.Result;
 
-            var message = $"Please confirm, I'm adding: {projectIntentDetails.personName} to the {projectIntentDetails.projectName} project";
+            var message = $"Please confirm, I'm adding: {requestDetails.personName} to the {requestDetails.projectName} project";
 
             return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(message) }, cancellationToken);
         }
@@ -82,13 +82,13 @@ namespace ConsultingBot.Dialogs
         {
             if ((bool)stepContext.Result)
             {
-                var projectIntentDetails = stepContext.Options is ProjectIntentDetails
+                var requestDetails = stepContext.Options is RequestDetails
                         ?
-                    stepContext.Options as ProjectIntentDetails
+                    stepContext.Options as RequestDetails
                         :
-                    new ProjectIntentDetails();
+                    new RequestDetails();
 
-                return await stepContext.EndDialogAsync(projectIntentDetails, cancellationToken);
+                return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
             }
             else
             {

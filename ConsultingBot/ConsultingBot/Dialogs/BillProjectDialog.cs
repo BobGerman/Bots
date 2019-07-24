@@ -15,9 +15,9 @@ namespace ConsultingBot.Dialogs
             AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                DestinationStepAsync,
-                OriginStepAsync,
-                TravelDateStepAsync,
+                ProjectStepAsync,
+                TimeWorkedAsync,
+                DeliveryDateAsync,
                 ConfirmStepAsync,
                 FinalStepAsync,
             }));
@@ -26,7 +26,7 @@ namespace ConsultingBot.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
-        private async Task<DialogTurnResult> DestinationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
 
@@ -40,7 +40,7 @@ namespace ConsultingBot.Dialogs
             }
         }
 
-        private async Task<DialogTurnResult> OriginStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> TimeWorkedAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
 
@@ -55,7 +55,7 @@ namespace ConsultingBot.Dialogs
                 return await stepContext.NextAsync(bookingDetails.Origin, cancellationToken);
             }
         }
-        private async Task<DialogTurnResult> TravelDateStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> DeliveryDateAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
 

@@ -35,7 +35,6 @@ namespace ConsultingBot.Dialogs
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InitialStepAsync,
-                //ActStepAsync,
                 FinalStepAsync,
             }));
 
@@ -43,6 +42,7 @@ namespace ConsultingBot.Dialogs
             InitialDialogId = nameof(WaterfallDialog);
         }
 
+        // Step 1: Figure out the user's intent and run the appropriate dialog to act on it
         private async Task<DialogTurnResult> InitialStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(Configuration["LuisAppId"]) || string.IsNullOrEmpty(Configuration["LuisAPIKey"]) || string.IsNullOrEmpty(Configuration["LuisAPIHostName"]))
@@ -60,17 +60,17 @@ namespace ConsultingBot.Dialogs
                         ?
                     await LuisConsultingProjectRecognizer.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
                         :
-                    new ProjectIntentDetails();
+                    new RequestDetails();
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {projectIntentDetails.intent}\nProject: {projectIntentDetails.projectName}\nPerson: {projectIntentDetails.personName}\nMinutes: {projectIntentDetails.taskDurationMinutes}\nWhen: {projectIntentDetails.deliveryDate}"), cancellationToken);
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {projectIntentDetails.intent}\nProject: {projectIntentDetails.projectName}\nPerson: {projectIntentDetails.personName}\nMinutes: {projectIntentDetails.workDuration}\nWhen: {projectIntentDetails.workDate}"), cancellationToken);
 
                 switch (projectIntentDetails.intent)
                 {
-                    case ProjectIntent.AddToProject:
+                    case Intent.AddToProject:
                         {
                             return await stepContext.BeginDialogAsync(nameof(AddToProjectDialog), projectIntentDetails, cancellationToken);
                         }
-                    case ProjectIntent.BillToProject:
+                    case Intent.BillToProject:
                         {
                             return await stepContext.BeginDialogAsync(nameof(BillProjectDialog), projectIntentDetails, cancellationToken);
                         }
@@ -80,27 +80,28 @@ namespace ConsultingBot.Dialogs
             }
 
         }
+
+        // Step 2: Confirm the final outcome
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var confirmationMessage = "Thank you for using ConsultingBot";
-            var result = stepContext.Result as ProjectIntentDetails;
+            var result = stepContext.Result as RequestDetails;
 
-            // If the child dialog ("AddToProjectDialog" etc.) was cancelled or the user failed to confirm,
-            // the Result here will be null.
+            // If the child dialog was cancelled or the user failed to confirm, the result will be null.
             if (result != null)
             {
                 switch (result.intent)
                 {
-                    case ProjectIntent.AddToProject:
+                    case Intent.AddToProject:
                         {
                             confirmationMessage = $"I'm confirming that you have added {result.personName} to the {result.projectName} project. Thank you for using ConsultingBot.";
                             break;
                         }
-                    case ProjectIntent.BillToProject:
+                    case Intent.BillToProject:
                         {
-                            var timeProperty = new TimexProperty(result.deliveryDate);
+                            var timeProperty = new TimexProperty(result.workDate);
                             var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);
-                            confirmationMessage = $"I'm charging {result.projectName} for {result.taskDurationMinutes} minutes on {deliveryDateText}. Thank you for using ConsultingBot.";
+                            confirmationMessage = $"I'm charging {result.projectName} for {result.workDuration} minutes on {deliveryDateText}. Thank you for using ConsultingBot.";
                             break;
                         }
                     default:

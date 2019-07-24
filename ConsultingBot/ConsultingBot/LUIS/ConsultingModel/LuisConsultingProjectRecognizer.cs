@@ -13,9 +13,9 @@ namespace ConsultingBot
 {
     public static class LuisConsultingProjectRecognizer
     {
-        public static async Task<ProjectIntentDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
+        public static async Task<RequestDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            var result = new ProjectIntentDetails();
+            var result = new RequestDetails();
 
             try
             {
@@ -43,24 +43,24 @@ namespace ConsultingBot
                 {
                     case "AddPersonToProject":
                         {
-                            result.intent = ProjectIntent.AddToProject;
+                            result.intent = Intent.AddToProject;
                             result.personName = personNameValues?.FirstOrDefault();
                             result.projectName = projectNameValues?.FirstOrDefault();
                             break;
                         }
                     case "BillToProject":
                         {
-                            result.intent = ProjectIntent.BillToProject;
+                            result.intent = Intent.BillToProject;
                             result.projectName = projectNameValues?.FirstOrDefault();
                             string timeUnitsToken;
-                            (result.taskDurationMinutes, timeUnitsToken) =
+                            (result.workDuration, timeUnitsToken) =
                                 TryExtractTimeWorked(result, timeWorkedValues);
-                            result.deliveryDate = TryExtractDeliveryDate(result, dateTimeValues, timeUnitsToken);
+                            result.workDate = TryExtractDeliveryDate(result, dateTimeValues, timeUnitsToken);
                             break;
                         }
                     default:
                         {
-                            result.intent = ProjectIntent.Unknown;
+                            result.intent = Intent.Unknown;
                             break;
                         }
                 }
@@ -73,7 +73,7 @@ namespace ConsultingBot
             return result;
         }
 
-        private static string TryExtractDeliveryDate(ProjectIntentDetails result, List<string> dateTimeValues, string timeUnitsToken)
+        private static string TryExtractDeliveryDate(RequestDetails result, List<string> dateTimeValues, string timeUnitsToken)
         {
             foreach (string val in dateTimeValues)
             {
@@ -87,7 +87,7 @@ namespace ConsultingBot
             return null;
         }
 
-        private static (int,string) TryExtractTimeWorked(ProjectIntentDetails result, List<string> timeWorkedValues)
+        private static (int,string) TryExtractTimeWorked(RequestDetails result, List<string> timeWorkedValues)
         {
             var minutes = 0;
             string timeUnitString = null;
