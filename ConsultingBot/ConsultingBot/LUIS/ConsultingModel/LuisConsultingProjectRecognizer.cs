@@ -7,6 +7,8 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Recognizers.Text;
+using Microsoft.Recognizers.Text.DateTime;
 using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot
@@ -75,16 +77,26 @@ namespace ConsultingBot
 
         private static string TryExtractDeliveryDate(RequestDetails result, List<string> dateTimeValues, string timeUnitsToken)
         {
+            string timex = null;
+
             foreach (string val in dateTimeValues)
             {
                 // Often the task duration is mistaken as a date value, so if we see the 
                 // same time units in there, skip that value
                 if (!string.IsNullOrEmpty(timeUnitsToken) && val.IndexOf(timeUnitsToken) <= 0)
                 {
-                    return val;
+                    // OK looks like we have the right string, use the DateTime Recognizer to resolve it
+                    var culture = Culture.English;
+                    var r = DateTimeRecognizer.RecognizeDateTime(val, culture);
+                    if (r.Count > 0 && r.First().TypeName.StartsWith("datetimeV2"))
+                    {
+                        var first = r.First();
+                        var resolutionValues = (IList<Dictionary<string, string>>)first.Resolution["values"];
+                        timex = resolutionValues[0]["timex"];
+                    }
                 }
             }
-            return null;
+            return timex;
         }
 
         private static (double,string) TryExtractTimeWorked(List<string> timeWorkedValues)
