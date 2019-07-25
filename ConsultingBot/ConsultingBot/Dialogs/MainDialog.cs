@@ -53,15 +53,14 @@ namespace ConsultingBot.Dialogs
             }
             else
             {
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
-
                 var requestDetails = stepContext.Context.Activity.Text != null
                         ?
                     await LuisConsultingProjectRecognizer.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
                         :
                     new RequestDetails();
 
-                await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {requestDetails.intent}\nProject: {requestDetails.projectName}\nPerson: {requestDetails.personName}\nMinutes: {requestDetails.workHours}\nWhen: {requestDetails.workDate}"), cancellationToken);
+                //await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
+                //await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {requestDetails.intent}\nProject: {requestDetails.projectName}\nPerson: {requestDetails.personName}\nHours: {requestDetails.workHours}\nWhen: {requestDetails.workDate}"), cancellationToken);
 
                 switch (requestDetails.intent)
                 {
@@ -101,7 +100,7 @@ namespace ConsultingBot.Dialogs
                         {
                             var timeProperty = new TimexProperty(result.workDate);
                             var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);
-                            confirmationMessage = $"I'm charging {result.projectName} for {result.workHours} minutes on {deliveryDateText}. Thank you for using ConsultingBot.";
+                            confirmationMessage = $"I'm charging {result.projectName} for {result.workHours} hours on {deliveryDateText}. Thank you for using ConsultingBot.";
                             break;
                         }
                     default:
