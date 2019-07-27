@@ -1,13 +1,14 @@
 ﻿using ConsultingData.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConsultingData.Services
 {
     // Simple mock for now
     public class ConsultingDataService
     {
-        public List<ConsultingProject> GetProjects(string query = null)
+        public async Task<List<ConsultingProject>> GetProjects(string query = null)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -22,7 +23,7 @@ namespace ConsultingData.Services
             }
         }
 
-        public ConsultingProject GetProjectByName(string projectName)
+        public async Task<ConsultingProject> GetProjectByName(string projectName)
         {
             ConsultingProject result = MockProjects.data.Where((p) =>
                 p.Name == projectName).FirstOrDefault();

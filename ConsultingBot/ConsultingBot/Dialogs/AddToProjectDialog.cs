@@ -40,7 +40,7 @@ namespace ConsultingBot.Dialogs
                     ? stepContext.Options as RequestDetails
                     : new RequestDetails();
 
-            List<ConsultingProject> result = ResolveProject(requestDetails.projectName);
+            List<ConsultingProject> result = await ResolveProject(requestDetails.projectName);
 
             if (result == null || result.Count < 1)
             {
@@ -56,12 +56,12 @@ namespace ConsultingBot.Dialogs
             }
         }
 
-        private List<ConsultingProject> ResolveProject(string keyword)
+        private async Task<List<ConsultingProject>> ResolveProject(string keyword)
         {
             if (!string.IsNullOrEmpty(keyword))
             {
                 ConsultingDataService dataService = new ConsultingDataService();
-                var possibleResults = dataService.GetProjects(keyword);
+                var possibleResults = await dataService.GetProjects(keyword);
                 if (possibleResults.Count > 0)
                 {
                     // We have a single result, return it
@@ -75,7 +75,7 @@ namespace ConsultingBot.Dialogs
         {
             ConsultingDataService dataService = new ConsultingDataService();
             var keyword = promptContext.Recognized.Value;
-            var projects = ResolveProject(keyword);
+            var projects = await ResolveProject(keyword);
             return projects != null && projects.Count > 0;
         }
 

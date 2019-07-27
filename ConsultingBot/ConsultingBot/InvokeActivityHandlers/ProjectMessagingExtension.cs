@@ -55,7 +55,7 @@ namespace ConsultingBot.InvokeActivityHandlers
             queryText = query?.Parameters.FirstOrDefault(p => p.Name == "queryText").Value as string;
 
             var consultingDataService = new ConsultingDataService();
-            var projects = consultingDataService.GetProjects(queryText);
+            var projects = await consultingDataService.GetProjects(queryText);
             var attachments = new List<MessagingExtensionAttachment>();
             foreach (var project in projects)
             {
@@ -128,7 +128,7 @@ namespace ConsultingBot.InvokeActivityHandlers
                         {
                             // Sample project card
                             var consultingDataService = new ConsultingDataService();
-                            var project = consultingDataService.GetProjects().FirstOrDefault();
+                            var project = (await consultingDataService.GetProjects()).FirstOrDefault();
 
                             var card = ProjectPreviewCard.GetCard(project);
                             var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
