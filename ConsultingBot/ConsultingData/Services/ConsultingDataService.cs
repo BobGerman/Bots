@@ -21,5 +21,13 @@ namespace ConsultingData.Services
                     p.Name.ToLower().IndexOf(query.ToLower()) >= 0).ToList();
             }
         }
+
+        public ConsultingProject GetProjectByName(string projectName)
+        {
+            ConsultingProject result = MockProjects.data.Where((p) =>
+                p.Name == projectName).FirstOrDefault();
+
+            return result;
+        }
     }
 }
