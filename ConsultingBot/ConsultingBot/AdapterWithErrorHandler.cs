@@ -34,8 +34,11 @@ namespace ConsultingBot
                 logger.LogError($"Exception caught : {exception.Message}");
 
                 // Send a catch-all apology to the user.
-                await turnContext.SendActivityAsync("Sorry, it looks like something went wrong.");
-
+#if (!DEBUG)
+                await turnContext.SendActivityAsync("Sorry, something went wrong.");
+#else
+                await turnContext.SendActivityAsync($"Sorry, something went wrong: {exception.Message}");
+#endif
                 if (conversationState != null)
                 {
                     try

@@ -85,10 +85,11 @@ namespace ConsultingBot.Cards
                 Placeholder = "0",
                 Value = "",
             });
+            string submitJson = @"{""msteams"":{""type"":""messageBack"",""displayText"":""I clicked this button"",""text"":""text to bots"",""value"":""""} }";
             card.Actions.Add(new AdaptiveCards.AdaptiveSubmitAction()
             {
                 Title = "Submit",
-                Data = JObject.Parse(@"{ ""done"": true }"),
+                Data = JObject.Parse(submitJson)
             });
 
             return card;
