@@ -6,6 +6,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsultingBot.Cards;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Teams;
@@ -93,8 +94,11 @@ namespace ConsultingBot.Dialogs
                 {
                     case Intent.AddToProject:
                         {
-                            confirmationMessage = $"I'm confirming that you have added {result.personName} to the {result.projectName} project. Thank you for using ConsultingBot.";
-                            break;
+                            var projectCard = ProjectAssignmentCard.GetCard(result);
+                            var reply = stepContext.Context.Activity.CreateReply();
+                            reply.Attachments.Add(projectCard.ToAttachment());
+                            await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
+                            return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
                         }
                     case Intent.BillToProject:
                         {
