@@ -13,7 +13,7 @@ namespace ConsultingBot.Cards
 {
     public static class ProjectAssignmentCard
     {
-        public static AdaptiveCard GetCard(RequestDetails requestDetails)
+        public static AdaptiveCard GetCard(ITurnContext turnContext, RequestDetails requestDetails)
         {
             var card = new AdaptiveCard();
 
@@ -122,12 +122,13 @@ namespace ConsultingBot.Cards
             var payload = val.ToObject<ProjectAssignmentCardSubmitValue>();
 
             var responseCard = ProjectAssignmentConfirmationCard.GetCard(payload);
-            Activity replyActivity = turnContext.Activity.CreateReply();
-            replyActivity.Attachments = new List<Attachment>()
-                {
-                    responseCard.ToAttachment()
-                };
+
+            var replyActivity = turnContext.Activity.CreateReply();
+            replyActivity.Attachments.Add(responseCard.ToAttachment());
+
             await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
+            //await turnContext.UpdateActivityAsync(replyActivity).ConfigureAwait(false);
+
             return await Task.FromResult<InvokeResponse>(null);
         }
 
