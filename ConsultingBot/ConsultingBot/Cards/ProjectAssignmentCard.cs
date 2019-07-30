@@ -1,7 +1,13 @@
 ﻿using AdaptiveCards;
+using ConsultingBot.InvokeActivityHandlers;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Schema;
+using Microsoft.Bot.Schema.Teams;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ConsultingBot.Cards
 {
@@ -85,14 +91,40 @@ namespace ConsultingBot.Cards
                 Placeholder = "0",
                 Value = "",
             });
-            string submitJson = @"{""msteams"":{""type"":""messageBack"",""displayText"":""I clicked this button"",""text"":""text to bots"",""value"":""""} }";
-            card.Actions.Add(new AdaptiveCards.AdaptiveSubmitAction()
+
+            var payload = new CardActionValue()
+            {
+                submissionId = ProjectAssignmentCard.SubmissionId
+            };
+
+            CardAction action = new CardAction()
             {
                 Title = "Submit",
-                Data = JObject.Parse(submitJson)
-            });
+                Type = "invoke",
+                Value = JsonConvert.SerializeObject(payload)
+            };
+
+            card.Actions.Add(action.ToAdaptiveCardAction());
 
             return card;
+        }
+
+        public static async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
+        {
+            var val = turnContext.Activity.Value as JObject;
+            var payload = val.ToObject<CardSubmittedValue>();
+
+            return await Task.FromResult<InvokeResponse>(null);
+        }
+
+        public static string SubmissionId { get; } = nameof(ProjectAssignmentCard) + "submit";
+
+        public class CardSubmittedValue : CardActionValue
+        {
+            public string roleChoice = "";
+            public string forecast1 = "0";
+            public string forecast2 = "0";
+            public string forecast3 = "0";
         }
     }
 }

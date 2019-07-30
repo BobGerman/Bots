@@ -4,6 +4,7 @@ using ConsultingBot.InvokeActivityHandlers;
 using ConsultingBot.TeamsManifest;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Teams;
+using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot.InvokeActivityHandlers
 {
@@ -62,6 +63,17 @@ namespace ConsultingBot.InvokeActivityHandlers
             {
                 var taskModule = new TestTaskModule();
                 return await taskModule.HandleInvokeActivityAsync(turnContext);
+            }
+
+            // Card actions
+            if (string.IsNullOrEmpty(turnContext.Activity.Name))
+            {
+                var val = turnContext.Activity.Value as JObject;
+                var payload = val.ToObject<CardActionValue>();
+                if (payload.submissionId == ProjectAssignmentCard.SubmissionId)
+                {
+                    return await ProjectAssignmentCard.HandleInvokeActivityAsync(turnContext);
+                }
             }
 
             return await Task.FromResult<InvokeResponse>(null);
