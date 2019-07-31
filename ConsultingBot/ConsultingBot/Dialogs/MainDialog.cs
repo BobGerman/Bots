@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ConsultingBot.Cards;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.AI.QnA;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Connector.Teams;
@@ -60,9 +61,6 @@ namespace ConsultingBot.Dialogs
                         :
                     new RequestDetails();
 
-                //await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Echo: {stepContext.Context.Activity.Text}"), cancellationToken);
-                //await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Got intent of {requestDetails.intent}\nProject: {requestDetails.projectName}\nPerson: {requestDetails.personName}\nHours: {requestDetails.workHours}\nWhen: {requestDetails.workDate}"), cancellationToken);
-
                 switch (requestDetails.intent)
                 {
                     case Intent.AddToProject:
@@ -109,7 +107,25 @@ namespace ConsultingBot.Dialogs
                         }
                     default:
                         {
-                            confirmationMessage = "Sorry, I don't understand what you typed";
+                            // If LUIS doesn't know what to do, fall back to an answer from QnA Maker
+                            var qnaMaker = new QnAMaker(new QnAMakerEndpoint
+                            {
+                                KnowledgeBaseId = Configuration["QnAKnowledgebaseId"],
+                                EndpointKey = Configuration["QnAEndpointKey"],
+                                Host = Configuration["QnAEndpointHostName"]
+                            });
+
+                            var response = await qnaMaker.GetAnswersAsync(stepContext.Context);
+                            if (response != null && response.Length > 0)
+                            {
+                                confirmationMessage = response[0].Answer;
+                            }
+                            else
+                            {
+                                // If QnA Maker doesn't know what to do, fall back to a canned message
+                                confirmationMessage = "Sorry, I don't understand what you typed";
+                            }
+
                             break;
                         }
                 }

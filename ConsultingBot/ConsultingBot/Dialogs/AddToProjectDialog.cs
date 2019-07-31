@@ -127,7 +127,7 @@ namespace ConsultingBot.Dialogs
 
             requestDetails.personName = (string)stepContext.Result;
 
-            var message = $"Please confirm, I'm adding: {requestDetails.personName} to the {requestDetails.projectName} project";
+            var message = $"Please confirm, I'm adding: {requestDetails.personName} to the {requestDetails.project.Client.Name} {requestDetails.projectName} project";
 
             return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(message) }, cancellationToken);
         }

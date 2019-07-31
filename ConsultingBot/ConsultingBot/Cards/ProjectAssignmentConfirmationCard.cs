@@ -16,16 +16,22 @@ namespace ConsultingBot.Cards
         public static AdaptiveCard GetCard(ProjectAssignmentCard.ProjectAssignmentCardSubmitValue value)
         {
             var card = new AdaptiveCard();
+            card.Body.Add(new AdaptiveTextBlock($"Adding {value.personName} to project")
+            {
+                Weight = AdaptiveTextWeight.Bolder,
+                Size = AdaptiveTextSize.Large,
+            });
+
+            // Display details in a fact set
             var factSet = new AdaptiveFactSet();
             factSet.Facts.Add(new AdaptiveFact("Client", value.clientName));
             factSet.Facts.Add(new AdaptiveFact("Project", value.projectName));
-            factSet.Facts.Add(new AdaptiveFact("Consultant", value.personName));
             factSet.Facts.Add(new AdaptiveFact("Role", value.roleChoice));
-            factSet.Facts.Add(new AdaptiveFact($"Forecast for {value.forecastMonth1}",
+            factSet.Facts.Add(new AdaptiveFact($"{value.forecastMonth1} forecast",
                 String.IsNullOrEmpty(value.forecast1) ? "0" : value.forecast1));
-            factSet.Facts.Add(new AdaptiveFact($"Forecast for {value.forecastMonth2}",
+            factSet.Facts.Add(new AdaptiveFact($"{value.forecastMonth2} forecast",
                 String.IsNullOrEmpty(value.forecast2) ? "0" : value.forecast2));
-            factSet.Facts.Add(new AdaptiveFact($"Forecast for {value.forecastMonth3}",
+            factSet.Facts.Add(new AdaptiveFact($"{value.forecastMonth3} forecast",
                 String.IsNullOrEmpty(value.forecast3) ? "0" : value.forecast3));
 
             card.Body.Add(new AdaptiveColumnSet()
