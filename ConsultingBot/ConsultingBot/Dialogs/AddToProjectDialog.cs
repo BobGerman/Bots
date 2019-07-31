@@ -125,7 +125,10 @@ namespace ConsultingBot.Dialogs
                     :
                 new RequestDetails();
 
-            requestDetails.personName = (string)stepContext.Result;
+            // Get the person's name in Title Case
+            var cultureInfo = Thread.CurrentThread.CurrentCulture;
+            var textInfo = cultureInfo.TextInfo;
+            requestDetails.personName = textInfo.ToTitleCase((string)stepContext.Result);
 
             var message = $"Please confirm, I'm adding: {requestDetails.personName} to the {requestDetails.project.Client.Name} {requestDetails.projectName} project";
 
