@@ -1,0 +1,142 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.5/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.5",
+  "version": "0.1.0",
+  "id": "0bc1c141-9935-4cc8-826d-8b9667b99420",
+  "packageName": "com.treyresearch.teamsapps.consulting",
+  "developer": {
+    "name": "Bob German",
+    "websiteUrl": "https://www.bob1german.com/",
+    "privacyUrl": "https://www.bob1german.com/",
+    "termsOfUseUrl": "https://www.bob1german.com/"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "ConsultingApp",
+    "full": "Demo application for a consulting practice"
+  },
+  "description": {
+    "short": "Consulting demo application",
+    "full": "Consulting demo bot using Bot Framework v4"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "526dec6e-545d-4706-b818-d709112323ec",
+      "scopes": [
+        "personal",
+        "team",
+        "groupchat"
+      ],
+      "supportsFiles": true,
+      "isNotificationOnly": false
+    }
+  ],
+  "composeExtensions": [
+    {
+      "botId": "526dec6e-545d-4706-b818-d709112323ec",
+      "commands": [
+        {
+          "id": "queryProjects",
+          "description": "Find a consulting project",
+          "title": "Project",
+          "parameters": [
+            {
+              "name": "queryText",
+              "title": "Query parameter",
+              "description": "Query parameter"
+            }
+          ]
+        },
+        {
+          "id": "sampleCard",
+          "type": "action",
+          "description": "Create a sample card",
+          "title": "Sample card",
+          "fetchTask": true,
+          "parameters": [
+            {
+              "name": "dummy",
+              "title": "Dummy parameter",
+              "description": "Dummy parameter"
+            }
+          ]
+        },
+        {
+          "id": "queryCards",
+          "description": "Test command to run query",
+          "title": "Query cards",
+          "parameters": [
+            {
+              "name": "queryText",
+              "title": "Query parameter",
+              "description": "Query parameter"
+            }
+          ]
+        },
+        {
+          "id": "createCard",
+          "type": "action",
+          "description": "Test command to run action to create a card",
+          "title": "Create cards",
+          "fetchTask": true,
+          "parameters": [
+            {
+              "name": "dummy",
+              "title": "Dummy parameter",
+              "description": "Dummy parameter"
+            }
+          ]
+        },
+        {
+          "id": "createWithPreview",
+          "type": "action",
+          "description": "Test command to run action to create a card with preview before sending",
+          "title": "Create cards with preview",
+          "fetchTask": true,
+          "parameters": [
+            {
+              "name": "dummy",
+              "title": "Dummy parameter",
+              "description": "Dummy parameter"
+            }
+          ]
+        },
+        {
+          "id": "shareMessage",
+          "type": "action",
+          "context": [ "message" ],
+          "description": "Test command to run action on message context (message sharing)",
+          "title": "Create cards",
+          "fetchTask": true,
+          "parameters": [
+            {
+              "name": "dummy",
+              "title": "Dummy parameter",
+              "description": "Dummy parameter"
+            }
+          ]
+        }
+      ],
+      "messageHandlers": [
+        {
+          "type": "link",
+          "value": {
+            "domains": [
+              "*.azurewebsites.net",
+              "*.example.com"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": []
+}
