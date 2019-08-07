@@ -1,0 +1,44 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.5/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.5",
+  "version": "0.1.0",
+  "id": "d2eb81aa-d09d-487a-baf4-09c4d584614a",
+  "packageName": "com.treyresearch.teamsapps.local",
+  "developer": {
+    "name": "Bob German",
+    "websiteUrl": "https://www.bob1german.com/",
+    "privacyUrl": "https://www.bob1german.com/",
+    "termsOfUseUrl": "https://www.bob1german.com/"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "LocalBot",
+    "full": "LocalBot"
+  },
+  "description": {
+    "short": "Reusable bot setup for testing with ngrok",
+    "full": "Reusable bot setup for testing with ngrok"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "4ae54c1b-d7ee-4075-a803-d1846cebe36c",
+      "scopes": [
+        "personal",
+        "team",
+        "groupchat"
+      ],
+      "supportsFiles": true,
+      "isNotificationOnly": false
+    }
+  ],
+  "composeExtensions": [],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": []
+}
