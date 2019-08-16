@@ -29,6 +29,8 @@ class MyBot extends ActivityHandler {
             const teamsContext = TeamsContext.from(turnContext);
             if (!teamsContext) {
                 await turnContext.sendActivity('Sorry, this bot only works in Teams');
+                await next();
+                return;
             }
 
             // Get the state properties from the turn context.
@@ -58,12 +60,21 @@ class MyBot extends ActivityHandler {
 
             }
 
+            // Update turncount in conversation data
             let turnCount = conversationData.turnCount || 0;
             conversationData.turnCount = ++turnCount;
+
             // Add message details to the conversation data.
-            await turnContext.sendActivity(
-                `(We've been chatting over the ${turnContext.activity.channelId}
-                     channel for ${conversationData.turnCount} turns)`);
+            if (teamsContext.channel) {
+                // If we have a channel, show its id
+                await turnContext.sendActivity(
+                    `(We've been chatting over channel ${teamsContext.channel.id}
+                         for ${conversationData.turnCount} turns)`);
+            } else {
+                // If we're not running in a channel, skip that
+                await turnContext.sendActivity(
+                    `(We've been chatting for ${conversationData.turnCount} turns)`);
+            }
 
             // Persist any state changes during this turn.
             await this.conversationState.saveChanges(turnContext, false);

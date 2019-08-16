@@ -16,7 +16,8 @@ const {
 
  const {
      TeamsAdapter,
-     TeamsMiddleware 
+     TeamsMiddleware,
+     TeamSpecificConversationState 
  } = require('botbuilder-teams');
 
 // This bot's main dialog.
@@ -28,7 +29,7 @@ dotenv.config({ path: ENV_FILE });
 
 // Set up bot state
 const memoryStorage = new MemoryStorage();
-const conversationState = new ConversationState(memoryStorage);
+const conversationState = new TeamSpecificConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
 
 // Create HTTP server
