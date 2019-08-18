@@ -23,5 +23,15 @@ Your challenge is to run the plunk at [http://bit.ly/ElizaPlunk](http://bit.ly/E
 2. Modernize Eliza by adding SharePoint to all references to dreams and dreaming
 
 
+## OK
+
+Repos used:
+
+https://github.com/BobGerman/Bots
+https://github.com/coolc0ders/Real-Proactive-Message-Bot
+https://github.com/microsoft/BotBuilder-Samples
+https://github.com/BobGerman/BotBuilder-MicrosoftTeams-dotnet
+https://github.com/OfficeDev/msteams-samples-outgoing-webhook-nodejs
+https://github.com/OfficeDev/msteams-sample-contoso-hr-talent-app.git
 
 
