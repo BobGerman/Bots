@@ -176,7 +176,7 @@ The Teams Bot Builder SDK includes Teams-specific middleware; Beta version is he
 
 ![Slide](./Slides/Slide19.PNG)
 
-* [.NET Core dependency injection and middleware setup](../ConsultingBot/ConsultingBot/startup.cs)
+* [.NET Core dependency injection and middleware setup](../ConsultingBot/ConsultingBot/Startup.cs)
 * [Simple middleware](../ConsultingBot/ConsultingBot/Middleware/StripBotMention.cs)
 * [JavaScript middleware setup](../TeamsStateBot/index.js)
 

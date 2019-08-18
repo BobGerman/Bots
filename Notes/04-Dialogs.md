@@ -13,14 +13,34 @@ Table of Contents
 ## Dialogs
 
 ![Slide](./Slides/Slide30.PNG)
+
+See [Design and control conversation flow](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-design-conversation-flow?view=azure-bot-service-4.0) for more details.
+
 ![Slide](./Slides/Slide31.PNG)
+
 ![Slide](./Slides/Slide32.PNG)
+
+Here's [an overview](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-concept-dialog?view=azure-bot-service-4.0) of dialogs in Bot Framework v4. I found [this, more succinct article](https://www.brightdevelopers.com/overview-of-dialogs-for-bot-framework-v4/) helpful as well.
+
+If you want to add branching and looping to your dialogs, check out [Create advanced conversation flow using branches and loops](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-dialog-manage-complex-conversation-flow).
+
 ![Slide](./Slides/Slide33.PNG)
+
 ![Slide](./Slides/Slide34.PNG)
+
+Prompt options are detailed here ([.NET](https://docs.microsoft.com/en-us/dotnet/api/microsoft.bot.builder.dialogs.promptoptions), [Node](https://docs.microsoft.com/en-us/javascript/api/botbuilder-dialogs/promptoptions)).
+
 ![Slide](./Slides/Slide35.PNG)
+
+The [Multi-turn prompt sample](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-dialog-manage-conversation-flow) shows a sequence of several prompt dialogs called by a waterfall dialog.
+
 ![Slide](./Slides/Slide36.PNG)
+
+Notice that the bot saves state at the end of each turn.
+
 ![Slide](./Slides/Slide37.PNG)
 
+Walk through the [Consuling Bot dialogs](../ConsultingBot/ConsultingBot/Dialogs/).
 
 ### [The next section is here](05-LUIS.md)
 
