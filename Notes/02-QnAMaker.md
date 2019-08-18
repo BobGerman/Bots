@@ -13,9 +13,16 @@ Table of Contents
 ## QnA Maker
 
 ![Slide](./Slides/Slide21.PNG)
-![Slide](./Slides/Slide22.PNG)
-![Slide](./Slides/Slide23.PNG)
 
+[QnA Maker](https://www.qnamaker.ai/) is part of [Azure Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/). It's a service that interprets Frequently Asked Questions to build "knowledge bases" of questions and answers. Then it provides a REST service which returns the best answer for a natural language question.
+
+QnA Maker is a great low-code/no-code approach to building a bot! However your bot will only be able to supply static answers to questions.
+
+![Slide](./Slides/Slide22.PNG)
+
+Check out the [QnA Maker quick start](https://docs.microsoft.com/en-us/azure/cognitive-services/qnamaker/how-to/create-knowledge-base).
+
+The demo will use an incredibly useful tool for working with REST APIs called [Postman](https://www.getpostman.com/).
 
 ### [The next section is here](03-State.md)
 

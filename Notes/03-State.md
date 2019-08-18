@@ -13,12 +13,30 @@ Table of Contents
 ## Bot State
 
 ![Slide](./Slides/Slide24.PNG)
+
+Perhaps you remember the movie [Memento](https://en.wikipedia.org/wiki/Memento_(film)), in which the protagonist, Leonard Shelby
+([Guy Pearce](https://en.wikipedia.org/wiki/Guy_Pearce)) suffers from [anterograde amnesia](https://en.wikipedia.org/wiki/Anterograde_amnesia) and can't remember anything. Your bot will be like Leonard if you don't give it some way to keep track of _bot state_.
+
 ![Slide](./Slides/Slide25.PNG)
+
+This slide shows the amazing timeline in Memento, in which recent events are shown in reverse chronological order, interspersed with past events. This has nothing to do with this workshop, except it inspired me to make the next slide, which shows how bot dialogs and conversations work.
+
 ![Slide](./Slides/Slide26.PNG)
+
+Once we have state, we can carry on conversations that last more than one turn. This is done using _dialogs_, which are the next topic.
+
+Since bots are web services, which may be load balanced across many services. The picture shows this by implying that each bot response might come from a different instance of the bot web service. Without bot state, you couldn't have dialogs. 
+
 ![Slide](./Slides/Slide27.PNG)
+
+Here are the three kinds of bot state, as explained in [this article](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-concept-state). The following diagram is from the same article.
+
 ![Slide](./Slides/Slide28.PNG)
+
 ![Slide](./Slides/Slide29.PNG)
 
+The StateBot sample is right [here in this repo](../StateBot).
+The TeamsStateBot is [here, also in this repo](../TeamsStateBot).
 
 ### [The next section is here](04-Dialogs.md)
 
