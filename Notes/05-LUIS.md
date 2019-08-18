@@ -13,15 +13,41 @@ Table of Contents
 ## LUIS
 
 ![Slide](./Slides/Slide38.PNG)
+
+LUIS stands for Language Understanding Intelligent Service. Learn more and sign up at [https://www.luis.ai](https://www.luis.ai).
+
 ![Slide](./Slides/Slide39.PNG)
+
+LUIS attempts to turn utterances (what the user says) into intents (what the user wants to do) and entities (details about the intent).
+
 ![Slide](./Slides/Slide40.PNG)
+
+This and the next couple of  slides are from [the LUIS section](https://azure.github.io/LearnAI-DesigningandArchitectingIntelligentAgents/03-luis/1_session.html) of [Learn AI - Designing and Architecting Intelligent Agents](https://azure.github.io/LearnAI-DesigningandArchitectingIntelligentAgents/).
+
+See [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-intent) for more on LUIS intents.
+
 ![Slide](./Slides/Slide41.PNG)
 ![Slide](./Slides/Slide42.PNG)
+
+See [this article](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-entity-types) for details on the LUIS entity types.
+
 ![Slide](./Slides/Slide43.PNG)
+
+Here are some [best practices](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-concept-best-practices) for building a LUIS model.
+
 ![Slide](./Slides/Slide44.PNG)
+
+LUIS won't get everything, and the entities it extracts will be raw text. Plan to prompt the user for anything that's missing, and to resolve and disambiguate what you do get.
+
+The [AddProjectDialog](../ConsultingBot/ConsultingBot/Dialogs/AddToProjectDialog.cs) and [BillToProjectDialog](../ConsultingBot/ConsultingBot/Dialogs/BillProjectDialog.cs) in the Consulting Bot show how to do this.
+
 ![Slide](./Slides/Slide45.PNG)
+
+The LUIS model is in the cognitiveModels folder in many Bot projects. In the ConsultingBot sample, I put the LUIS code and models in a folder called [LUIS](../ConsultingBot/ConsultingBot/LUIS/).
+
 ![Slide](./Slides/Slide46.PNG)
 
+If you want to use multiple LUIS and/or QnA Maker models, check out the [Dispatch tool](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-tutorial-dispatch?view=azure-bot-service-4.0&tabs=cs).
 
 ### [The next section is here](06-AdaptiveCards.md)
 
