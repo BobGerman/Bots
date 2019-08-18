@@ -38,6 +38,14 @@ Here are the three kinds of bot state, as explained in [this article](https://do
 The StateBot sample is right [here in this repo](../StateBot).
 The TeamsStateBot is [here, also in this repo](../TeamsStateBot).
 
+---
+__**CHALLENGE**__ (after class)
+
+* Build the StateBot and test it using the Bot Framework emulator. Remember you can create a new session with the same user ID in the emulator in order to test user state.
+* Add a feature which displays how long the bot has "known" the user.
+
+---
+
 ### [The next section is here](04-Dialogs.md)
 
 ## Repos used in this workshop:

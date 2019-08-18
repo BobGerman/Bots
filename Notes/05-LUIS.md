@@ -45,6 +45,17 @@ The [AddProjectDialog](../ConsultingBot/ConsultingBot/Dialogs/AddToProjectDialog
 
 The LUIS model is in the cognitiveModels folder in many Bot projects. In the ConsultingBot sample, I put the LUIS code and models in a folder called [LUIS](../ConsultingBot/ConsultingBot/LUIS/).
 
+---
+__**CHALLENGE**__
+
+Point your browser to [https://www.luis.ai](https://www.luis.ai). If you don't have an account, sign up for a trial; all you need is a Microsoft ID and no credit card is required.
+
+* Build a pizza shop model that supports two intents: order pizza and order drink
+* Add entities for the pizza and drink types and sizes. Suggestion: Keep it simple - just a few choices.
+* Test your model within the LUIS UI. Find an utterance that doesn't work, and improve your model to fix it.
+
+---
+
 ![Slide](./Slides/Slide46.PNG)
 
 If you want to use multiple LUIS and/or QnA Maker models, check out the [Dispatch tool](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-tutorial-dispatch?view=azure-bot-service-4.0&tabs=cs).

@@ -66,6 +66,15 @@ The [On Behalf Of (OBO)](https://docs.microsoft.com/en-us/azure/active-directory
 
 There's nothing more frustrating than getting a 401 - Access Denied, with no idea why. Here are my handy troubleshooting steps.
 
+---
+__**CHALLENGE**__ (after class)
+
+* Download or clone the [Bot Builder Samples](https://github.com/microsoft/BotBuilder-Samples) and find the demo 46.teams-auth in the language of your choice.
+* Follow the instructions in the readme to register, build, and run the sample
+* Modify the sample to call the Graph API instead of just showing the token
+
+---
+
 ### ** THE END **
 
 ## Repos used in this workshop:

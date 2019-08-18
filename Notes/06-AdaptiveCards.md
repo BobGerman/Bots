@@ -34,7 +34,7 @@ You can even [implement your own renderer](https://docs.microsoft.com/en-us/adap
 * [Adaptive Card Designer](http://bit.ly/CardDesigner)
 
 ---
-**CHALLENGE**
+__**CHALLENGE**__
 
 Open and run [this Plunker project](https://bit.ly/CardPlunk), which will display an adaptive card on a web page. When you submit the card, it will update (replace w/a new card) showing the data you submitted.
 

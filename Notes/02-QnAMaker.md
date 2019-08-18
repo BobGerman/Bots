@@ -24,6 +24,16 @@ Check out the [QnA Maker quick start](https://docs.microsoft.com/en-us/azure/cog
 
 The demo will use an incredibly useful tool for working with REST APIs called [Postman](https://www.getpostman.com/).
 
+---
+__**CHALLENGE**__ (after class)
+
+* Sign up for [QnA Maker](https://www.qnamaker.ai/) and [set up the service](https://docs.microsoft.com/en-us/azure/cognitive-services/qnamaker/overview/overview#how-do-i-start) in Azure.
+* Create a new knowledge base import a FAQ web page of your choice. Test it and tweak the questions and answers within the QnA Maker UI.
+* From the QnA Maker Publish screen, create an Azure bot for the service and test in the Azure portal
+* Use [Teams App Studio](https://docs.microsoft.com/en-us/microsoftteams/platform/get-started/get-started-app-studio) to create an app manifest for your bot and test it in Teams
+
+---
+
 ### [The next section is here](03-State.md)
 
 ## Repos used in this workshop:

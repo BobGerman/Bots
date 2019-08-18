@@ -42,6 +42,12 @@ Notice that the bot saves state at the end of each turn.
 
 Walk through the [Consuling Bot dialogs](../ConsultingBot/ConsultingBot/Dialogs/).
 
+---
+__**CHALLENGE**__ (after class)
+
+* The current sample resolves the project and looks up its information in the Add to Project dialog, but not the Bill to Project dialog. Resolve the project in both dialogs.
+---
+
 ### [The next section is here](05-LUIS.md)
 
 ## Repos used in this workshop:
