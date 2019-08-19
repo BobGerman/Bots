@@ -2,7 +2,7 @@
 
 Welcome to I, Chatbot, a workshop all about building bots for Microsoft Teams and Sharepoint using the latest version of the Bot Framework.
 
-![Slide](./Slides/Slide1.PNG)
+![Slide](./Notes/Slides/Slide1.PNG)
 
 These notes are intended as a companion for the workshop. Most of the slides are here; some text slides have been placed directly into the text of these notes. There is a markdown file for each section of the workshop as follows:
 
