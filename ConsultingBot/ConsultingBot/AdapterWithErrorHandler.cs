@@ -7,7 +7,6 @@ using System;
 using ConsultingBot.Middleware;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.Bot.Builder.Teams.Middlewares;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Logging;
 
@@ -15,14 +14,9 @@ namespace ConsultingBot
 {
     public class AdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
-        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, TeamsMiddleware teamsMiddleware, StripBotMention stripBotMentionMiddleware, ConversationState conversationState = null)
+        public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, StripBotMention stripBotMentionMiddleware, ConversationState conversationState = null)
             : base(credentialProvider)
         {
-            if (teamsMiddleware != null)
-            {
-                Use(teamsMiddleware);
-            }
-
             if (stripBotMentionMiddleware != null)
             {
                 Use(stripBotMentionMiddleware);

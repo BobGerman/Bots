@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using ConsultingBot.InvokeActivityHandlers;
+using ConsultingBot.TeamsActivityHandlers;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -18,10 +18,13 @@ namespace ConsultingBot.Bots
 {
     public class DialogAndWelcomeBot<T> : DialogBot<T> where T : Dialog
     {
-        public DialogAndWelcomeBot(ConversationState conversationState, UserState userState, T dialog, IInvokeActivityService invokeActivityService, ILogger<DialogBot<T>> logger)
-            : base(conversationState, userState, dialog, invokeActivityService, logger)
-        {
-        }
+        public DialogAndWelcomeBot(
+            ProjectMessagingExtension projectMessagingExtension,
+            TestMessagingExtension testMessagingExtension,
+            ConversationState conversationState,
+            UserState userState,
+            T dialog,
+            ILogger<DialogBot<T>> logger): base(projectMessagingExtension, testMessagingExtension, conversationState, userState, dialog, logger) { }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {

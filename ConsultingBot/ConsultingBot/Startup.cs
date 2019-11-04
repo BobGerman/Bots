@@ -13,10 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ConsultingBot.Bots;
 using ConsultingBot.Dialogs;
-using Microsoft.Bot.Builder.Teams.Middlewares;
 using Microsoft.Extensions.Configuration;
 using ConsultingBot.Middleware;
-using ConsultingBot.InvokeActivityHandlers;
+using ConsultingBot.TeamsActivityHandlers;
+using Microsoft.Bot.Builder.Teams;
 
 namespace ConsultingBot
 {
@@ -48,18 +48,12 @@ namespace ConsultingBot
             // Create the Conversation state. (Used by the Dialog system itself.)
             services.AddSingleton<ConversationState>();
 
-            // Internal services
+            // Messaging extensions
             services.AddSingleton(new ProjectMessagingExtension(this.Configuration));
-            services.AddSingleton<IInvokeActivityService, InvokeActivityService>();
+            services.AddSingleton(new TestMessagingExtension());
 
             // The Dialog that will be run by the bot.
             services.AddSingleton<MainDialog>();
-
-            // Teams middleware to be added in AdapterWithErrorHandler
-            var teamsMiddleware = new TeamsMiddleware(
-                        new ConfigurationCredentialProvider(this.Configuration)
-                );
-            services.AddSingleton(teamsMiddleware);
 
             // Custom middleware to be added in AdapterWithErrorHandler
             services.AddSingleton<StripBotMention>();

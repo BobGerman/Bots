@@ -11,14 +11,13 @@ namespace Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Newtonsoft.Json.Linq;
+    using ConsultingBot;
 
     public class MessageActivityHandler
     {
         public async Task HandleMessageAsync(ITurnContext turnContext)
         {
-            ITeamsContext teamsContext = turnContext.TurnState.Get<ITeamsContext>();
-
-            string actualText = teamsContext.GetActivityTextWithoutMentions();
+            string actualText = turnContext.Activity.RemoveRecipientMention();
             if (actualText.Equals("Cards", StringComparison.OrdinalIgnoreCase))
             {
                 // Demo card 1 - adaptive card with bot bulder actions
