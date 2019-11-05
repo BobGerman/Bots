@@ -75,8 +75,7 @@ namespace ConsultingBot.Dialogs
                     Prompt = MessageFactory.Text("Which of these projects did you mean?"),
                     Choices = result.Select(project => new Choice()
                     {
-                        Value = $"{project.Client.Name} - {project.Name}",
-                        Synonyms = new List<string>() { project.ProjectId.ToString() }
+                        Value = $"{project.Client.Name} - {project.Name}"
                     }).ToList()
                 }, cancellationToken);
             }
