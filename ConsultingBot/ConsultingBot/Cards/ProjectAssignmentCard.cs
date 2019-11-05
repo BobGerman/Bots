@@ -136,7 +136,7 @@ namespace ConsultingBot.Cards
             await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
             //await turnContext.UpdateActivityAsync(replyActivity).ConfigureAwait(false);
 
-            return await Task.FromResult<InvokeResponse>(null);
+            return new InvokeResponse() { Status = 200 };
         }
 
         public static string SubmissionId { get; } = nameof(ProjectAssignmentCard) + "submit";

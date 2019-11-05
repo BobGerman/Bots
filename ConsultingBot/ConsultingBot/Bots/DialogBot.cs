@@ -6,6 +6,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsultingBot.Cards;
 using ConsultingBot.TeamsActivityHandlers;
 using ConsultingBot.TeamsManifest;
 using Microsoft.Bot.Builder;
@@ -16,6 +17,7 @@ using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot.Bots
 {
@@ -117,9 +119,19 @@ namespace ConsultingBot.Bots
             return await taskModule.HandleTaskModuleSubmitAsync(turnContext, taskModuleRequest);
         }
 
-        protected override Task<InvokeResponse> OnTeamsCardActionInvokeAsync(ITurnContext<IInvokeActivity> turnContext, CancellationToken cancellationToken)
+        protected override async Task<InvokeResponse> OnTeamsCardActionInvokeAsync(ITurnContext<IInvokeActivity> turnContext, CancellationToken cancellationToken)
         {
-            return base.OnTeamsCardActionInvokeAsync(turnContext, cancellationToken);
+            if (string.IsNullOrEmpty(turnContext.Activity.Name))
+            {
+                var val = turnContext.Activity.Value as JObject;
+                var payload = val.ToObject<CardActionValue>();
+                if (payload.submissionId == ProjectAssignmentCard.SubmissionId)
+                {
+                    return await ProjectAssignmentCard.HandleInvokeActivityAsync(turnContext);
+                }
+            }
+
+            return await Task.FromResult<InvokeResponse>(null);
         }
 
     }
