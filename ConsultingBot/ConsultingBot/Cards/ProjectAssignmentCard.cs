@@ -64,7 +64,7 @@ namespace ConsultingBot.Cards
                 }
             });
 
-            var month1Name = DateTime.Now.ToString("MMMM");
+            var month1Name = GetMonthFromNow(0).ToString("MMMM");
             card.Body.Add(new AdaptiveTextBlock($"Forecast for {month1Name}"));
             card.Body.Add(new AdaptiveCards.AdaptiveTextInput()
             {
@@ -73,7 +73,7 @@ namespace ConsultingBot.Cards
                 Value = "",
             });
 
-            var month2Name = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 1 % 12, 1).ToString("MMMM");
+            var month2Name = GetMonthFromNow(1).ToString("MMMM");
             card.Body.Add(new AdaptiveTextBlock($"Forecast for {month2Name}"));
             card.Body.Add(new AdaptiveCards.AdaptiveTextInput()
             {
@@ -81,7 +81,7 @@ namespace ConsultingBot.Cards
                 Placeholder = "0",
                 Value = "",
             });
-            var month3Name = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 2 % 12, 1).ToString("MMMM");
+            var month3Name = GetMonthFromNow(2).ToString("MMMM");
             card.Body.Add(new AdaptiveTextBlock($"Forecast for {month3Name}"));
             card.Body.Add(new AdaptiveCards.AdaptiveTextInput()
             {
@@ -112,6 +112,15 @@ namespace ConsultingBot.Cards
             card.Actions.Add(action.ToAdaptiveCardAction());
 
             return card;
+        }
+
+        // GetMonthFromNow() - returns the 1st of the month +/- delta months
+        private static DateTime GetMonthFromNow(int delta)
+        {
+            var now = DateTime.Now;
+            var month = ((now.Month-1+delta) % 12) + 1;
+            var year = (now.Year + (month < now.Month ? 1 : 0));
+            return new DateTime(year, month, 1);
         }
 
         public static async Task<InvokeResponse> HandleInvokeActivityAsync(ITurnContext turnContext)
