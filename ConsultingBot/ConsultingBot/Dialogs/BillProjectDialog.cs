@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsultingData.Models;
+using ConsultingData.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
 
 namespace ConsultingBot.Dialogs
@@ -10,13 +15,15 @@ namespace ConsultingBot.Dialogs
     {
         public BillProjectDialog(string dialogId) : base(dialogId)
         {
-            AddDialog(new TextPrompt(nameof(TextPrompt)));
+            AddDialog(new TextPrompt(nameof(TextPrompt) + "projectName", ProjectNameValidatorAsync));
+            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new NumberPrompt<double>(nameof(NumberPrompt<double>)));
             AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
             AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 ProjectStepAsync,
+                ProjectDisambiguationStepAsync,
                 TimeWorkedAsync,
                 DeliveryDateAsync,
                 ConfirmStepAsync,
@@ -28,21 +35,62 @@ namespace ConsultingBot.Dialogs
         }
 
         // Step 1: Ensure we have a project name
-        // Result is the project name from LUIS or from a user prompt
+        // Result is a list of possible projects from the database
         private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var requestDetails = stepContext.Options is RequestDetails
                     ? stepContext.Options as RequestDetails
                     : new RequestDetails();
 
-            if (requestDetails.projectName == null)
+            List<ConsultingProject> result = await ResolveProject(requestDetails.projectName);
+
+            if (result == null || result.Count < 1)
             {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text("Which project do you want to add to?") }, cancellationToken);
+                return await stepContext.PromptAsync(nameof(TextPrompt) + "projectName", new PromptOptions
+                {
+                    Prompt = MessageFactory.Text("Which project do you want to add to?"),
+                    RetryPrompt = MessageFactory.Text("Sorry I didn't get that, what project was it?"),
+                }, cancellationToken);
             }
             else
             {
-                return await stepContext.NextAsync(requestDetails.projectName, cancellationToken);
+                return await stepContext.NextAsync(result, cancellationToken);
             }
+        }
+
+        // Step 2: Project Disambiguation step
+        // Result is one or more ConsultingProject objects
+        private async Task<DialogTurnResult> ProjectDisambiguationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var requestDetails = stepContext.Options is RequestDetails
+                    ? stepContext.Options as RequestDetails
+                    : new RequestDetails();
+
+            List<ConsultingProject> result = (List<ConsultingProject>)stepContext.Result;
+            requestDetails.possibleProjects = result;
+
+            if (result.Count > 1)
+            {
+                return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
+                {
+                    Prompt = MessageFactory.Text("Which of these projects did you mean?"),
+                    Choices = result.Select(project => new Choice()
+                    {
+                        Value = $"{project.Client.Name} - {project.Name}"
+                    }).ToList()
+                }, cancellationToken);
+            }
+            else
+            {
+                var project = result.First();
+                var foundChoice = new FoundChoice()
+                {
+                    Value = $"{project.Client.Name} - {project.Name}",
+                    Index = 0,
+                };
+                return await stepContext.NextAsync(foundChoice);
+            }
+
         }
 
         // Step 2: Save the project name and ensure we have a duration
@@ -53,7 +101,10 @@ namespace ConsultingBot.Dialogs
                     ? stepContext.Options as RequestDetails
                     : new RequestDetails();
 
-            requestDetails.projectName = (string)stepContext.Result;
+            var choice = (FoundChoice)stepContext.Result;
+            var project = requestDetails.possibleProjects.ToArray()[choice.Index];
+            requestDetails.projectName = project.Name;
+            requestDetails.project = project;
 
             if (requestDetails.workHours == 0.0)
             {
@@ -122,5 +173,31 @@ namespace ConsultingBot.Dialogs
             var timexProperty = new TimexProperty(timex);
             return !timexProperty.Types.Contains(Constants.TimexTypes.Definite);
         }
+
+        #region Project name resolution
+        private async Task<List<ConsultingProject>> ResolveProject(string keyword)
+        {
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                ConsultingDataService dataService = new ConsultingDataService();
+                var possibleResults = await dataService.GetProjects(keyword);
+                if (possibleResults.Count > 0)
+                {
+                    // We have a single result, return it
+                    return possibleResults;
+                }
+            }
+            return null;
+        }
+
+        private async Task<bool> ProjectNameValidatorAsync(PromptValidatorContext<string> promptContext, CancellationToken cancellationToken)
+        {
+            ConsultingDataService dataService = new ConsultingDataService();
+            var keyword = promptContext.Recognized.Value;
+            var projects = await ResolveProject(keyword);
+            return projects != null && projects.Count > 0;
+        }
+        #endregion
+
     }
 }
