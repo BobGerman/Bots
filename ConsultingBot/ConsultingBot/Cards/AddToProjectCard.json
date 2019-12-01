@@ -21,9 +21,16 @@
               "wrap": true
             },
             {
-              "type": "Input.Text",
+              "type": "Input.ChoiceSet",
               "id": "personName",
-              "value": "{personName}"
+              "value": "{possiblePersons[0].name}",
+              "choices": [
+                {
+                  "$data": "{possiblePersons}",
+                  "title": "{name}",
+                  "value": "{name}"
+                }
+              ]
             },
             {
               "type": "TextBlock",

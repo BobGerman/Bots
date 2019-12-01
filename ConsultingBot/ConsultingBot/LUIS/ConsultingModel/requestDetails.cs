@@ -10,6 +10,12 @@ namespace ConsultingBot
         BillToProject,
     }
 
+    public class Person
+    {
+        public string name { get; set; }
+        public string email { get; set; }
+    }
+
     public class RequestDetails
     {
         public Intent intent { get; set; } = Intent.Unknown;
@@ -20,10 +26,12 @@ namespace ConsultingBot
         public double workHours { get; set; } = 0.0;
         public string workDate { get; set; } = null;
 
-        // Possible projects matching project name
+        // Intermediate results
         public List<ConsultingProject> possibleProjects { get; set; } = new List<ConsultingProject>();
+        public List<Person> possiblePersons { get; set; } = new List<Person>();
 
         // Resolved value validated with data
         public ConsultingProject project { get; set; } = null;
+        public Person person { get; set; } = null;
     }
 }

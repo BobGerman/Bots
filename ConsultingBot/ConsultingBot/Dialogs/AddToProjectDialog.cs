@@ -8,6 +8,8 @@ using ConsultingData.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
+using Microsoft.Bot.Builder.Teams;
+using Microsoft.Bot.Schema.Teams;
 
 namespace ConsultingBot.Dialogs
 {
@@ -61,6 +63,7 @@ namespace ConsultingBot.Dialogs
                     :
                 new RequestDetails();
 
+            // Resolve project if needed
             List<ConsultingProject> result = stepContext.Result as List<ConsultingProject>;
             if (result == null)
             {
@@ -68,6 +71,9 @@ namespace ConsultingBot.Dialogs
                 result = await ResolveProject(projectName);
             }
             requestDetails.possibleProjects = result;
+
+            // Resolve person
+            requestDetails.possiblePersons = await ResolvePerson(requestDetails.personName, stepContext.Context, cancellationToken);
 
             var projectCard = await AddToProjectCard.GetCard(stepContext.Context, requestDetails);
             var reply = stepContext.Context.Activity.CreateReply();
@@ -78,6 +84,32 @@ namespace ConsultingBot.Dialogs
         }
         #endregion
 
+        #region Person name resolution
+
+        private async Task<List<Person>> ResolvePerson (string name, ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            List<Person> result = null;
+
+            IEnumerable<TeamsChannelAccount> members = await TeamsInfo.GetMembersAsync(turnContext, cancellationToken);
+            result = members.Where((w) => w.Name.ToLower().Contains(name.ToLower()))
+                            .Select((w) => new Person
+                            {
+                                name = w.Name,
+                                email = w.Email
+                            })
+                            .ToList();
+            result.Sort((p, q) => string.Compare(p.name, q.name));
+
+            if (result == null || result.Count == 0)
+            {
+                result = new List<Person> { new Person { name = name, email = "" } };
+            }
+
+            return result;
+        }
+
+        #endregion
+
         #region Project name resolution
         private async Task<List<ConsultingProject>> ResolveProject(string keyword)
         {
@@ -85,6 +117,7 @@ namespace ConsultingBot.Dialogs
             {
                 ConsultingDataService dataService = new ConsultingDataService();
                 var possibleResults = await dataService.GetProjects(keyword);
+                possibleResults.Sort((p, q) => string.Compare(p.Name, q.Name));
                 if (possibleResults.Count > 0)
                 {
                     // We have a single result, return it
