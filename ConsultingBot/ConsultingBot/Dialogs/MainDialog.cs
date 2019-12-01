@@ -6,6 +6,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AdaptiveCards;
 using ConsultingBot.Cards;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.QnA;
@@ -92,17 +93,28 @@ namespace ConsultingBot.Dialogs
                 {
                     case Intent.AddToProject:
                         {
-                            var projectCard = ProjectAssignmentCard.GetCard(stepContext.Context, result);
+                            //                            var projectCard = ProjectAssignmentCard.GetCard(stepContext.Context, result);
+                            var projectCard = AddToProjectCard.GetCard(stepContext.Context, result);
                             var reply = stepContext.Context.Activity.CreateReply();
                             reply.Attachments.Add(projectCard.ToAttachment());
                             await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
-                            return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
+                            break;
                         }
                     case Intent.BillToProject:
                         {
                             var timeProperty = new TimexProperty(result.workDate);
                             var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);
-                            confirmationMessage = $"I'm charging {result.projectName} for {result.workHours} hours on {deliveryDateText}. Thank you for using ConsultingBot.";
+
+                            confirmationMessage = $"I'm charging {result.projectName} for {result.workHours} hours on {deliveryDateText}. Thank you for using ConsultingBot. {result.workDate.ToString()}";
+
+                            await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
+
+                            AdaptiveCard card = BillingConfirmationCard.GetCard(result);
+                            var reply = stepContext.Context.Activity.CreateReply();
+                            reply.Attachments.Add(card.ToAttachment());
+                            await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
+
+
                             break;
                         }
                     default:
@@ -126,12 +138,13 @@ namespace ConsultingBot.Dialogs
                                 confirmationMessage = "Sorry, I don't understand what you typed";
                             }
 
+                            await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
+
                             break;
                         }
                 }
             }
 
-            await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
     }
