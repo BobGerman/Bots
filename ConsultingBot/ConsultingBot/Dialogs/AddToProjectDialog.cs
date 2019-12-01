@@ -16,16 +16,10 @@ namespace ConsultingBot.Dialogs
         public AddToProjectDialog(string dialogId) : base(dialogId)
         {
             AddDialog(new TextPrompt(nameof(TextPrompt) + "projectName", ProjectNameValidatorAsync));
-            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ConfirmPrompt(nameof(ConfirmPrompt)));
-            AddDialog(new DateResolverDialog());
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 ProjectStepAsync,
-                ProjectDisambiguationStepAsync,
-                PersonStepAsync,
-                ConfirmStepAsync,
                 FinalStepAsync,
             }));
 
@@ -58,66 +52,8 @@ namespace ConsultingBot.Dialogs
             }
         }
 
-        // Step 2: Project Disambiguation step
-        // Result is one or more ConsultingProject objects
-        private async Task<DialogTurnResult> ProjectDisambiguationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
-
-            List<ConsultingProject> result = (List<ConsultingProject>)stepContext.Result;
-            requestDetails.possibleProjects = result;
-
-            if (result.Count > 1)
-            {
-                return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
-                {
-                    Prompt = MessageFactory.Text("Which of these projects did you mean?"),
-                    Choices = result.Select(project => new Choice()
-                    {
-                        Value = $"{project.Client.Name} - {project.Name}"
-                    }).ToList()
-                }, cancellationToken);
-            }
-            else
-            {
-                var project = result.First();
-                var foundChoice = new FoundChoice()
-                {
-                    Value = $"{project.Client.Name} - {project.Name}",
-                    Index = 0,
-                };
-                return await stepContext.NextAsync(foundChoice);
-            }
-
-        }
-
-        // Step 3: Save the project info and ensure we have a person name
-        // Result is the person name from LUIS or from a user prompt
-        private async Task<DialogTurnResult> PersonStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
-
-            var choice = (FoundChoice)stepContext.Result;
-            var project = requestDetails.possibleProjects.ToArray()[choice.Index];
-            requestDetails.projectName = project.Name;
-            requestDetails.project = project;
-
-            if (string.IsNullOrEmpty(requestDetails.personName))
-            {
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = MessageFactory.Text($"Ok, who did you want to add to the {requestDetails.projectName} project?") }, cancellationToken);
-            }
-            else
-            {
-                return await stepContext.NextAsync(requestDetails.personName, cancellationToken);
-            }
-        }
-
-        // Step 4: Save the person name and confirm with the user 
-        private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        // Step 2: Display the Add to Project card
+        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var requestDetails = stepContext.Options is RequestDetails
                     ?
@@ -125,38 +61,20 @@ namespace ConsultingBot.Dialogs
                     :
                 new RequestDetails();
 
-            // Get the person's name in Title Case
-            var cultureInfo = Thread.CurrentThread.CurrentCulture;
-            var textInfo = cultureInfo.TextInfo;
-            requestDetails.personName = textInfo.ToTitleCase((string)stepContext.Result);
-
-            var message = $"Please confirm, I'm adding: {requestDetails.personName} to the {requestDetails.project.Client.Name} {requestDetails.projectName} project";
-
-            return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(message) }, cancellationToken);
-        }
-
-        // Step 5: Display the final outcome
-        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            if ((bool)stepContext.Result)
+            List<ConsultingProject> result = stepContext.Result as List<ConsultingProject>;
+            if (result == null)
             {
-                var requestDetails = stepContext.Options is RequestDetails
-                        ?
-                    stepContext.Options as RequestDetails
-                        :
-                    new RequestDetails();
-
-                var projectCard = await AddToProjectCard.GetCard(stepContext.Context, requestDetails);
-                var reply = stepContext.Context.Activity.CreateReply();
-                reply.Attachments.Add(projectCard.ToAttachment());
-                await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
-
-                return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
+                var projectName = stepContext.Result as string;
+                result = await ResolveProject(projectName);
             }
-            else
-            {
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
+            requestDetails.possibleProjects = result;
+
+            var projectCard = await AddToProjectCard.GetCard(stepContext.Context, requestDetails);
+            var reply = stepContext.Context.Activity.CreateReply();
+            reply.Attachments.Add(projectCard.ToAttachment());
+            await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
+
+            return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
         }
         #endregion
 

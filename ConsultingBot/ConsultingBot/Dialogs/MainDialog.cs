@@ -50,7 +50,7 @@ namespace ConsultingBot.Dialogs
             if (string.IsNullOrEmpty(Configuration["LuisAppId"]) || string.IsNullOrEmpty(Configuration["LuisAPIKey"]) || string.IsNullOrEmpty(Configuration["LuisAPIHostName"]))
             {
                 await stepContext.Context.SendActivityAsync(
-                    MessageFactory.Text("NOTE: LUIS is not configured. To enable all capabilities, add 'LuisAppId', 'LuisAPIKey' and 'LuisAPIHostName' to the appsettings.json file."), cancellationToken);
+                    MessageFactory.Text("NOTE: LUIS is not configured. Please add 'LuisAppId', 'LuisAPIKey' and 'LuisAPIHostName' to the app settings."), cancellationToken);
 
                 return await stepContext.NextAsync(null, cancellationToken);
             }

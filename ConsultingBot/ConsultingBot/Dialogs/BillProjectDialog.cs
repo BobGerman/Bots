@@ -69,7 +69,12 @@ namespace ConsultingBot.Dialogs
                     ? stepContext.Options as RequestDetails
                     : new RequestDetails();
 
-            List<ConsultingProject> result = (List<ConsultingProject>)stepContext.Result;
+            List<ConsultingProject> result = stepContext.Result as List<ConsultingProject>;
+            if (result == null)
+            {
+                var projectName = stepContext.Result as string;
+                result = await ResolveProject(projectName);
+            }
             requestDetails.possibleProjects = result;
 
             if (result.Count > 1)
