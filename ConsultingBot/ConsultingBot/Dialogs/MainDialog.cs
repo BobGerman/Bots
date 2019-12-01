@@ -83,38 +83,21 @@ namespace ConsultingBot.Dialogs
         // Step 2: Confirm the final outcome
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var confirmationMessage = "OK never mind!";
             var result = stepContext.Result as RequestDetails;
 
             // If the child dialog was cancelled or the user failed to confirm, the result will be null.
-            if (result != null)
+            if (result == null)
+            {
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text("OK, never mind"), cancellationToken);
+            }
+            else
             {
                 switch (result.intent)
                 {
                     case Intent.AddToProject:
-                        {
-                            //                            var projectCard = ProjectAssignmentCard.GetCard(stepContext.Context, result);
-                            var projectCard = await AddToProjectCard.GetCard(stepContext.Context, result);
-                            var reply = stepContext.Context.Activity.CreateReply();
-                            reply.Attachments.Add(projectCard.ToAttachment());
-                            await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
-                            break;
-                        }
                     case Intent.BillToProject:
                         {
-                            var timeProperty = new TimexProperty(result.workDate);
-                            var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);
-
-                            confirmationMessage = $"I'm charging {result.projectName} for {result.workHours} hours on {deliveryDateText}. Thank you for using ConsultingBot. {result.workDate.ToString()}";
-
-                            await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
-
-                            AdaptiveCard card = BillingConfirmationCard.GetCard(result);
-                            var reply = stepContext.Context.Activity.CreateReply();
-                            reply.Attachments.Add(card.ToAttachment());
-                            await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
-
-
+                            // These dialogs have their own completion messages, nothing to show
                             break;
                         }
                     default:
@@ -130,21 +113,20 @@ namespace ConsultingBot.Dialogs
                             var response = await qnaMaker.GetAnswersAsync(stepContext.Context);
                             if (response != null && response.Length > 0)
                             {
-                                confirmationMessage = response[0].Answer;
+                                // If we got answers, show the most probable best one
+                                await stepContext.Context.SendActivityAsync(MessageFactory.Text(response[0].Answer), cancellationToken);
                             }
                             else
                             {
-                                // If QnA Maker doesn't know what to do, fall back to a canned message
-                                confirmationMessage = "Sorry, I don't understand what you typed";
+                                // If QnA Maker doesn't know what to do, show a canned message
+                                await stepContext.Context.SendActivityAsync(MessageFactory.Text("Sorry, I don't understand what you typed"), cancellationToken);
                             }
-
-                            await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
 
                             break;
                         }
                 }
             }
-
+            
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
     }

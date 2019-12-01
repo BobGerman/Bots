@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AdaptiveCards;
+using ConsultingBot.Cards;
 using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;
@@ -159,6 +162,20 @@ namespace ConsultingBot.Dialogs
                 var requestDetails = stepContext.Options is RequestDetails
                         ? stepContext.Options as RequestDetails
                         : new RequestDetails();
+
+                var timeProperty = new TimexProperty(requestDetails.workDate);
+                var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);
+
+                // TODO: Update billing system here and report any errors to user
+                // Here is the success message
+                var confirmationMessage = $"OK, I've charged {requestDetails.project.Name} for {requestDetails.workHours} hours worked {deliveryDateText}. Thank you for using ConsultingBot.";
+
+                await stepContext.Context.SendActivityAsync(MessageFactory.Text(confirmationMessage), cancellationToken);
+
+                AdaptiveCard card = BillingConfirmationCard.GetCard(requestDetails);
+                var reply = stepContext.Context.Activity.CreateReply();
+                reply.Attachments.Add(card.ToAttachment());
+                await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
 
                 return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
             }

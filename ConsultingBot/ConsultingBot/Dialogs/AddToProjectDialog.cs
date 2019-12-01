@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsultingBot.Cards;
 using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;
@@ -144,6 +145,11 @@ namespace ConsultingBot.Dialogs
                     stepContext.Options as RequestDetails
                         :
                     new RequestDetails();
+
+                var projectCard = await AddToProjectCard.GetCard(stepContext.Context, requestDetails);
+                var reply = stepContext.Context.Activity.CreateReply();
+                reply.Attachments.Add(projectCard.ToAttachment());
+                await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
 
                 return await stepContext.EndDialogAsync(requestDetails, cancellationToken);
             }
