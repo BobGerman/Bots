@@ -3,15 +3,18 @@
   "version": "1.0",
   "body": [
     {
-      "type": "TextBlock",
-      "text": "Project assignment"
-    },
-    {
       "type": "ColumnSet",
       "columns": [
         {
           "type": "Column",
           "items": [
+            {
+              "type": "TextBlock",
+              "text": "Project assignment",
+              "weight": "bolder",
+              "size": "large",
+              "spacing": "None"
+            },
             {
               "type": "TextBlock",
               "text": "Consultant name",
@@ -39,7 +42,7 @@
             },
             {
               "type": "Input.ChoiceSet",
-              "id": "projectName",
+              "id": "projectId",
               "value": "{possibleProjects[0].ProjectId}",
               "choices": [
                 {
@@ -48,7 +51,35 @@
                   "value": "{ProjectId}"
                 }
               ]
+            },
+            {
+              "type": "TextBlock",
+              "text": "Role",
+              "wrap": true
+            },
+            {
+              "type": "Input.ChoiceSet",
+              "id": "role",
+              "choices": [
+                {
+                  "title": "Architect",
+                  "value": "architect"
+                },
+                {
+                  "title": "Designer",
+                  "value": "designer"
+                },
+                {
+                  "title": "Developer",
+                  "value": "dev"
+                },
+                {
+                  "title": "Project Manager",
+                  "value": "pm"
+                }
+              ]
             }
+
           ],
           "width": "auto"
         },
@@ -58,7 +89,33 @@
             {
               "type": "Image",
               "url": "{possibleProjects[0].Client.LogoUrl}",
-              "size": "medium"
+              "size": "large"
+            },
+            {
+              "type": "TextBlock",
+              "text": "Forecast hours",
+              "wrap": true
+            },
+            {
+              "type": "Input.Text",
+              "placeholder": "January 2021",
+              "style": "text",
+              "maxLength": 0,
+              "id": "forecast0"
+            },
+            {
+              "type": "Input.Text",
+              "placeholder": "February 2021",
+              "style": "text",
+              "maxLength": 0,
+              "id": "forecast1"
+            },
+            {
+              "type": "Input.Text",
+              "placeholder": "March 2021",
+              "style": "text",
+              "maxLength": 0,
+              "id": "forecast2"
             }
           ],
           "width": "auto"
