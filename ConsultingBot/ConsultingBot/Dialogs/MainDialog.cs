@@ -94,7 +94,7 @@ namespace ConsultingBot.Dialogs
                     case Intent.AddToProject:
                         {
                             //                            var projectCard = ProjectAssignmentCard.GetCard(stepContext.Context, result);
-                            var projectCard = AddToProjectCard.GetCard(stepContext.Context, result);
+                            var projectCard = await AddToProjectCard.GetCard(stepContext.Context, result);
                             var reply = stepContext.Context.Activity.CreateReply();
                             reply.Attachments.Add(projectCard.ToAttachment());
                             await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
