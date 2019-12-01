@@ -7,39 +7,61 @@
       "text": "Project assignment"
     },
     {
-      "type": "TextBlock",
-      "text": "Consultant name",
-      "wrap": true
-    },
-    {
-      "type": "Input.Text",
-      "id": "personName",
-      "value": "{personName}"
-    },
-    {
-      "type": "TextBlock",
-      "text": "Client name",
-      "wrap": true
-    },
-    {
-      "type": "Input.Text",
-      "id": "clientName",
-      "value": "{project.Client.Name}"
-    },
-    {
-      "type": "TextBlock",
-      "text": "Project name",
-      "wrap": true
-    },
-    {
-      "type": "Input.ChoiceSet",
-      "id": "projectName",
-      "value": "{possibleProjects[0].ProjectId}",
-      "choices": [
+      "type": "ColumnSet",
+      "columns": [
         {
-          "$data": "{possibleProjects}",
-          "title": "{Name}",
-          "value": "{ProjectId}"
+          "type": "Column",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "Consultant name",
+              "wrap": true
+            },
+            {
+              "type": "Input.Text",
+              "id": "personName",
+              "value": "{personName}"
+            },
+            {
+              "type": "TextBlock",
+              "text": "Client name",
+              "wrap": true
+            },
+            {
+              "type": "Input.Text",
+              "id": "clientName",
+              "value": "{possibleProjects[0].Client.Name}"
+            },
+            {
+              "type": "TextBlock",
+              "text": "Project name",
+              "wrap": true
+            },
+            {
+              "type": "Input.ChoiceSet",
+              "id": "projectName",
+              "value": "{possibleProjects[0].ProjectId}",
+              "choices": [
+                {
+                  "$data": "{possibleProjects}",
+                  "title": "{Name}",
+                  "value": "{ProjectId}"
+                }
+              ]
+            }
+          ],
+          "width": "auto"
+        },
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "Image",
+              "url": "{possibleProjects[0].Client.LogoUrl}",
+              "size": "medium"
+            }
+          ],
+          "width": "auto"
         }
       ]
     }
