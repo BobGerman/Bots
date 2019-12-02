@@ -78,20 +78,17 @@ namespace ConsultingBot.Cards
 
                 var card = AdaptiveCard.FromJson(cardJson).Card;
 
-                var replyActivity = turnContext.Activity.CreateReply();
-                replyActivity.Attachments.Add(card.ToAttachment());
-
-                await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
-                //await turnContext.UpdateActivityAsync(replyActivity).ConfigureAwait(false);
+                var newActivity = MessageFactory.Attachment(card.ToAttachment());
+                newActivity.Id = turnContext.Activity.ReplyToId;
+                await turnContext.UpdateActivityAsync(newActivity, cancellationToken);
 
                 return new InvokeResponse() { Status = 200 };
             }
             else
             {
-                var replyActivity = turnContext.Activity.CreateReply();
-                replyActivity.Text = "OK I cancelled your request.";
-
-                await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
+                var newActivity = MessageFactory.Text("Cancelled request");
+                newActivity.Id = turnContext.Activity.ReplyToId;
+                await turnContext.UpdateActivityAsync(newActivity, cancellationToken);
 
                 return new InvokeResponse() { Status = 200 };
             }
