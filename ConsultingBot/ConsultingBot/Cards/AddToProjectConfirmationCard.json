@@ -17,23 +17,27 @@
           "value": "{personName}"
         },
         {
+          "title": "Role: ",
+          "value": "{role}"
+        },
+        {
           "title": "Client: ",
           "value": "{clientName}"
         },
         {
-          "title": "Project id: ",
-          "value": "{projectId}"
+          "title": "Project: ",
+          "value": "{projectName}"
         },
         {
-          "title": "{forecastZero} forecast: ",
+          "title": "{monthZero} forecast: ",
           "value": "{forecastZero}"
         },
         {
-          "title": "Month1 forecast: ",
+          "title": "{monthOne} forecast: ",
           "value": "{forecastOne}"
         },
         {
-          "title": "Month2 forecast: ",
+          "title": "{monthTwo} forecast: ",
           "value": "{forecastTwo}"
         }
       ]

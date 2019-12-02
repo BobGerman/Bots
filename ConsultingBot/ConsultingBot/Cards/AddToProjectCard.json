@@ -49,13 +49,13 @@
             },
             {
               "type": "Input.ChoiceSet",
-              "id": "projectId",
-              "value": "{possibleProjects[0].ProjectId}",
+              "id": "projectName",
+              "value": "{possibleProjects[0].Name}",
               "choices": [
                 {
                   "$data": "{possibleProjects}",
                   "title": "{Name}",
-                  "value": "{ProjectId}"
+                  "value": "{Name}"
                 }
               ]
             },
@@ -70,19 +70,19 @@
               "choices": [
                 {
                   "title": "Architect",
-                  "value": "architect"
+                  "value": "Architect"
                 },
                 {
                   "title": "Designer",
-                  "value": "designer"
+                  "value": "Designer"
                 },
                 {
                   "title": "Developer",
-                  "value": "dev"
+                  "value": "Developer"
                 },
                 {
                   "title": "Project Manager",
-                  "value": "pm"
+                  "value": "Project Manager"
                 }
               ]
             }
@@ -105,19 +105,19 @@
             },
             {
               "type": "Input.Text",
-              "placeholder": "January 2021",
+              "placeholder": "January 2020",
               "style": "text",
               "id": "forecastZero"
             },
             {
               "type": "Input.Text",
-              "placeholder": "February 2021",
+              "placeholder": "February 2020",
               "style": "text",
               "id": "forecastOne"
             },
             {
               "type": "Input.Text",
-              "placeholder": "March 2021",
+              "placeholder": "March 2020",
               "style": "text",
               "id": "forecastTwo"
             }
@@ -135,10 +135,28 @@
         "msteams": {
           "type": "invoke",
           "value": {
-            "submissionId": "AddToProjectSubmit"
+            "submissionId": "AddToProjectSubmit",
+            "command": "submit",
+            "monthZero": "January 2020",
+            "monthOne": "February 2020",
+            "monthTwo":  "March 2020"
+          }
+        }
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Cancel",
+      "data": {
+        "msteams": {
+          "type": "invoke",
+          "value": {
+            "submissionId": "AddToProjectSubmit",
+            "command": "cancel"
           }
         }
       }
     }
+
   ]
 }
