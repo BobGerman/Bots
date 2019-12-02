@@ -105,19 +105,19 @@
             },
             {
               "type": "Input.Text",
-              "placeholder": "January 2020",
+              "placeholder": "{monthZero}",
               "style": "text",
               "id": "forecastZero"
             },
             {
               "type": "Input.Text",
-              "placeholder": "February 2020",
+              "placeholder": "{monthOne}",
               "style": "text",
               "id": "forecastOne"
             },
             {
               "type": "Input.Text",
-              "placeholder": "March 2020",
+              "placeholder": "{monthTwo}",
               "style": "text",
               "id": "forecastTwo"
             }
@@ -137,9 +137,9 @@
           "value": {
             "submissionId": "AddToProjectSubmit",
             "command": "submit",
-            "monthZero": "January 2020",
-            "monthOne": "February 2020",
-            "monthTwo":  "March 2020"
+            "monthZero": "{monthZero}",
+            "monthOne": "{monthOne}",
+            "monthTwo":  "{monthTwo}"
           }
         }
       }

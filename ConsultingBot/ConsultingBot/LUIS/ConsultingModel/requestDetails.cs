@@ -29,6 +29,9 @@ namespace ConsultingBot
         // Intermediate results
         public List<ConsultingProject> possibleProjects { get; set; } = new List<ConsultingProject>();
         public List<Person> possiblePersons { get; set; } = new List<Person>();
+        public string monthZero { get; set; }
+        public string monthOne { get; set; }
+        public string monthTwo { get; set; }
 
         // Resolved value validated with data
         public ConsultingProject project { get; set; } = null;
