@@ -44,9 +44,9 @@ namespace ConsultingBot.Cards
             public string personName { get; set; }
             public string clientName { get; set; }
             public string projectId { get; set; }
-            public string forecast0 { get; set; }
-            public string forecast1 { get; set; }
-            public string forecast2 { get; set; }
+            public string forecastZero { get; set; }
+            public string forecastOne { get; set; }
+            public string forecastTwo { get; set; }
         }
 
         public static async Task<InvokeResponse> OnSubmit(ITurnContext turnContext, CancellationToken cancellationToken)

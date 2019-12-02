@@ -25,16 +25,16 @@
           "value": "{projectId}"
         },
         {
-          "title": "Month0 forecast: ",
-          "value": "{forecast0}"
+          "title": "{forecastZero} forecast: ",
+          "value": "{forecastZero}"
         },
         {
           "title": "Month1 forecast: ",
-          "value": "{forecast1}"
+          "value": "{forecastOne}"
         },
         {
           "title": "Month2 forecast: ",
-          "value": "{forecast2}"
+          "value": "{forecastTwo}"
         }
       ]
     }

@@ -107,22 +107,19 @@
               "type": "Input.Text",
               "placeholder": "January 2021",
               "style": "text",
-              "maxLength": 0,
-              "id": "forecast0"
+              "id": "forecastZero"
             },
             {
               "type": "Input.Text",
               "placeholder": "February 2021",
               "style": "text",
-              "maxLength": 0,
-              "id": "forecast1"
+              "id": "forecastOne"
             },
             {
               "type": "Input.Text",
               "placeholder": "March 2021",
               "style": "text",
-              "maxLength": 0,
-              "id": "forecast2"
+              "id": "forecastTwo"
             }
           ],
           "width": "auto"
