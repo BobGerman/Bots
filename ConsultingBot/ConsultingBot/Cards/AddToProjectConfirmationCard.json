@@ -1,0 +1,42 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Project assignment confirmation",
+      "weight": "bolder",
+      "size": "large",
+      "spacing": "None"
+    },
+    {
+      "type": "FactSet",
+      "facts": [
+        {
+          "title": "Person assigned: ",
+          "value": "{personName}"
+        },
+        {
+          "title": "Client: ",
+          "value": "{clientName}"
+        },
+        {
+          "title": "Project id: ",
+          "value": "{projectId}"
+        },
+        {
+          "title": "Month0 forecast: ",
+          "value": "{forecast0}"
+        },
+        {
+          "title": "Month1 forecast: ",
+          "value": "{forecast1}"
+        },
+        {
+          "title": "Month2 forecast: ",
+          "value": "{forecast2}"
+        }
+      ]
+    }
+  ]
+}

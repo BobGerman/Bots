@@ -125,9 +125,9 @@ namespace ConsultingBot.Bots
             {
                 var val = turnContext.Activity.Value as JObject;
                 var payload = val.ToObject<CardActionValue>();
-                if (payload.submissionId == ProjectAssignmentCard.SubmissionId)
+                if (payload.submissionId == AddToProjectCard.SubmissionId)
                 {
-                    return await ProjectAssignmentCard.HandleInvokeActivityAsync(turnContext);
+                    return await AddToProjectCard.OnSubmit(turnContext, cancellationToken);
                 }
             }
 

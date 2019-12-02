@@ -133,8 +133,8 @@ namespace ConsultingBot.Cards
             var replyActivity = turnContext.Activity.CreateReply();
             replyActivity.Attachments.Add(responseCard.ToAttachment());
 
-            await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
-            //await turnContext.UpdateActivityAsync(replyActivity).ConfigureAwait(false);
+            //await turnContext.SendActivityAsync(replyActivity).ConfigureAwait(false);
+            await turnContext.UpdateActivityAsync(replyActivity).ConfigureAwait(false);
 
             return new InvokeResponse() { Status = 200 };
         }

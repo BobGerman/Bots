@@ -133,7 +133,15 @@
   "actions": [
     {
       "type": "Action.Submit",
-      "title": "Submit"
+      "title": "Submit",
+      "data": {
+        "msteams": {
+          "type": "invoke",
+          "value": {
+            "submissionId": "AddToProjectSubmit"
+          }
+        }
+      }
     }
   ]
 }

@@ -16,10 +16,12 @@
 
   <ItemGroup>
     <Content Remove="Cards\AddToProjectCard.json" />
+    <Content Remove="Cards\AddToProjectConfirmationCard.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Cards\AddToProjectCard.json" />
+    <EmbeddedResource Include="Cards\AddToProjectConfirmationCard.json" />
   </ItemGroup>
 
   <ItemGroup>
