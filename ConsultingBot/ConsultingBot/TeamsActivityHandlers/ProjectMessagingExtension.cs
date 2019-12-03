@@ -1,4 +1,5 @@
-﻿using ConsultingBot.Cards;
+﻿using AdaptiveCards;
+using ConsultingBot.Cards;
 using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;
@@ -6,10 +7,12 @@ using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsultingBot.TeamsActivityHandlers
@@ -65,7 +68,7 @@ namespace ConsultingBot.TeamsActivityHandlers
                                                    })
                                                    .ToList();
 
-            var card = await AddToProjectCard.GetCard(turnContext, emptyRequest);
+            var card = await AddToProjectCard.GetCardAsync(turnContext, emptyRequest);
             var response = new Microsoft.Bot.Schema.Teams.TaskModuleContinueResponse()
             {
                 Type = "continue",
@@ -83,9 +86,9 @@ namespace ConsultingBot.TeamsActivityHandlers
         }
 
         // Called when the task module from an action messaging extension  is submitted
-        public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
+        public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, CancellationToken cancellationToken, MessagingExtensionAction action)
         {
-            var val = JObject.FromObject(query.Data); // turnContext.Activity.Value as JObject;
+            var val = JObject.FromObject(action.Data); // turnContext.Activity.Value as JObject;
             var payload = val.ToObject<AddToProjectCard.AddToProjectCardActionValue>();
             var submitData = val["msteams"]["value"];
             payload.submissionId = submitData.Value<string>("submissionId");
@@ -94,68 +97,53 @@ namespace ConsultingBot.TeamsActivityHandlers
             payload.monthOne = submitData.Value<string>("monthOne");
             payload.monthTwo = submitData.Value<string>("monthTwo");
 
-            I left off here
-
-
-
-
-
-
-            bool done = false;
-            string sampleChoice = "";
-            string userText = "";
-
-            JObject data = null;
-            if (query.Data != null)
+            // FROM SAMPLE
+            dynamic Data = JObject.Parse(action.Data.ToString());
+            var response = new MessagingExtensionActionResponse
             {
-                data = JObject.FromObject(query.Data);
-                sampleChoice = (string)data["sampleChoice"];
-                userText = (string)data["userText"];
-                done = (bool)data["done"];
-            }
-
-            var body = new MessagingExtensionActionResponse();
-            if (data != null && done && sampleChoice != "refresh")
-            {
-                switch (sampleChoice)
+                ComposeExtension = new MessagingExtensionResult
                 {
-                    case "1":
-                        {
-                            // Sample Hero Card
-                            var card = SampleHeroCard.GetCard(userText);
-                            var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
-                            var resultCards = new List<MessagingExtensionAttachment> {
-                               card.ToAttachment().ToMessagingExtensionAttachment(preview)
-                            };
-                            body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
-                            break;
-                        }
-                    default:
-                        {
-                            // Sample project card
-                            var consultingDataService = new ConsultingDataService();
-                            var project = (await consultingDataService.GetProjects()).FirstOrDefault();
+                    Type = "botMessagePreview",
+                    ActivityPreview = MessageFactory.Attachment(new Attachment
+                    {
+                        Content = await AddToProjectCard.GetCardAsync(turnContext, payload),
+                        ContentType = AdaptiveCard.ContentType
+                    }) as Activity
+                },
+                
+            };
 
-                            var card = ProjectPreviewCard.GetCard(project);
-                            var preview = new ThumbnailCard("Created Card (preview)", null, $"Your input: {userText}").ToAttachment();
-                            var resultCards = new List<MessagingExtensionAttachment> {
-                                card.ToAttachment().ToMessagingExtensionAttachment(preview)
-                            };
-                            body.ComposeExtension = new MessagingExtensionResult("list", "result", resultCards);
-                            break;
-                        }
-                }
-                return body;
-            }
-            else
-            {
-                return new MessagingExtensionActionResponse
-                {
-                    Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(sampleChoice, userText)
-                };
-            }
+            return response;
+
         }
 
+        public async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionBotMessagePreviewEditAsync(
+  ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
+        {
+            return await HandleMessagingExtensionFetchTaskAsync(turnContext, action);
+        }
+
+        public async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionBotMessagePreviewSendAsync(
+          ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
+        {
+            var activityPreview = action.BotActivityPreview[0];
+            var attachmentContent = activityPreview.Attachments[0].Content;
+            var previewedCard = JsonConvert.DeserializeObject<AdaptiveCard>(attachmentContent.ToString(),
+                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            previewedCard.Version = "1.0";
+
+            var responseActivity = Activity.CreateMessageActivity();
+            Attachment attachment = new Attachment()
+            {
+                ContentType = AdaptiveCard.ContentType,
+                Content = previewedCard
+            };
+            responseActivity.Attachments.Add(attachment);
+            await turnContext.SendActivityAsync(responseActivity);
+
+            return new MessagingExtensionActionResponse();
+        }
         private string getMapUrl(ConsultingClient client)
         {
             string coordinates = $"{ client.Latitude.ToString() },{ client.Longitude.ToString()}";

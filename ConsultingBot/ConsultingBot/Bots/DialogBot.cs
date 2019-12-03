@@ -93,12 +93,24 @@ namespace ConsultingBot.Bots
         {
             if (action.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
             {
-                return await this.projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, action);
+                return await this.projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, cancellationToken, action);
             }
             else
             {
                 return await this.testMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, action);
             }
+        }
+
+        protected override async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionBotMessagePreviewEditAsync(
+  ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
+        {
+            return await this.projectMessagingExtension.OnTeamsMessagingExtensionBotMessagePreviewEditAsync(turnContext, action, cancellationToken);
+        }
+
+        protected override async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionBotMessagePreviewSendAsync(
+          ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
+        {
+            return await this.projectMessagingExtension.OnTeamsMessagingExtensionBotMessagePreviewSendAsync(turnContext, action, cancellationToken);
         }
 
         protected override async Task<MessagingExtensionResponse> OnTeamsAppBasedLinkQueryAsync(ITurnContext<IInvokeActivity> turnContext, AppBasedLinkQuery query, CancellationToken cancellationToken)

@@ -19,7 +19,7 @@ namespace ConsultingBot.Cards
     {
         public const string SubmissionId = "AddToProjectSubmit";
 
-        public static async Task<AdaptiveCard> GetCard(ITurnContext turnContext, RequestDetails requestDetails)
+        public static async Task<AdaptiveCard> GetCardAsync(ITurnContext turnContext, RequestDetails requestDetails)
         {
             var templateJson = String.Empty;
             var assembly = Assembly.GetEntryAssembly();
@@ -56,6 +56,25 @@ namespace ConsultingBot.Cards
             public string forecastTwo { get; set; }
         }
 
+        public static async Task<AdaptiveCard> GetCardAsync(ITurnContext turnContext, AddToProjectCardActionValue payload)
+        {
+            var templateJson = String.Empty;
+            var assembly = Assembly.GetEntryAssembly();
+            var resourceStream = assembly.GetManifestResourceStream("ConsultingBot.Cards.AddToProjectConfirmationCard.json");
+            using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
+            {
+                templateJson = await reader.ReadToEndAsync();
+            }
+
+            var dataJson = JsonConvert.SerializeObject(payload);
+
+            var transformer = new AdaptiveTransformer();
+            var cardJson = transformer.Transform(templateJson, dataJson);
+
+            return AdaptiveCard.FromJson(cardJson).Card;
+
+        }
+
         public static async Task<InvokeResponse> OnSubmit(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             var val = turnContext.Activity.Value as JObject;
@@ -63,21 +82,7 @@ namespace ConsultingBot.Cards
 
             if (payload.command == "submit")
             {
-                var templateJson = String.Empty;
-                var assembly = Assembly.GetEntryAssembly();
-                var resourceStream = assembly.GetManifestResourceStream("ConsultingBot.Cards.AddToProjectConfirmationCard.json");
-                using (var reader = new StreamReader(resourceStream, Encoding.UTF8))
-                {
-                    templateJson = await reader.ReadToEndAsync();
-                }
-
-                var dataJson = JsonConvert.SerializeObject(payload);
-
-                var transformer = new AdaptiveTransformer();
-                var cardJson = transformer.Transform(templateJson, dataJson);
-
-                var card = AdaptiveCard.FromJson(cardJson).Card;
-
+                var card = await GetCardAsync(turnContext, payload);
                 var newActivity = MessageFactory.Attachment(card.ToAttachment());
                 newActivity.Id = turnContext.Activity.ReplyToId;
                 await turnContext.UpdateActivityAsync(newActivity, cancellationToken);

@@ -75,7 +75,7 @@ namespace ConsultingBot.Dialogs
             // Resolve person
             requestDetails.possiblePersons = await ResolvePerson(requestDetails.personName, stepContext.Context, cancellationToken);
 
-            var projectCard = await AddToProjectCard.GetCard(stepContext.Context, requestDetails);
+            var projectCard = await AddToProjectCard.GetCardAsync(stepContext.Context, requestDetails);
             var reply = stepContext.Context.Activity.CreateReply();
             reply.Attachments.Add(projectCard.ToAttachment());
             await stepContext.Context.SendActivityAsync(reply).ConfigureAwait(false);
