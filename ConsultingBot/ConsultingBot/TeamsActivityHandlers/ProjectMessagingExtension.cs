@@ -54,15 +54,53 @@ namespace ConsultingBot.TeamsActivityHandlers
         // Called when the task module is fetched for an action
         public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
+            var emptyRequest = new RequestDetails();
+            ConsultingDataService dataService = new ConsultingDataService();
+            emptyRequest.possibleProjects = await dataService.GetProjects("");
+            IEnumerable<TeamsChannelAccount> members = await TeamsInfo.GetMembersAsync(turnContext);
+            emptyRequest.possiblePersons = members.Select((w) => new Person
+                                                   {
+                                                      name = w.Name,
+                                                      email = w.Email
+                                                   })
+                                                   .ToList();
+
+            var card = await AddToProjectCard.GetCard(turnContext, emptyRequest);
+            var response = new Microsoft.Bot.Schema.Teams.TaskModuleContinueResponse()
+            {
+                Type = "continue",
+                Value = new TaskModuleTaskInfo()
+                {
+                    Title = "Select a sample",
+                    Card = card.ToAttachment()
+                }
+            };
+
             return new MessagingExtensionActionResponse
             {
-                Task = SampleCardSelectionCard.GetSampleCardTaskModuleResponse(),
+                Task = response
             };
         }
 
         // Called when the task module from an action messaging extension  is submitted
         public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
+            var val = JObject.FromObject(query.Data); // turnContext.Activity.Value as JObject;
+            var payload = val.ToObject<AddToProjectCard.AddToProjectCardActionValue>();
+            var submitData = val["msteams"]["value"];
+            payload.submissionId = submitData.Value<string>("submissionId");
+            payload.command = submitData.Value<string>("command");
+            payload.monthZero = submitData.Value<string>("monthZero");
+            payload.monthOne = submitData.Value<string>("monthOne");
+            payload.monthTwo = submitData.Value<string>("monthTwo");
+
+            I left off here
+
+
+
+
+
+
             bool done = false;
             string sampleChoice = "";
             string userText = "";

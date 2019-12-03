@@ -6,12 +6,6 @@
 
   <ItemGroup>
     <Compile Remove="Bots\MessagingExtensionBot.cs" />
-    <Compile Remove="InvokeActivityHandlers\IInvokeActivityService.cs" />
-    <Compile Remove="InvokeActivityHandlers\InvokeActivityService.cs" />
-    <Compile Remove="InvokeActivityHandlers\ProjectMessagingExtension.cs" />
-    <Compile Remove="InvokeActivityHandlers\TestMessagingExtension.cs" />
-    <Compile Remove="InvokeActivityHandlers\TestTaskModule.cs" />
-    <Compile Remove="InvokeActivityHandlers\TesttLinkQuery.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +41,6 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="InvokeActivityHandlers\" />
   </ItemGroup>
 
 </Project>
