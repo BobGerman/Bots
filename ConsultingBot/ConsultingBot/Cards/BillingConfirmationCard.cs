@@ -10,10 +10,10 @@ namespace ConsultingBot.Cards
         public static AdaptiveCard GetCard(ConsultingRequestDetails value)
         {
             var project = value.project;
-            var card = new AdaptiveCard();
-            card.Body.Add(new AdaptiveTextBlock($"{value.personName} billed {value.workHours} to {project.Client.Name}")
+            var card = new AdaptiveCard(new AdaptiveSchemaVersion(1, 0));
+            card.Body.Add(new AdaptiveTextBlock($"You billed {value.workHours} hours to {project.Client.Name}")
             {
-                Weight = AdaptiveTextWeight.Bolder,
+                Weight = AdaptiveTextWeight.Default,
                 Size = AdaptiveTextSize.Large,
             });
 

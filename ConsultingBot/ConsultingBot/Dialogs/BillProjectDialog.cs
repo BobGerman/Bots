@@ -155,7 +155,7 @@ namespace ConsultingBot.Dialogs
 
             requestDetails.workDate = (string)stepContext.Result;
 
-            var msg = $"Please confirm that you worked for {requestDetails.workHours} hours on the {requestDetails.projectName} on {requestDetails.workDate}";
+            var msg = $"Please confirm that on {requestDetails.workDate} you worked {requestDetails.workHours} hours for {requestDetails.project.Client.Name} on the {requestDetails.project.Name} project";
 
             return await stepContext.PromptAsync(nameof(ConfirmPrompt), new PromptOptions { Prompt = MessageFactory.Text(msg) }, cancellationToken);
         }
