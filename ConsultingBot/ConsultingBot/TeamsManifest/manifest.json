@@ -6,21 +6,21 @@
   "packageName": "com.treyresearch.teamsapps.consulting",
   "developer": {
     "name": "Bob German",
-    "websiteUrl": "https://www.bob1german.com/",
-    "privacyUrl": "https://www.bob1german.com/",
-    "termsOfUseUrl": "https://www.bob1german.com/"
+    "websiteUrl": "https://aka.ms/teamsdev",
+    "privacyUrl": "https://aka.ms/teamsdev",
+    "termsOfUseUrl": "https://aka.ms/teamsdev"
   },
   "icons": {
-    "color": "color.png",
-    "outline": "outline.png"
+    "color": "GreenBot192x192.png",
+    "outline": "GreenBot32x32.png"
   },
   "name": {
-    "short": "ConsultingApp",
-    "full": "Demo application for a consulting practice"
+    "short": "ConsultingBot",
+    "full": "Consulting bot"
   },
   "description": {
-    "short": "Consulting demo application",
-    "full": "Consulting demo bot using Bot Framework v4"
+    "short": "Consulting demo bot",
+    "full": "Consulting bot assists a project team"
   },
   "accentColor": "#FFFFFF",
   "bots": [
@@ -31,7 +31,7 @@
         "team",
         "groupchat"
       ],
-      "supportsFiles": true,
+      "supportsFiles": false,
       "isNotificationOnly": false
     }
   ],
@@ -52,65 +52,10 @@
           ]
         },
         {
-          "id": "sampleCard",
+          "id": "addProjectCard",
           "type": "action",
-          "description": "Create a sample card",
-          "title": "Sample card",
-          "fetchTask": true,
-          "parameters": [
-            {
-              "name": "dummy",
-              "title": "Dummy parameter",
-              "description": "Dummy parameter"
-            }
-          ]
-        },
-        {
-          "id": "queryCards",
-          "description": "Test command to run query",
-          "title": "Query cards",
-          "parameters": [
-            {
-              "name": "queryText",
-              "title": "Query parameter",
-              "description": "Query parameter"
-            }
-          ]
-        },
-        {
-          "id": "createCard",
-          "type": "action",
-          "description": "Test command to run action to create a card",
-          "title": "Create cards",
-          "fetchTask": true,
-          "parameters": [
-            {
-              "name": "dummy",
-              "title": "Dummy parameter",
-              "description": "Dummy parameter"
-            }
-          ]
-        },
-        {
-          "id": "createWithPreview",
-          "type": "action",
-          "description": "Test command to run action to create a card with preview before sending",
-          "title": "Create cards with preview",
-          "fetchTask": true,
-          "parameters": [
-            {
-              "name": "dummy",
-              "title": "Dummy parameter",
-              "description": "Dummy parameter"
-            }
-          ]
-        },
-        {
-          "id": "shareMessage",
-          "type": "action",
-          "context": [ "message" ],
-          "description": "Test command to run action on message context (message sharing)",
-          "title": "Create cards",
+          "description": "Add a new consulting project",
+          "title": "Add Project",
           "fetchTask": true,
           "parameters": [
             {

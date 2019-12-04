@@ -10,9 +10,9 @@
                 public static string ParameterName = "queryText";
             }
 
-            public static class SampleCard
+            public static class AddToProjectCard
             {
-                public static string Id = "sampleCard";
+                public static string Id = "addProjectCard";
             }
         }
     }

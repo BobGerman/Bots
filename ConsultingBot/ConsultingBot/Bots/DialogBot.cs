@@ -73,7 +73,7 @@ namespace ConsultingBot.Bots
 
         protected override async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionFetchTaskAsync(ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
         {
-            if (action.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
+            if (action.CommandId == ManifestConstants.ComposeExtensions.AddToProjectCard.Id)
             {
                 return await this.projectMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, action);
             }
@@ -85,7 +85,7 @@ namespace ConsultingBot.Bots
 
         protected override async Task<MessagingExtensionActionResponse> OnTeamsMessagingExtensionSubmitActionAsync(ITurnContext<IInvokeActivity> turnContext, MessagingExtensionAction action, CancellationToken cancellationToken)
         {
-            if (action.CommandId == ManifestConstants.ComposeExtensions.SampleCard.Id)
+            if (action.CommandId == ManifestConstants.ComposeExtensions.AddToProjectCard.Id)
             {
                 return await this.projectMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, cancellationToken, action);
             }
@@ -118,7 +118,7 @@ namespace ConsultingBot.Bots
             if (string.IsNullOrEmpty(turnContext.Activity.Name))
             {
                 var val = turnContext.Activity.Value as JObject;
-                var payload = val.ToObject<ICardActionValue>();
+                var payload = val.ToObject<AddToProjectCard.AddToProjectCardActionValue>();
                 if (payload.submissionId == AddToProjectCard.SubmissionId)
                 {
                     return await AddToProjectCard.OnSubmit(turnContext, cancellationToken);
