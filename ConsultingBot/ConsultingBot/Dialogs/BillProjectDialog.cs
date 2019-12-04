@@ -41,9 +41,9 @@ namespace ConsultingBot.Dialogs
         // Result is a list of possible projects from the database
         private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             List<ConsultingProject> result = await ResolveProject(requestDetails.projectName);
 
@@ -65,9 +65,9 @@ namespace ConsultingBot.Dialogs
         // Result is one or more ConsultingProject objects
         private async Task<DialogTurnResult> ProjectDisambiguationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             List<ConsultingProject> result = stepContext.Result as List<ConsultingProject>;
             if (result == null)
@@ -105,9 +105,9 @@ namespace ConsultingBot.Dialogs
         // Result is the duration from LUIS or from a user prompt
         private async Task<DialogTurnResult> TimeWorkedAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             var choice = (FoundChoice)stepContext.Result;
             var project = requestDetails.possibleProjects.ToArray()[choice.Index];
@@ -129,9 +129,9 @@ namespace ConsultingBot.Dialogs
 
         private async Task<DialogTurnResult> DeliveryDateAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             requestDetails.workHours = (double)stepContext.Result;
 
@@ -148,9 +148,9 @@ namespace ConsultingBot.Dialogs
         // Step 4: Save the work date and confirm
         private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             requestDetails.workDate = (string)stepContext.Result;
 
@@ -164,9 +164,9 @@ namespace ConsultingBot.Dialogs
         {
             if ((bool)stepContext.Result)
             {
-                var requestDetails = stepContext.Options is RequestDetails
-                        ? stepContext.Options as RequestDetails
-                        : new RequestDetails();
+                var requestDetails = stepContext.Options is ConsultingRequestDetails
+                        ? stepContext.Options as ConsultingRequestDetails
+                        : new ConsultingRequestDetails();
 
                 var timeProperty = new TimexProperty(requestDetails.workDate);
                 var deliveryDateText = timeProperty.ToNaturalLanguage(DateTime.Now);

@@ -55,7 +55,7 @@ namespace ConsultingBot.TeamsActivityHandlers
         // Called when the task module is fetched for an action
         public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionFetchTaskAsync(ITurnContext turnContext, MessagingExtensionAction query)
         {
-            var emptyRequest = new RequestDetails();
+            var emptyRequest = new ConsultingRequestDetails();
             ConsultingDataService dataService = new ConsultingDataService();
             emptyRequest.possibleProjects = await dataService.GetProjects("");
             IEnumerable<TeamsChannelAccount> members = await TeamsInfo.GetMembersAsync(turnContext);

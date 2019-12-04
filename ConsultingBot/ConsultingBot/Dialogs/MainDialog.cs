@@ -60,7 +60,7 @@ namespace ConsultingBot.Dialogs
                         ?
                     await LuisConsultingProjectRecognizer.ExecuteQuery(Configuration, Logger, stepContext.Context, cancellationToken)
                         :
-                    new RequestDetails();
+                    new ConsultingRequestDetails();
 
                 switch (requestDetails.intent)
                 {
@@ -83,7 +83,7 @@ namespace ConsultingBot.Dialogs
         // Step 2: Confirm the final outcome
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var result = stepContext.Result as RequestDetails;
+            var result = stepContext.Result as ConsultingRequestDetails;
 
             // If the child dialog was cancelled or the user failed to confirm, the result will be null.
             if (result == null)

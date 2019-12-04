@@ -15,9 +15,9 @@ namespace ConsultingBot
 {
     public static class LuisConsultingProjectRecognizer
     {
-        public static async Task<RequestDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
+        public static async Task<ConsultingRequestDetails> ExecuteQuery(IConfiguration configuration, ILogger logger, ITurnContext turnContext, CancellationToken cancellationToken)
         {
-            var result = new RequestDetails();
+            var result = new ConsultingRequestDetails();
 
             try
             {
@@ -75,7 +75,7 @@ namespace ConsultingBot
             return result;
         }
 
-        private static string TryExtractDeliveryDate(RequestDetails result, List<string> dateTimeValues, string timeUnitsToken)
+        private static string TryExtractDeliveryDate(ConsultingRequestDetails result, List<string> dateTimeValues, string timeUnitsToken)
         {
             string timex = null;
 

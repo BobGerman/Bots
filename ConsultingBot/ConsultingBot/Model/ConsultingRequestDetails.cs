@@ -16,7 +16,7 @@ namespace ConsultingBot
         public string email { get; set; }
     }
 
-    public class RequestDetails
+    public class ConsultingRequestDetails
     {
         public Intent intent { get; set; } = Intent.Unknown;
 

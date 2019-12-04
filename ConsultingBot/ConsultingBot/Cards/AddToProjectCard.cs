@@ -19,7 +19,7 @@ namespace ConsultingBot.Cards
     {
         public const string SubmissionId = "AddToProjectSubmit";
 
-        public static async Task<AdaptiveCard> GetCardAsync(ITurnContext turnContext, RequestDetails requestDetails)
+        public static async Task<AdaptiveCard> GetCardAsync(ITurnContext turnContext, ConsultingRequestDetails requestDetails)
         {
             var templateJson = String.Empty;
             var assembly = Assembly.GetEntryAssembly();

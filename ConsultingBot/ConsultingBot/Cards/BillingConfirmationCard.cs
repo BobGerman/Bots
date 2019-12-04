@@ -6,7 +6,7 @@ namespace ConsultingBot.Cards
     public static class BillingConfirmationCard
 
     {
-        public static AdaptiveCard GetCard(RequestDetails value)
+        public static AdaptiveCard GetCard(ConsultingRequestDetails value)
         {
             var project = value.project;
             var card = new AdaptiveCard();

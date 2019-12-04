@@ -34,9 +34,9 @@ namespace ConsultingBot.Dialogs
         // Result is the project name from LUIS or from a user prompt
         private async Task<DialogTurnResult> ProjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
-                    ? stepContext.Options as RequestDetails
-                    : new RequestDetails();
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
+                    ? stepContext.Options as ConsultingRequestDetails
+                    : new ConsultingRequestDetails();
 
             List<ConsultingProject> result = await ResolveProject(requestDetails.projectName);
 
@@ -57,11 +57,11 @@ namespace ConsultingBot.Dialogs
         // Step 2: Display the Add to Project card
         private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var requestDetails = stepContext.Options is RequestDetails
+            var requestDetails = stepContext.Options is ConsultingRequestDetails
                     ?
-                stepContext.Options as RequestDetails
+                stepContext.Options as ConsultingRequestDetails
                     :
-                new RequestDetails();
+                new ConsultingRequestDetails();
 
             // Resolve project if needed
             List<ConsultingProject> result = stepContext.Result as List<ConsultingProject>;
