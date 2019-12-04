@@ -20,11 +20,10 @@ namespace ConsultingBot.Bots
     {
         public DialogAndWelcomeBot(
             ProjectMessagingExtension projectMessagingExtension,
-            TestMessagingExtension testMessagingExtension,
             ConversationState conversationState,
             UserState userState,
             T dialog,
-            ILogger<DialogBot<T>> logger): base(projectMessagingExtension, testMessagingExtension, conversationState, userState, dialog, logger) { }
+            ILogger<DialogBot<T>> logger): base(projectMessagingExtension, conversationState, userState, dialog, logger) { }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {

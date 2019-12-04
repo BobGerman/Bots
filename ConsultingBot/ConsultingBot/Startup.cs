@@ -50,7 +50,6 @@ namespace ConsultingBot
 
             // Messaging extensions
             services.AddSingleton(new ProjectMessagingExtension(this.Configuration));
-            services.AddSingleton(new TestMessagingExtension());
 
             // The Dialog that will be run by the bot.
             services.AddSingleton<MainDialog>();

@@ -3,7 +3,6 @@
 //
 // Generated with Bot Builder V4 SDK Template for Visual Studio CoreBot v4.3.0
 
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsultingBot.Cards;
@@ -12,10 +11,8 @@ using ConsultingBot.TeamsManifest;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Teams;
-using Microsoft.Bot.Builder.Teams.MessagingExtensionBot.Engine;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Schema.Teams;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
@@ -28,18 +25,15 @@ namespace ConsultingBot.Bots
         protected readonly Dialog dialog;
         protected readonly ILogger logger;
         protected readonly ProjectMessagingExtension projectMessagingExtension;
-        protected readonly TestMessagingExtension testMessagingExtension;
 
         public DialogBot(
             ProjectMessagingExtension projectMessagingExtension,
-            TestMessagingExtension testMessagingExtension,
             ConversationState conversationState,
             UserState userState,
             T dialog,
             ILogger<DialogBot<T>> logger)
         {
             this.projectMessagingExtension = projectMessagingExtension;
-            this.testMessagingExtension = testMessagingExtension;
 
             this.conversationState = conversationState;
             this.userState = userState;
@@ -73,7 +67,7 @@ namespace ConsultingBot.Bots
             }
             else
             {
-                return await this.testMessagingExtension.HandleMessagingExtensionQueryAsync(turnContext, query);
+                return new MessagingExtensionResponse();
             }
         }
 
@@ -85,7 +79,7 @@ namespace ConsultingBot.Bots
             }
             else
             {
-                return await this.testMessagingExtension.HandleMessagingExtensionFetchTaskAsync(turnContext, action);
+                return new MessagingExtensionActionResponse();
             }
         }
 
@@ -97,7 +91,7 @@ namespace ConsultingBot.Bots
             }
             else
             {
-                return await this.testMessagingExtension.HandleMessagingExtensionSubmitActionAsync(turnContext, action);
+                return new MessagingExtensionActionResponse();
             }
         }
 
