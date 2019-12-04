@@ -52,8 +52,8 @@ namespace ConsultingBot.Dialogs
             {
                 return await stepContext.PromptAsync(nameof(TextPrompt) + "projectName", new PromptOptions
                 {
-                    Prompt = MessageFactory.Text("Which project do you want to add to?"),
-                    RetryPrompt = MessageFactory.Text("Sorry I didn't get that, what project was it?"),
+                    Prompt = MessageFactory.Text("Which project do you want to bill?"),
+                    RetryPrompt = MessageFactory.Text("Sorry I didn't get that, which project was it?"),
                 }, cancellationToken);
             }
             else
