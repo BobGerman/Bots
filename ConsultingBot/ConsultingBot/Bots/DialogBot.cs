@@ -113,18 +113,6 @@ namespace ConsultingBot.Bots
             return await projectLinkQuery.HandleInvokeActivityAsync(turnContext, query).ConfigureAwait(false);
         }
 
-        protected override async Task<TaskModuleResponse> OnTeamsTaskModuleFetchAsync(ITurnContext<IInvokeActivity> turnContext, TaskModuleRequest taskModuleRequest, CancellationToken cancellationToken)
-        {
-            var taskModule = new TestTaskModule();
-            return await taskModule.HandleTaskModuleFetchAsync(turnContext, taskModuleRequest);
-        }
-
-        protected override async Task<TaskModuleResponse> OnTeamsTaskModuleSubmitAsync(ITurnContext<IInvokeActivity> turnContext, TaskModuleRequest taskModuleRequest, CancellationToken cancellationToken)
-        {
-            var taskModule = new TestTaskModule();
-            return await taskModule.HandleTaskModuleSubmitAsync(turnContext, taskModuleRequest);
-        }
-
         protected override async Task<InvokeResponse> OnTeamsCardActionInvokeAsync(ITurnContext<IInvokeActivity> turnContext, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(turnContext.Activity.Name))

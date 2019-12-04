@@ -19,8 +19,6 @@ namespace ConsultingBot.TeamsActivityHandlers
 {
     public class ProjectMessagingExtension
     {
-        private TestCard testCard = new TestCard();
-
         private readonly IConfiguration configuration;
         public ProjectMessagingExtension(IConfiguration configuration)
         {

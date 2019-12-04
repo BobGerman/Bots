@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ConsultingBot.Cards
 {
-    public class TestCard 
+    public class TestCardx
     {
         //public Attachment GetCardAttachment(ITurnContext turnContext)
         //{
