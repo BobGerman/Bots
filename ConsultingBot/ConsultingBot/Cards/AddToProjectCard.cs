@@ -1,5 +1,6 @@
 ﻿using AdaptiveCards;
 using AdaptiveCards.Templating;
+using ConsultingBot.Model;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
@@ -41,19 +42,10 @@ namespace ConsultingBot.Cards
             return result;
         }
 
-        public class AddToProjectCardActionValue : CardActionValue
-        {
+        public class AddToProjectCardActionValue : ConsultingRequest, ICardActionValue
+       {
+            public string submissionId { get; set; }
             public string command { get; set; }
-            public string personName { get; set; }
-            public string clientName { get; set; }
-            public string projectName { get; set; }
-            public string role { get; set; }
-            public string monthZero { get; set; }
-            public string monthOne { get; set; }
-            public string monthTwo { get; set; }
-            public string forecastZero { get; set; }
-            public string forecastOne { get; set; }
-            public string forecastTwo { get; set; }
         }
 
         public static async Task<AdaptiveCard> GetCardAsync(ITurnContext turnContext, AddToProjectCardActionValue payload)

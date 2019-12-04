@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsultingBot.Cards;
+using ConsultingBot.Model;
 using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;

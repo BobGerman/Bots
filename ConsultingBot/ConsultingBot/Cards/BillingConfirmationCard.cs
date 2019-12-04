@@ -1,4 +1,5 @@
 ﻿using AdaptiveCards;
+using ConsultingBot.Model;
 using System.Collections.Generic;
 
 namespace ConsultingBot.Cards

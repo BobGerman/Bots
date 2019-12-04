@@ -1,7 +1,7 @@
 ﻿using ConsultingData.Models;
 using System.Collections.Generic;
 
-namespace ConsultingBot
+namespace ConsultingBot.Model
 {
     public enum Intent
     {

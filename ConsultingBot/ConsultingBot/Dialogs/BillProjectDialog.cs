@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AdaptiveCards;
 using ConsultingBot.Cards;
+using ConsultingBot.Model;
 using ConsultingData.Models;
 using ConsultingData.Services;
 using Microsoft.Bot.Builder;
