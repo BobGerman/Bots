@@ -3,12 +3,10 @@ using AdaptiveCards.Templating;
 using ConsultingBot.Model;
 using Microsoft.Bot.Builder;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsultingBot.Cards
