@@ -52,6 +52,17 @@ Your challenge is to run the plunk  and:
 
 ![Slide](./Slides/Slide7.PNG)
 
+## Webhooks
+
+Simple HTTPS calls can be used as sort of proto-bots; these are called incoming and outgoing webhooks. 
+
+ - Incoming webhooks send messages into a Team. They are similar to [Office 365 Connectors](https://www.microsoft.com/en-us/microsoft-365/blog/2016/03/25/introducing-office-365-connectors/), which can do the same thing across multiple teams.
+ - Outgoing webhooks allow users to send messages to a web service, but there is no support for an actual conversation.
+
+The demo shows these in Microsoft Teams. There's a [good tutorial here.](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/what-are-webhooks-and-connectors)
+
+## Azure Bot Service
+
 Check out the Bot Framework [Principles of Design](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-design-principles) for more details.
 
 ![Slide](./Slides/Slide8.PNG)
@@ -66,6 +77,7 @@ The Bot Framework just got a big overhaul, and v3 bots will need a big overhaul 
 
 * [Differences between v3 and v4](https://docs.microsoft.com/en-us/azure/bot-service/migration/migration-about?view=azure-bot-service-4.0)
 * [Migration guide](https://docs.microsoft.com/en-us/azure/bot-service/migration/conversion-framework?view=azure-bot-service-4.0)
+* [Deprecation of Teams Extensions for Bot Builder SDK and very soft announce that Teams is now integrated into v4.6](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams)
 
 Remember that what changed is just the SDK that runs inside the Bot; the service and its REST protocol didn't change, so v3 bots will continue to work. And you can skip the entire Bot Framework and build your own by using the [REST services](https://docs.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-overview) directly.
 
@@ -188,15 +200,10 @@ The Teams Bot Builder SDK includes Teams-specific middleware; Beta version is he
 
 1. [https://github.com/BobGerman/Bots](https://github.com/BobGerman/Bots): Bob's repo, containing samples specific to this workshop, and these notes
 
-1. [https://github.com/microsoft/BotBuilder-Samples](https://github.com/microsoft/BotBuilder-Samples): Great samples for Bot Framework v4
+1. [https://github.com/microsoft/BotBuilder-Samples](https://github.com/microsoft/BotBuilder-Samples): Great samples for Bot Framework - now including Teams examples!
 
 1. [https://github.com/OfficeDev/msteams-samples-outgoing-webhook-nodejs](https://github.com/OfficeDev/msteams-samples-outgoing-webhook-nodejs): Outgoing webhook - the simplest bot for Teams
 
-1. [https://github.com/OfficeDev/BotBuilder-MicrosoftTeams-dotnet](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams-dotnet): Beta of Teams .NET SDK for Bot Framework v4; samples are included
 
-1. [https://github.com/OfficeDev/BotBuilder-MicrosoftTeams-node](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams-node): Beta of Teams Node SDK for Bot Framework v4; samples are included
-
-1. [https://github.com/coolc0ders/Real-Proactive-Message-Bot:](https://github.com/coolc0ders/Real-Proactive-Message-Bot): Shows how to build a "proactive" bot for Teams - i.e. the Bot initiates conversation
-
-1. [https://github.com/OfficeDev/msteams-sample-contoso-hr-talent-app.git](https://github.com/OfficeDev/msteams-sample-contoso-hr-talent-app.git): Great Teams bot/app sample but it's v3
+1. [https://github.com/OfficeDev/msteams-sample-contoso-hr-talent-app.git](https://github.com/OfficeDev/msteams-sample-contoso-hr-talent-app.git): Great Teams bot/app sample showing an HR recruiting application
 
