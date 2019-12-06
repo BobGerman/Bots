@@ -88,7 +88,7 @@ namespace ConsultingBot.TeamsActivityHandlers
         public async Task<MessagingExtensionActionResponse> HandleMessagingExtensionSubmitActionAsync(ITurnContext turnContext, CancellationToken cancellationToken, MessagingExtensionAction action)
         {
             var val = JObject.FromObject(action.Data); // turnContext.Activity.Value as JObject;
-            var payload = val.ToObject<AddToProjectCard.AddToProjectCardActionValue>();
+            var payload = val.ToObject<AddToProjectConfirmationCard.AddToProjectCardActionValue>();
             var submitData = val["msteams"]["value"];
             payload.submissionId = submitData.Value<string>("submissionId");
             payload.command = submitData.Value<string>("command");
@@ -105,7 +105,7 @@ namespace ConsultingBot.TeamsActivityHandlers
                     Type = "botMessagePreview",
                     ActivityPreview = MessageFactory.Attachment(new Attachment
                     {
-                        Content = await AddToProjectCard.GetCardAsync(turnContext, payload),
+                        Content = await AddToProjectConfirmationCard.GetCardAsync(turnContext, payload),
                         ContentType = AdaptiveCard.ContentType
                     }) as Activity
                 },

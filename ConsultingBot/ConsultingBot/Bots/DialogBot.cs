@@ -118,7 +118,7 @@ namespace ConsultingBot.Bots
             if (string.IsNullOrEmpty(turnContext.Activity.Name))
             {
                 var val = turnContext.Activity.Value as JObject;
-                var payload = val.ToObject<AddToProjectCard.AddToProjectCardActionValue>();
+                var payload = val.ToObject<AddToProjectConfirmationCard.AddToProjectCardActionValue>();
                 if (payload.submissionId == AddToProjectCard.SubmissionId)
                 {
                     return await AddToProjectCard.OnSubmit(turnContext, cancellationToken);
