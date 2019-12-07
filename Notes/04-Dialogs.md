@@ -12,6 +12,10 @@ Table of Contents
 
 ## Dialogs
 
+Different environments call for different dialog styles. Teams channels are threaded, and a back-and-forth conversation can get confusing so cards are better.
+
+![Slide](./Slides/Slide29.2.PNG)
+
 ![Slide](./Slides/Slide30.PNG)
 
 See [Design and control conversation flow](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-design-conversation-flow?view=azure-bot-service-4.0) for more details.

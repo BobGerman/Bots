@@ -12,8 +12,6 @@ Table of Contents
 
 ## Bot State
 
-![Slide](./Slides/Slide24.PNG)
-
 Perhaps you remember the movie [Memento](https://en.wikipedia.org/wiki/Memento_(film)), in which the protagonist, Leonard Shelby
 ([Guy Pearce](https://en.wikipedia.org/wiki/Guy_Pearce)) suffers from [anterograde amnesia](https://en.wikipedia.org/wiki/Anterograde_amnesia) and can't remember anything. Your bot will be like Leonard if you don't give it some way to keep track of _bot state_.
 

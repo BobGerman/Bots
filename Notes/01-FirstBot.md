@@ -192,8 +192,6 @@ The Teams Bot Builder SDK includes Teams-specific middleware; Beta version is he
 * [Simple middleware](../ConsultingBot/ConsultingBot/Middleware/StripBotMention.cs)
 * [JavaScript middleware setup](../TeamsStateBot/index.js)
 
-![Slide](./Slides/Slide20.PNG)
-
 ### [The next section is here](02-QnAMaker.md)
 
 ## Repos used in this workshop:

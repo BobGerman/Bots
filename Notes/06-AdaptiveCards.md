@@ -13,22 +13,23 @@ Table of Contents
 ## Adaptive Cards and Messaging Extensions
 
 ![Slide](./Slides/Slide47.PNG)
-![Slide](./Slides/Slide48.PNG)
+![Slide](./Slides/Update1/Slide52.PNG)
 
 [Adaptive Cards](https://adaptivecards.io/) fill a middle ground between a web browser and application-specific cards. They are reusable but allow the hosting application flexibility to present them so they look like they're part of the application.
 
+![Slide](./Slides/Slide48.PNG)
 ![Slide](./Slides/Slide49.PNG)
-![Slide](./Slides/Slide50.PNG)
 
 If you've ever approved a Flow action, you've used an adaptive card in Outlook.
 
-![Slide](./Slides/Slide51.PNG)
+![Slide](./Slides/Update1/Slide55.PNG)
+![Slide](./Slides/Update1/Slide56.PNG)
 
 You can even [implement your own renderer](https://docs.microsoft.com/en-us/adaptive-cards/rendering-cards/implement-a-renderer).
 
-![Slide](./Slides/Slide54.PNG)
-![Slide](./Slides/Slide55.PNG)
-![Slide](./Slides/Slide52.PNG)
+![Slide](./Slides/Update1/Slide57.PNG)
+![Slide](./Slides/Update1/Slide58.PNG)
+![Slide](./Slides/Update1/Slide59.PNG)
 
 * [Adaptive Card Playground](http://bit.ly/CardPlayground)
 * [Adaptive Card Designer](http://bit.ly/CardDesigner)
@@ -52,6 +53,8 @@ Here are some challenges; choose any you like or try them all!
 For more information about adding media to Bot messages, see [this article](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-add-media-attachments).
 
 ![Slide](./Slides/Slide56.PNG)
+![Slide](./Slides/Update1/Slide62.PNG)
+
 
 For more information about messaging extensions, see [this article](https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/messaging-extensions/messaging-extensions-overview).
 
