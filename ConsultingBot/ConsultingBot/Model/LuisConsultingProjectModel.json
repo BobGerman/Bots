@@ -1,6 +1,6 @@
 {
   "luis_schema_version": "4.0.0",
-  "versionId": "0.1",
+  "versionId": "0.2",
   "name": "ConsultingBot",
   "desc": "A LUIS model that uses intent and entities.",
   "culture": "en-us",
@@ -17,16 +17,7 @@
     }
   ],
   "entities": [],
-  "composites": [
-    {
-      "name": "timeWorked",
-      "children": [
-        "number",
-        "timeUnit"
-      ],
-      "roles": []
-    }
-  ],
+  "composites": [],
   "closedLists": [
     {
       "name": "projectName",
@@ -52,27 +43,6 @@
         }
       ],
       "roles": []
-    },
-    {
-      "name": "timeUnit",
-      "subLists": [
-        {
-          "canonicalForm": "hours",
-          "list": [
-            "hrs",
-            "hour"
-          ]
-        },
-        {
-          "canonicalForm": "minutes",
-          "list": [
-            "min",
-            "minute",
-            "minue"
-          ]
-        }
-      ],
-      "roles": []
     }
   ],
   "patternAnyEntities": [],
@@ -80,11 +50,10 @@
   "prebuiltEntities": [
     {
       "name": "datetimeV2",
-      "roles": []
-    },
-    {
-      "name": "number",
-      "roles": []
+      "roles": [
+        "day worked",
+        "time worked"
+      ]
     },
     {
       "name": "personName",
@@ -98,50 +67,17 @@
     {
       "text": "3 hours today on contoso",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 0,
-          "endPos": 0
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 2,
-          "endPos": 6
-        }
-      ]
+      "entities": []
     },
     {
       "text": "3 hrs contoso today",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 0,
-          "endPos": 0
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 2,
-          "endPos": 4
-        }
-      ]
+      "entities": []
     },
     {
       "text": "5 minutes contoso yesterday",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 0,
-          "endPos": 0
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 2,
-          "endPos": 8
-        }
-      ]
+      "entities": []
     },
     {
       "text": "add sally to forth coffee",
@@ -181,58 +117,28 @@
     {
       "text": "bill 3 hours for today on the contoso project",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 5,
-          "endPos": 5
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 7,
-          "endPos": 11
-        }
-      ]
-    },
-    {
-      "text": "bill a project",
-      "intent": "BillToProject",
       "entities": []
     },
     {
       "text": "bill contoso for 2 hours today",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 17,
-          "endPos": 17
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 19,
-          "endPos": 23
-        }
-      ]
-    },
-    {
-      "text": "bill project",
-      "intent": "BillToProject",
       "entities": []
     },
     {
-      "text": "charge contoso for 3 hours today",
+      "text": "charge contoso for 2 hours yesterday",
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
+          "entity": "datetimeV2",
+          "role": "time worked",
           "startPos": 19,
-          "endPos": 19
+          "endPos": 25
         },
         {
-          "entity": "timeWorked",
-          "startPos": 21,
-          "endPos": 25
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 27,
+          "endPos": 35
         }
       ]
     },
@@ -241,46 +147,39 @@
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
+          "entity": "datetimeV2",
+          "role": "time worked",
           "startPos": 17,
-          "endPos": 17
+          "endPos": 20
         },
         {
-          "entity": "timeWorked",
-          "startPos": 19,
-          "endPos": 20
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 22,
+          "endPos": 26
         }
       ]
     },
     {
       "text": "contoso 3 hours today",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 8,
-          "endPos": 8
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 10,
-          "endPos": 14
-        }
-      ]
+      "entities": []
     },
     {
       "text": "i did 3 hours on contoso today",
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
+          "entity": "datetimeV2",
+          "role": "time worked",
           "startPos": 6,
-          "endPos": 6
+          "endPos": 12
         },
         {
-          "entity": "timeWorked",
-          "startPos": 8,
-          "endPos": 12
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 25,
+          "endPos": 29
         }
       ]
     },
@@ -288,6 +187,24 @@
       "text": "i hate projects",
       "intent": "None",
       "entities": []
+    },
+    {
+      "text": "i worked on contoso 3 hours today",
+      "intent": "BillToProject",
+      "entities": [
+        {
+          "entity": "datetimeV2",
+          "role": "time worked",
+          "startPos": 20,
+          "endPos": 26
+        },
+        {
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 28,
+          "endPos": 32
+        }
+      ]
     },
     {
       "text": "john is joining consolidated messenger",
@@ -299,14 +216,16 @@
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
+          "entity": "datetimeV2",
+          "role": "time worked",
           "startPos": 16,
-          "endPos": 16
+          "endPos": 22
         },
         {
-          "entity": "timeWorked",
-          "startPos": 18,
-          "endPos": 22
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 24,
+          "endPos": 28
         }
       ]
     },
@@ -325,14 +244,16 @@
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
+          "entity": "datetimeV2",
+          "role": "time worked",
           "startPos": 6,
-          "endPos": 6
+          "endPos": 12
         },
         {
-          "entity": "timeWorked",
-          "startPos": 8,
-          "endPos": 12
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 25,
+          "endPos": 29
         }
       ]
     },
@@ -344,31 +265,22 @@
     {
       "text": "today contoso 3 hours",
       "intent": "BillToProject",
-      "entities": [
-        {
-          "entity": "timeWorked",
-          "startPos": 14,
-          "endPos": 14
-        },
-        {
-          "entity": "timeWorked",
-          "startPos": 16,
-          "endPos": 20
-        }
-      ]
+      "entities": []
     },
     {
       "text": "today i worked 3 hours on contoso",
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
-          "startPos": 15,
-          "endPos": 15
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 0,
+          "endPos": 4
         },
         {
-          "entity": "timeWorked",
-          "startPos": 17,
+          "entity": "datetimeV2",
+          "role": "time worked",
+          "startPos": 15,
           "endPos": 21
         }
       ]
@@ -378,13 +290,15 @@
       "intent": "BillToProject",
       "entities": [
         {
-          "entity": "timeWorked",
-          "startPos": 43,
-          "endPos": 43
+          "entity": "datetimeV2",
+          "role": "day worked",
+          "startPos": 0,
+          "endPos": 4
         },
         {
-          "entity": "timeWorked",
-          "startPos": 45,
+          "entity": "datetimeV2",
+          "role": "time worked",
+          "startPos": 43,
           "endPos": 49
         }
       ]

@@ -38,8 +38,11 @@ namespace ConsultingBot
                 // (GetEntityValueOptions is an extension method, see below)
                 var personNameValues = recognizerResult.GetPossibleEntityValues<string>("personName");
                 var projectNameValues = recognizerResult.GetPossibleEntityValues<string>("projectName");
-                var timeWorkedValues = recognizerResult.GetPossibleEntityValues<string>("timeWorked");
                 var dateTimeValues = recognizerResult.GetPossibleEntityValues<string>("datetime");
+                var dayWorkedValues = recognizerResult.GetPossibleEntityValues<string>("day_worked");
+                if (dayWorkedValues.Count == 0) dayWorkedValues = dateTimeValues;
+                var timeWorkedValues = recognizerResult.GetPossibleEntityValues<string>("time_worked");
+                if (timeWorkedValues.Count == 0) timeWorkedValues = dateTimeValues;
 
                 // Now based on the intent, fill in the result as best we can
                 switch (intent)
@@ -55,10 +58,8 @@ namespace ConsultingBot
                         {
                             result.intent = Intent.BillToProject;
                             result.projectName = projectNameValues?.FirstOrDefault();
-                            string timeUnitsToken;
-                            (result.workHours, timeUnitsToken) =
-                                TryExtractTimeWorked(timeWorkedValues);
-                            result.workDate = TryExtractDeliveryDate(result, dateTimeValues, timeUnitsToken);
+                            result.workDate = TryExtractWorkDate(dayWorkedValues);
+                            result.workHours = TryExtractWorkHours(timeWorkedValues);
                             break;
                         }
                     default:
@@ -76,58 +77,60 @@ namespace ConsultingBot
             return result;
         }
 
-        private static string TryExtractDeliveryDate(ConsultingRequestDetails result, List<string> dateTimeValues, string timeUnitsToken)
+        private static string TryExtractWorkDate(List<string> possibleValues)
         {
             string timex = null;
 
-            foreach (string val in dateTimeValues)
+            foreach (string val in possibleValues)
             {
-                // Often the task duration is mistaken as a date value, so if we see the 
-                // same time units in there, skip that value
-                if (!string.IsNullOrEmpty(timeUnitsToken) && val.IndexOf(timeUnitsToken) <= 0)
+                var culture = Culture.English;
+                var r = DateTimeRecognizer.RecognizeDateTime(val, culture);
+                if (r.Count > 0 && r.First().TypeName.StartsWith("datetimeV2"))
                 {
-                    // OK looks like we have the right string, use the DateTime Recognizer to resolve it
-                    var culture = Culture.English;
-                    var r = DateTimeRecognizer.RecognizeDateTime(val, culture);
-                    if (r.Count > 0 && r.First().TypeName.StartsWith("datetimeV2"))
-                    {
-                        var first = r.First();
-                        var resolutionValues = (IList<Dictionary<string, string>>)first.Resolution["values"];
-                        timex = resolutionValues[0]["timex"];
-                    }
+                    var first = r.First();
+                    var resolutionValues = (IList<Dictionary<string, string>>)first.Resolution["values"];
+                    timex = resolutionValues[0]["timex"];
                 }
             }
             return timex;
         }
 
-        private static (double,string) TryExtractTimeWorked(List<string> timeWorkedValues)
+        private static double TryExtractWorkHours(List<string> possibleValues)
         {
+            var hourTokens = new[] { "hours", "hrs", "hr", "h" };
+            var minuteTokens = new[] { "minutes", "min", "mn", "m" };
             var result = 0.0;
-            string timeUnitString = null;
-            for (int i = 0; i < timeWorkedValues.Count; i++)
+
+            foreach (var val in possibleValues)
             {
                 var hours = 0.0;
-                if (double.TryParse(timeWorkedValues[i], out hours))
+                var hoursMultiplier = 0.0;
+                foreach (var token in hourTokens)
                 {
-                    if (i < timeWorkedValues.Count)
+                    if (val.ToLower().Contains(token))
                     {
-                        if ((new[] { "hours", "hrs", "hr", "h" })
-                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
-                        {
-                            result = hours;
-                            timeUnitString = timeWorkedValues[i + 1];
-                        }
-                        else if ((new[] { "minutes", "min", "mn", "m" })
-                            .Contains(timeWorkedValues[i + 1], StringComparer.OrdinalIgnoreCase))
-                        {
-                            result = hours / 60.0;
-                            timeUnitString = timeWorkedValues[i + 1];
-                        }
+                        hoursMultiplier = 1.0;
+                    }
+                }
+
+                foreach (var token in minuteTokens)
+                {
+                    if (val.ToLower().Contains(token))
+                    {
+                        hoursMultiplier = 1.0 / 60.0;
+                    }
+                }
+
+                if (double.TryParse(val.Split(' ')[0], out hours))
+                {
+                    if (result <= 0)
+                    {
+                        result = hours * hoursMultiplier;
                     }
                 }
             }
 
-            return (result, timeUnitString);
+            return result;
         }
 
         private static List<T> GetPossibleEntityValues<T>(this RecognizerResult luisResult, string entityKey, string valuePropertyName = "text")
