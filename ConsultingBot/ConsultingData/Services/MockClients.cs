@@ -52,6 +52,21 @@ namespace ConsultingData.Services
                     LogoUrl = "https://dev.botframework.com/client/images/channels/icons/cortana.png",
                     Url = "https://www.microsoft.com/en-us/mtc"
                 },
+                                new ConsultingClient()
+                {
+                    ClientId = 4,
+                    Name = "Southridge Video",
+                    Address = "200 E Randolph St.",
+                    City = "Chicago",
+                    State = "IL",
+                    Zip = "60601",
+                    Latitude = 41.885314,
+                    Longitude = -87.621546,
+                    Phone = "+1 (312) 555-1212",
+                    Contact = "Megan Bowen",
+                    LogoUrl = "https://dev.botframework.com/client/images/channels/icons/cortana.png",
+                    Url = "https://www.microsoft.com/en-us/mtc"
+                },
         };
     }
 }

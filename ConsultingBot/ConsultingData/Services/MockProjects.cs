@@ -79,6 +79,24 @@ namespace ConsultingData.Services
                     Description = "Migrate newly acquired companies into main tenant",
                     DocumentsUrl = "https://bgtest18.sharepoint.com/sites/Bot4Test/Shared Documents/",
                     TeamUrl = "https://teams.microsoft.com/l/team/19%3ad90eb69425bc4cc7a6a43df04be83bba%40thread.skype/conversations?groupId=a54cd0e7-1d00-420a-8b51-060c288620eb&tenantId=a25d4ef1-c73a-4dc1-bdb1-9a342260f216"
+                },
+                new ConsultingProject()
+                {
+                    ProjectId = 5,
+                    Client = MockClients.data.FirstOrDefault<ConsultingClient>(
+                        (c) => c.ClientId == 4),
+                    Name = "Mark 8 Camera Development",
+                    Address = "200 E Randolph St.",
+                    City = "Chicago",
+                    State = "IL",
+                    Zip = "60601",
+                    Latitude = 41.885314,
+                    Longitude = -87.621546,
+                    Phone = "+1 (312) 555-1212",
+                    Contact = "Megan Bowen",
+                    Description = "Develop a new camera for retail",
+                    DocumentsUrl = "https://bgtest18.sharepoint.com/sites/Bot4Test/Shared Documents/",
+                    TeamUrl = "https://teams.microsoft.com/l/team/19%3ad90eb69425bc4cc7a6a43df04be83bba%40thread.skype/conversations?groupId=a54cd0e7-1d00-420a-8b51-060c288620eb&tenantId=a25d4ef1-c73a-4dc1-bdb1-9a342260f216"
                 }
 
         };
