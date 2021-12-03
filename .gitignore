@@ -13,6 +13,9 @@
 # Files containing secrets
 appsettings.json
 
+# VS Code settings
+.vscode
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
