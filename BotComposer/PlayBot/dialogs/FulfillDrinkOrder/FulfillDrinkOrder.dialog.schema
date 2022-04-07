@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.botframework.com/schemas/component/v1.0/component.schema",
+  "$role": "implements(Microsoft.IDialog)",
+  "title": "FulfillDrinkOrder",
+  "type": "object",
+  "properties": {},
+  "$result": {
+    "type": "object",
+    "properties": {
+      "Name": {
+        "type": "string",
+        "title": "Name"
+      },
+      "Quantity": {
+        "type": "number",
+        "title": "Quantity"
+      },
+      "BeverageChoice": {
+        "type": "string",
+        "title": "Beverage Choice"
+      }
+    }
+  }
+}

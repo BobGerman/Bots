@@ -1,0 +1,59 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "BMgBOM",
+    "name": "FulfillDrinkOrder",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "Zf57wq"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.TextInput",
+          "$designer": {
+            "id": "pGn0pS"
+          },
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "prompt": "${TextInput_Prompt_pGn0pS()}",
+          "property": "dialog.result.Name",
+          "value": "=turn.activity.value.Name"
+        },
+        {
+          "$kind": "Microsoft.SetProperties",
+          "$designer": {
+            "id": "RF8V0b"
+          },
+          "assignments": [
+            {
+              "property": "dialog.result.BeverageChoice",
+              "value": "=turn.activity.value.BeverageChoice"
+            },
+            {
+              "property": "dialog.result.Quantity",
+              "value": "=turn.activity.value.Quantity"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "generator": "FulfillDrinkOrder.lg",
+  "recognizer": {
+    "$kind": "Microsoft.VirtualAgents.Recognizer"
+  },
+  "id": "FulfillDrinkOrder"
+}

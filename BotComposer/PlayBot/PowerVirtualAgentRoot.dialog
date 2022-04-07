@@ -1,0 +1,18 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "name": "PlayBot",
+    "id": "000000",
+    "description": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [],
+  "$schema": "schemas/app.schema",
+  "generator": "PowerVirtualAgentRoot.lg",
+  "recognizer": {
+    "$kind": "Microsoft.VirtualAgents.Recognizer",
+    "id": "PowerVirtualAgentRoot.lu"
+  },
+  "id": "PowerVirtualAgentRoot"
+}
