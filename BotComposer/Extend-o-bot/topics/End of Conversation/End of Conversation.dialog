@@ -1,0 +1,10 @@
+{
+  "$kind": "Microsoft.VirtualAgents.Topic",
+  "$designer": {
+    "name": "End of Conversation",
+    "description": "System Intent Default Customer Survey",
+    "link": "https://web.powerva.microsoft.com/environments/Default-a25d4ef1-c73a-4dc1-bdb1-9a342260f216/bots/de1a1afb-06b3-4198-93d9-20ceb1f258dd/dialog/new_topic_de1a1afb06b3419893d920ceb1f258dd_aeabea4d071f415c8c107e1cb7af5424_assumedsuccess"
+  },
+  "id": "new_topic_de1a1afb06b3419893d920ceb1f258dd_aeabea4d071f415c8c107e1cb7af5424_assumedsuccess",
+  "isSystemTopic": true
+}

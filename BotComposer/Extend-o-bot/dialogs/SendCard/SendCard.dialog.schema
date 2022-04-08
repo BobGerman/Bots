@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.botframework.com/schemas/component/v1.0/component.schema",
+  "$role": "implements(Microsoft.IDialog)",
+  "title": "SendCard",
+  "type": "object",
+  "properties": {
+    "pictureUrl": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/stringExpression",
+      "title": "Picture Url"
+    },
+    "location": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/stringExpression",
+      "title": "Location"
+    },
+    "rating": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/stringExpression",
+      "title": "Rating"
+    },
+    "quote": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/stringExpression",
+      "title": "Quote"
+    }
+  },
+  "$result": {
+    "type": "object",
+    "properties": {}
+  }
+}

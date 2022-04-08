@@ -1,0 +1,74 @@
+[import](common.lg)
+
+# SendActivity_7KHMwj()
+[Activity
+    Attachments = ${json(SendActivity_7KHMwj_attachment_M7xJKa())}
+]
+
+# SendActivity_7KHMwj_attachment_M7xJKa()
+> To learn more Adaptive Cards format, read the documentation at
+> https://docs.microsoft.com/en-us/adaptive-cards/getting-started/bots
+- ```{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "width": 2,
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "${dialog.location}",
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": "${virtualagent.ReservationChoice}",
+              "weight": "bolder",
+              "size": "extraLarge",
+              "spacing": "none",
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": "${dialog.rating}",
+              "isSubtle": true,
+              "spacing": "none",
+              "wrap": true
+            },
+            {
+              "type": "TextBlock",
+              "text": "${dialog.quote}",
+              "size": "small",
+              "wrap": true,
+              "maxLines": 3
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": 1,
+          "items": [
+            {
+              "type": "Image",
+              "url": "${dialog.pictureUrl}",
+              "size": "auto",
+              "altText": "Seated guest drinking a cup of coffee"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "More Info",
+      "url": "https://adaptivecards.io"
+    }
+  ]
+}```

@@ -1,0 +1,34 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "Wo1i9B",
+    "name": "SendCard",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "XQxJzJ"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "7KHMwj"
+          },
+          "activity": "${SendActivity_7KHMwj()}"
+        }
+      ]
+    }
+  ],
+  "generator": "SendCard.lg",
+  "recognizer": {
+    "$kind": "Microsoft.VirtualAgents.Recognizer"
+  },
+  "id": "SendCard"
+}

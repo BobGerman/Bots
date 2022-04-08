@@ -1,0 +1,35 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "PKorNv",
+    "name": "AddNumbers",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "zIR4Us"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.SetProperty",
+          "$designer": {
+            "id": "8Qvl9T"
+          },
+          "property": "dialog.result.sum",
+          "value": "=dialog.addend1+dialog.addend2"
+        }
+      ]
+    }
+  ],
+  "generator": "AddNumbers.lg",
+  "recognizer": {
+    "$kind": "Microsoft.VirtualAgents.Recognizer"
+  },
+  "id": "AddNumbers"
+}

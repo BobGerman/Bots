@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.botframework.com/schemas/component/v1.0/component.schema",
+  "$role": "implements(Microsoft.IDialog)",
+  "title": "AddNumbers",
+  "type": "object",
+  "properties": {
+    "addend1": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/numberExpression",
+      "title": "Addend 1"
+    },
+    "addend2": {
+      "$ref": "https://schemas.botframework.com/schemas/component/v1.0/component.schema#/definitions/numberExpression",
+      "title": "Addend 2"
+    }
+  },
+  "$result": {
+    "type": "object",
+    "properties": {
+      "sum": {
+        "type": "number",
+        "title": "Sum"
+      }
+    }
+  }
+}

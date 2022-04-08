@@ -1,0 +1,51 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "name": "Extend-o-bot",
+    "id": "000000"
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnUnknownIntent",
+      "$designer": {
+        "id": "SbYoSf",
+        "name": "Unknown intent"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "2sf2yT"
+          },
+          "activity": "${SendActivity_2sf2yT()}"
+        }
+      ]
+    },
+    {
+      "$kind": "Microsoft.OnIntent",
+      "$designer": {
+        "id": "xtqV3H",
+        "name": "Joke"
+      },
+      "intent": "Joke",
+      "actions": [
+        {
+          "$kind": "Microsoft.SendActivity",
+          "$designer": {
+            "id": "YWjY1a"
+          },
+          "activity": "${SendActivity_YWjY1a()}"
+        }
+      ]
+    }
+  ],
+  "$schema": "schemas/app.schema",
+  "generator": "PowerVirtualAgentRoot.lg",
+  "recognizer": {
+    "$kind": "Microsoft.VirtualAgents.Recognizer",
+    "id": "PowerVirtualAgentRoot.lu"
+  },
+  "id": "PowerVirtualAgentRoot"
+}

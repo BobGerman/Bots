@@ -1,0 +1,10 @@
+{
+  "$kind": "Microsoft.VirtualAgents.Topic",
+  "$designer": {
+    "name": "Thank you",
+    "description": "System Intent Thank You",
+    "link": "https://web.powerva.microsoft.com/environments/Default-a25d4ef1-c73a-4dc1-bdb1-9a342260f216/bots/de1a1afb-06b3-4198-93d9-20ceb1f258dd/dialog/new_topic_de1a1afb06b3419893d920ceb1f258dd_3d2584ec30914684839527e05e7be172_thankyou"
+  },
+  "id": "new_topic_de1a1afb06b3419893d920ceb1f258dd_3d2584ec30914684839527e05e7be172_thankyou",
+  "isSystemTopic": true
+}

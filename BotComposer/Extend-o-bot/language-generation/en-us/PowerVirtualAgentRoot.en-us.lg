@@ -1,0 +1,30 @@
+# SendActivity_2sf2yT()
+[Activity
+    Text = ${SendActivity_2sf2yT_text()}
+]
+
+# SendActivity_2sf2yT_text()
+- What do you mean by ${turn.activity.text}?
+- I don't understand ${turn.activity.text}
+- Sorry I don't get ${turn.activity.text}
+
+# SendActivity_YWjY1a()
+[Activity
+    Text = ${SendActivity_YWjY1a_text()}
+]
+
+# SendActivity_YWjY1a_text()
+- Want to hear a potassium joke? K.
+- Never trust an atom; they make up everything
+- One atom asks the other, "Are you sure you lost an electron?" "Yeah, I'm positive."
+- My atom needs repair - anybody know a good quantum mechanic?
+- Does a radioactive cat have 18 half lives?
+- ```The bartender says, "We don't serve tachyons here".
+A tachyon walks into a bar.```
+- ```Two chemists walk into a bar. The first says, "I'll have an H2O". The second says, "I'll have an H2O too".
+The second chemist died.```
+- Willie was a chemist, but Willie is no more, for what he thought was H2O was H2SO4.
+- Did you hear oxygen and magnesium got together? OMg!
+- If you're not part of the solution, you're part of the precipitate
+- A neutrino walks into a bar but doesn't order anything. He was just passing through.
+- I told a helium joke but got no reaction.

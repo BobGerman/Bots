@@ -1,0 +1,24 @@
+{
+  "Microsoft.BeginDialog": {
+    "form": {
+      "label": "Begin a new dialog or topic"
+    },
+    "menu": [
+      {
+        "label": "Begin a new dialog or topic",
+        "submenu": [
+          "Dialog management"
+        ]
+      },
+      {
+        "label": "Begin a Power Virtual Agents topic",
+        "submenu": false
+      }
+    ]
+  },
+  "Microsoft.VirtualAgents.Topic": {
+    "menu": {
+      "disabled": false
+    }
+  }
+}
