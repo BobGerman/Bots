@@ -1,0 +1,75 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.14/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.14",
+    "version": "1.0.0",
+    "id": "24f47e2f-d88f-4bc9-bea8-71193a186e73",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Teams App, Inc.",
+        "websiteUrl": "https://www.example.com",
+        "privacyUrl": "https://www.example.com/termofuse",
+        "termsOfUseUrl": "https://www.example.com/privacy"
+    },
+    "icons": {
+        "color": "resources/color.png",
+        "outline": "resources/outline.png"
+    },
+    "name": {
+        "short": "SSOBotSample-local-debug",
+        "full": "Full name for SSOBotSample-local-debug"
+    },
+    "description": {
+        "short": "Short description of SSOBotSample.",
+        "full": "Full description of SSOBotSample."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [
+        {
+            "botId": "888ea59c-45e4-4235-b527-d579834e2b49",
+            "scopes": [
+                "personal",
+                "team",
+                "groupchat"
+            ],
+            "supportsFiles": false,
+            "isNotificationOnly": false,
+            "commandLists": [
+                {
+                    "scopes": [
+                        "personal",
+                        "team",
+                        "groupchat"
+                    ],
+                    "commands": [
+                        {
+                            "title": "welcome",
+                            "description": "Resend welcome card of this Bot"
+                        },
+                        {
+                            "title": "learn",
+                            "description": "Learn about Adaptive Card and Bot Command"
+                        },
+                        {
+                            "title": "show",
+                            "description": "Show user profile by calling Microsoft Graph API with SSO"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "composeExtensions": [],
+    "configurableTabs": [],
+    "staticTabs": [],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "540bb4a6d58e.ngrok.io"
+    ],
+    "webApplicationInfo": {
+        "id": "9ad5e573-0859-414b-a251-ca7089d68577",
+        "resource": "api://botid-888ea59c-45e4-4235-b527-d579834e2b49"
+    }
+}
