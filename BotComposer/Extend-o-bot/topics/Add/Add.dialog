@@ -1,0 +1,10 @@
+{
+  "$kind": "Microsoft.VirtualAgents.Topic",
+  "$designer": {
+    "name": "Add",
+    "description": "",
+    "link": "https://web.powerva.microsoft.com/environments/Default-a25d4ef1-c73a-4dc1-bdb1-9a342260f216/bots/de1a1afb-06b3-4198-93d9-20ceb1f258dd/dialog/new_topic_43cb40141cdc4a62b3e842418806b86f"
+  },
+  "id": "new_topic_43cb40141cdc4a62b3e842418806b86f",
+  "isSystemTopic": false
+}
