@@ -1,0 +1,60 @@
+{
+    "appName": "CommandBot",
+    "projectId": "340e9bd5-03b9-43bb-8675-3405a315bb44",
+    "version": "2.1.0",
+    "components": [
+        {
+            "name": "teams-bot",
+            "hosting": "azure-web-app",
+            "provision": false,
+            "deploy": true,
+            "capabilities": [
+                "command-response"
+            ],
+            "build": true,
+            "folder": "bot"
+        },
+        {
+            "name": "bot-service",
+            "provision": true
+        },
+        {
+            "name": "azure-web-app",
+            "scenario": "Bot",
+            "connections": [
+                "identity",
+                "teams-bot"
+            ]
+        },
+        {
+            "name": "identity",
+            "provision": true
+        }
+    ],
+    "programmingLanguage": "javascript",
+    "solutionSettings": {
+        "name": "fx-solution-azure",
+        "version": "1.0.0",
+        "hostType": "Azure",
+        "azureResources": [],
+        "capabilities": [
+            "Bot"
+        ],
+        "activeResourcePlugins": [
+            "fx-resource-local-debug",
+            "fx-resource-appstudio",
+            "fx-resource-cicd",
+            "fx-resource-api-connector",
+            "fx-resource-bot",
+            "fx-resource-identity"
+        ]
+    },
+    "pluginSettings": {
+        "fx-resource-bot": {
+            "host-type": "app-service",
+            "capabilities": [
+                "command-response"
+            ]
+        }
+    }
+}
