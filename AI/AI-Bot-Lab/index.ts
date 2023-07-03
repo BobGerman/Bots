@@ -62,7 +62,16 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(`\nBot Started, ${server.name} listening to ${server.url}`);
 });
 
-import { Application, ConversationHistory, DefaultPromptManager, DefaultTurnState, OpenAIModerator, OpenAIPlanner, AI } from '@microsoft/teams-ai';
+import { 
+  Application, 
+  ConversationHistory, 
+  DefaultPromptManager, 
+  DefaultTurnState, 
+  // OpenAIModerator, 
+  OpenAIPlanner, 
+  AI, 
+  AzureOpenAIPlanner
+} from '@microsoft/teams-ai';
 import path from "path";
 import { MemoryStorage } from "botbuilder";
 
@@ -70,16 +79,31 @@ import { MemoryStorage } from "botbuilder";
 interface ConversationState {}
 type ApplicationTurnState = DefaultTurnState<ConversationState>;
 
+// console.log( `Azure OpenAI Endpoint: ${config.endpoint}` );
+// console.log( `Azure OpenAI Key: ${config.azureOpenAIKey}` );
+
 // Create AI components
+// THIS WORKS:
 const planner = new OpenAIPlanner({
   apiKey: config.openAIKey,
   defaultModel: 'text-davinci-003',
   logRequests: true
 });
-const moderator = new OpenAIModerator({
-  apiKey: config.openAIKey,
-  moderate: 'both'
-});
+
+//THIS FAILS:
+// const planner = new AzureOpenAIPlanner({  // OpenAIPlanner({
+//   apiKey: config.azureOpenAIKey, // config.openAIKey,
+//   endpoint: config.endpoint,
+//   defaultModel: 'text-davinci-003',
+//   logRequests: true
+// });
+
+// REMOVED since supposedly moderation doesn't work w/Azure OpenAI
+// per comment on https://github.com/microsoft/hack-together-teams/discussions/62
+// const moderator = new OpenAIModerator({
+//   apiKey: config.azureOpenAIKey,  //config.openAIKey,
+//   moderate: 'both'
+// });
 const promptManager = new DefaultPromptManager(path.join(__dirname, './prompts' ));
 
 // Define storage and application
@@ -88,7 +112,7 @@ const app = new Application<ApplicationTurnState>({
   storage,
   ai: {
       planner,
-      moderator,
+      // moderator,
       promptManager,
       prompt: 'chat',
       history: {
