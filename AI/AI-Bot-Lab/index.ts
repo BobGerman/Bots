@@ -114,6 +114,7 @@ const app = new Application<ApplicationTurnState>({
       planner,
       // moderator,
       promptManager,
+      // prompt: 'command',
       prompt: 'chat',
       history: {
           assistantHistoryType: 'text'
